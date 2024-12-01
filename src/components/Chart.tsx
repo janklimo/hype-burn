@@ -44,7 +44,7 @@ const Chart: FC<Props> = ({ tokenInfo }) => {
   );
 
   // Calculate minimum segment size for better visibility
-  const minVisiblePercentage = 0.2;
+  const minVisiblePercentage = 0.25;
   const minSegmentSize = (totalSupply * minVisiblePercentage) / 100;
 
   const series = [
@@ -73,12 +73,7 @@ const Chart: FC<Props> = ({ tokenInfo }) => {
     calloutLabelKey: 'asset',
     angleKey: 'amount',
     innerRadiusRatio: 0.7,
-    calloutLabel: {
-      enabled: true,
-      minAngle: 20, // Only show labels for segments larger than 20 degrees
-      offset: 10,
-      color: '#bcc4c2',
-    },
+    calloutLabel: { enabled: false },
     radiusKey: 'radius',
     innerLabels: [
       {
@@ -139,10 +134,6 @@ const Chart: FC<Props> = ({ tokenInfo }) => {
       item: {
         paddingX: 32,
         paddingY: 8,
-        marker: {
-          size: 15,
-          strokeWidth: 2,
-        },
         label: {
           color: '#bcc4c2',
         },
