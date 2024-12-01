@@ -27,13 +27,13 @@ export default function HomePage() {
         <div className='layout relative flex min-h-screen flex-col items-center justify-center py-4 text-center'>
           <Headline />
           <div className='mb-4 h-96 w-80 md:h-[35rem] md:w-[70rem] relative'>
-            <Chart data={data} tokenInfo={tokenInfo} />
+            <Chart tokenInfo={tokenInfo} />
             {/* <span className='absolute top-1/2 left-1/2 text-white -translate-x-1/2 -translate-y-1/2'>
               hi there
             </span> */}
           </div>
           <div className='mb-6 w-full sm:w-3/4'>
-            <Stats data={data} />
+            <Stats data={data} tokenInfo={tokenInfo} />
           </div>
           <div className='my-4 w-full'>
             <Peers data={data} />

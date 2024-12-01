@@ -3,6 +3,9 @@ import Marquee from 'react-fast-marquee';
 
 import { downArrow, upArrow } from '@/lib/formatters';
 
+import Skeleton from '@/components/Skeleton';
+
+import useTokenInfo from '@/app/hooks/use-token-info';
 import useWebSocketData from '@/app/hooks/use-websocket-data';
 
 const PriceChange: FC<{ change: number }> = ({ change }) => {
@@ -37,13 +40,15 @@ const PriceChange: FC<{ change: number }> = ({ change }) => {
 
 interface Props {
   data: ReturnType<typeof useWebSocketData>;
+  tokenInfo: ReturnType<typeof useTokenInfo>['tokenInfo'];
 }
 
-const Stats: FC<Props> = ({ data }) => {
-  if (!data) return null;
+const Stats: FC<Props> = ({ data, tokenInfo }) => {
+  if (!data || !tokenInfo)
+    return <Skeleton className='h-96 w-80 md:h-[35rem] md:w-[70rem]' />;
 
-  const supply = parseFloat(data.circulatingSupply);
-  const burntAmount = 600_000_000 - supply;
+  const supply = parseFloat(tokenInfo.totalSupply);
+  const burntAmount = 1_000_000_000 - supply;
   const markPrice = parseFloat(data.markPx);
   const previousDayPrice = parseFloat(data.prevDayPx);
   const volume = parseFloat(data.dayNtlVlm);
@@ -58,7 +63,7 @@ const Stats: FC<Props> = ({ data }) => {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
           })}{' '}
-          PURR
+          HYPE
         </p>
         <p className='text-gray-500 mx-3'>/</p>
         {/* Price */}

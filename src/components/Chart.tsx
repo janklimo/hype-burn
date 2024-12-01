@@ -10,7 +10,6 @@ import { FC } from 'react';
 import Skeleton from '@/components/Skeleton';
 
 import useTokenInfo from '@/app/hooks/use-token-info';
-import useWebSocketData from '@/app/hooks/use-websocket-data';
 
 const theme: AgChartTheme = {
   palette: {
@@ -27,24 +26,24 @@ const sumBalances = (balances: [string, string][]): number => {
 };
 
 interface Props {
-  data: ReturnType<typeof useWebSocketData>;
   tokenInfo: ReturnType<typeof useTokenInfo>['tokenInfo'];
 }
 
-const Chart: FC<Props> = ({ data: other, tokenInfo }) => {
+const Chart: FC<Props> = ({ tokenInfo }) => {
   const { width } = useWindowSize();
 
-  if (!other || !tokenInfo)
+  if (!tokenInfo)
     return <Skeleton className='h-96 w-80 md:h-[35rem] md:w-[70rem]' />;
 
   const circulatingSupply = parseFloat(tokenInfo.circulatingSupply);
   const totalSupply = parseFloat(tokenInfo.totalSupply);
+  const burntAmount = 1_000_000_000 - totalSupply;
 
   const series = [
     { asset: 'Circulating Supply', amount: circulatingSupply, radius: 1 },
     {
       asset: 'Burn From Trading Fees',
-      amount: 1_000_000_000 - totalSupply,
+      amount: burntAmount,
       radius: 1.4,
     },
     {
