@@ -7,6 +7,11 @@ import {
 import { AgCharts } from 'ag-charts-react';
 import { FC } from 'react';
 
+import Skeleton from '@/components/Skeleton';
+
+import useTokenInfo from '@/app/hooks/use-token-info';
+import useWebSocketData from '@/app/hooks/use-websocket-data';
+
 const theme: AgChartTheme = {
   palette: {
     fills: ['#98FCE4', '#f69318', '#163832'],
@@ -14,21 +19,39 @@ const theme: AgChartTheme = {
   },
 };
 
+const sumBalances = (balances: [string, string][]): number => {
+  return balances.reduce((sum, [_, balanceStr]) => {
+    const balance = parseFloat(balanceStr);
+    return sum + balance;
+  }, 0);
+};
+
 interface Props {
-  supply: number;
+  data: ReturnType<typeof useWebSocketData>;
+  tokenInfo: ReturnType<typeof useTokenInfo>['tokenInfo'];
 }
 
-const Chart: FC<Props> = ({ supply }) => {
+const Chart: FC<Props> = ({ data: other, tokenInfo }) => {
   const { width } = useWindowSize();
 
-  const data = [
-    { asset: 'Circulating Supply', amount: supply, radius: 1 },
+  if (!other || !tokenInfo)
+    return <Skeleton className='h-96 w-80 md:h-[35rem] md:w-[70rem]' />;
+
+  const circulatingSupply = parseFloat(tokenInfo.circulatingSupply);
+  const totalSupply = parseFloat(tokenInfo.totalSupply);
+
+  const series = [
+    { asset: 'Circulating Supply', amount: circulatingSupply, radius: 1 },
     {
       asset: 'Burn From Trading Fees',
-      amount: 600_000_000 - supply,
+      amount: 1_000_000_000 - totalSupply,
       radius: 1.4,
     },
-    { asset: 'Initial Burn', amount: 400_000_000, radius: 1 },
+    {
+      asset: 'Non Circulating Supply',
+      amount: sumBalances(tokenInfo.nonCirculatingUserBalances),
+      radius: 1,
+    },
   ];
 
   const seriesOptions: AgDonutSeriesOptions = {
@@ -42,13 +65,13 @@ const Chart: FC<Props> = ({ supply }) => {
     radiusKey: 'radius',
     innerLabels: [
       {
-        text: 'Circulating Supply',
+        text: 'Total Supply',
         fontWeight: 'bold',
         color: '#bcc4c2',
         spacing: 10,
       },
       {
-        text: supply.toLocaleString('en-US', {
+        text: totalSupply.toLocaleString('en-US', {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
         }),
@@ -59,7 +82,7 @@ const Chart: FC<Props> = ({ supply }) => {
         color: '#98FCE4',
       },
       {
-        text: 'PURR',
+        text: 'HYPE',
         spacing: 8,
         fontSize: Number(width) > 768 ? 22 : 16,
         fontFamily:
@@ -76,7 +99,7 @@ const Chart: FC<Props> = ({ supply }) => {
   };
 
   const chartOptions: AgChartOptions = {
-    data,
+    data: series,
     width: Number(width) > 768 ? 1120 : 320,
     height: Number(width) > 768 ? 560 : 384,
     theme,
