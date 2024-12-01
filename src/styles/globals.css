@@ -7,9 +7,7 @@
   font-family: Teodor;
   font-style: normal;
   font-weight: 400;
-  src:
-    url('/fonts/Teodor-Light.woff') format('woff'),
-    url('/fonts/Teodor-Light.woff2') format('woff2');
+  src: url('/fonts/Teodor-Thin.otf');
 }
 
 :root {
