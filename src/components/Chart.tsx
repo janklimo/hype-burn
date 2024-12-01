@@ -31,6 +31,7 @@ interface Props {
 
 const Chart: FC<Props> = ({ tokenInfo }) => {
   const { width } = useWindowSize();
+  const isMobile = Number(width) <= 768;
 
   if (!tokenInfo)
     return <Skeleton className='h-96 w-80 md:h-[35rem] md:w-[70rem]' />;
@@ -38,18 +39,32 @@ const Chart: FC<Props> = ({ tokenInfo }) => {
   const circulatingSupply = parseFloat(tokenInfo.circulatingSupply);
   const totalSupply = parseFloat(tokenInfo.totalSupply);
   const burntAmount = 1_000_000_000 - totalSupply;
+  const nonCirculatingSupply = sumBalances(
+    tokenInfo.nonCirculatingUserBalances,
+  );
+
+  // Calculate minimum segment size for better visibility
+  const minVisiblePercentage = 0.2;
+  const minSegmentSize = (totalSupply * minVisiblePercentage) / 100;
 
   const series = [
-    { asset: 'Circulating Supply', amount: circulatingSupply, radius: 1 },
+    {
+      asset: 'Circulating Supply',
+      amount: circulatingSupply,
+      radius: 1,
+      displayAmount: circulatingSupply, // Original amount for tooltip
+    },
     {
       asset: 'Burn From Trading Fees',
-      amount: burntAmount,
+      amount: Math.max(burntAmount, minSegmentSize), // Ensure minimum visible size
       radius: 1.4,
+      displayAmount: burntAmount, // Original amount for tooltip
     },
     {
       asset: 'Non Circulating Supply',
-      amount: sumBalances(tokenInfo.nonCirculatingUserBalances),
+      amount: nonCirculatingSupply,
       radius: 1,
+      displayAmount: nonCirculatingSupply, // Original amount for tooltip
     },
   ];
 
@@ -59,7 +74,10 @@ const Chart: FC<Props> = ({ tokenInfo }) => {
     angleKey: 'amount',
     innerRadiusRatio: 0.7,
     calloutLabel: {
-      enabled: false,
+      enabled: true,
+      minAngle: 20, // Only show labels for segments larger than 20 degrees
+      offset: 10,
+      color: '#bcc4c2',
     },
     radiusKey: 'radius',
     innerLabels: [
@@ -75,7 +93,7 @@ const Chart: FC<Props> = ({ tokenInfo }) => {
           maximumFractionDigits: 2,
         }),
         spacing: 4,
-        fontSize: Number(width) > 768 ? 24 : 18,
+        fontSize: isMobile ? 18 : 24,
         fontFamily:
           'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
         color: '#98FCE4',
@@ -83,7 +101,7 @@ const Chart: FC<Props> = ({ tokenInfo }) => {
       {
         text: 'HYPE',
         spacing: 8,
-        fontSize: Number(width) > 768 ? 22 : 16,
+        fontSize: isMobile ? 16 : 22,
         fontFamily:
           'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
         color: '#98FCE4',
@@ -92,15 +110,18 @@ const Chart: FC<Props> = ({ tokenInfo }) => {
     tooltip: {
       renderer: (params) => ({
         title: params.datum.asset,
-        content: `${params.datum.amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} PURR`,
+        content: `${params.datum.displayAmount.toLocaleString('en-US', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })} HYPE`,
       }),
     },
   };
 
   const chartOptions: AgChartOptions = {
     data: series,
-    width: Number(width) > 768 ? 1120 : 320,
-    height: Number(width) > 768 ? 560 : 384,
+    width: isMobile ? 320 : 1120,
+    height: isMobile ? 384 : 560,
     theme,
     background: {
       fill: '#03251F',
@@ -118,6 +139,10 @@ const Chart: FC<Props> = ({ tokenInfo }) => {
       item: {
         paddingX: 32,
         paddingY: 8,
+        marker: {
+          size: 15,
+          strokeWidth: 2,
+        },
         label: {
           color: '#bcc4c2',
         },
