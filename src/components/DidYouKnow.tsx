@@ -9,16 +9,11 @@ import { apiHost } from '@/constant/config';
 
 import { LeaderboardData, LeaderboardRowData } from '@/types/responses';
 
-interface HypeData {
-  totalSupply: string;
-  markPx: string;
-}
-
 const findFirstRankAboveBalance = (
   data: LeaderboardRowData[],
   balance: number,
 ): number => {
-  const found = data.find((row) => balance > row.purr_balance)!;
+  const found = data.find((row) => balance > row.balance)!;
   return found.rank;
 };
 
@@ -41,7 +36,7 @@ interface Props {
 
 const DidYouKnow: FC<Props> = ({ data, tokenInfo }) => {
   const { data: leaderboardData } = useSWR<LeaderboardData>(
-    `${apiHost}/leaderboard`,
+    `${apiHost}/leaderboard?coin=hype`,
     (url: string) => fetch(url).then((res) => res.json()),
   );
 

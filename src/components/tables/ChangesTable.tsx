@@ -110,7 +110,9 @@ const ChangesTable = () => {
   const onGridReady = useCallback(() => {
     setRowData([]);
 
-    fetch(`${apiHost}/changes?type=${activeTable}&period=${activePeriod}`)
+    fetch(
+      `${apiHost}/changes?coin=hype&type=${activeTable}&period=${activePeriod}`,
+    )
       .then<ChangesData>((resp) => resp.json())
       .then((data) => {
         setRowData(data.rows);
@@ -135,13 +137,13 @@ const ChangesTable = () => {
     },
     {
       field: 'balance',
-      headerName: 'Balance (PURR)',
+      headerName: 'Balance (HYPE)',
       valueFormatter: formatPurrBalance,
       minWidth: 150,
     },
     {
       field: 'balance_difference_absolute',
-      headerName: 'Change (PURR)',
+      headerName: 'Change (HYPE)',
       type: ['colorHighlight'],
       valueFormatter: purrChangeFormatter,
       minWidth: 150,
@@ -156,7 +158,7 @@ const ChangesTable = () => {
       minWidth: 150,
     },
     {
-      field: 'purr_rank',
+      field: 'balance_rank',
       headerName: 'Rank',
       valueFormatter: formatInteger,
       width: 80,
