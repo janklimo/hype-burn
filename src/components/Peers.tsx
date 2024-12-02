@@ -17,7 +17,7 @@ const Peers: FC<Props> = ({ data }) => {
   const [coins, setCoins] = useState<PeersData>([]);
 
   useEffect(() => {
-    fetch(`${apiHost}/peers`)
+    fetch(`${apiHost}/peers?coin=hype`)
       .then<PeersData>((resp) => resp.json())
       .then((data) => {
         setCoins(data);

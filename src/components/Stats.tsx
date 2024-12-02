@@ -52,6 +52,7 @@ const Stats: FC<Props> = ({ data, tokenInfo }) => {
   const markPrice = parseFloat(data.markPx);
   const previousDayPrice = parseFloat(data.prevDayPx);
   const volume = parseFloat(data.dayNtlVlm);
+  const circulatingSupply = parseFloat(tokenInfo.circulatingSupply);
 
   return (
     <div className='bg-hl-light p-2 mt-4 text-hlGray'>
@@ -87,7 +88,7 @@ const Stats: FC<Props> = ({ data, tokenInfo }) => {
         {/* Market cap */}
         <p className='text-hlGray text-sm mr-3'>Market cap:</p>
         <p className='text-accent text-sm font-mono'>
-          {(markPrice * supply).toLocaleString('en-US', {
+          {(markPrice * circulatingSupply).toLocaleString('en-US', {
             style: 'currency',
             currency: 'USD',
             maximumFractionDigits: 0,
