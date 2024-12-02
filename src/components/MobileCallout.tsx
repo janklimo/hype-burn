@@ -10,14 +10,15 @@ const MobileCallout: FC = () => {
         <span className='mr-1'>Trade</span>
         <div className='w-5 inline-block mr-1'>
           <Image
-            src='/images/purr.webp'
+            src='/images/hype.png'
             width={64}
             height={64}
             priority
-            alt='PURR'
+            alt='HYPE'
+            className='rounded-full'
           />
         </div>
-        <span className='mr-1'>PURR</span>
+        <span className='mr-1'>HYPE</span>
         <UnderlineLink
           dotted={false}
           href='https://app.hyperliquid.xyz/join/AK194'
@@ -30,7 +31,7 @@ const MobileCallout: FC = () => {
             width={64}
             height={64}
             priority
-            alt='PURR'
+            alt='HYPE'
           />
         </div>
       </div>

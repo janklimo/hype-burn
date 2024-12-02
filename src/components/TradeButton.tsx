@@ -12,21 +12,22 @@ const TradeButton: FC = () => {
       <span className='mr-1'>Trade</span>
       <div className='w-5 inline-block mr-1'>
         <Image
-          src='/images/purr.webp'
+          src='/images/hype.png'
           width={64}
           height={64}
           priority
-          alt='PURR'
+          alt='HYPE'
+          className='rounded-full'
         />
       </div>
-      <span className='mr-1'>PURR on Hyperliquid</span>
+      <span className='mr-1'>HYPE on Hyperliquid</span>
       <div className='w-5 inline-block'>
         <Image
           src='/images/blob.gif'
           width={64}
           height={64}
           priority
-          alt='PURR'
+          alt='HYPE'
         />
       </div>
     </a>
