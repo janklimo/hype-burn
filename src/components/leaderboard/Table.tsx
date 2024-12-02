@@ -12,7 +12,7 @@ ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
 import { columnTypes, defaultColDef } from '@/components/tables/shared';
 
-import useWebSocketData from '@/app/hooks/use-websocket-data';
+import useHypeData from '@/app/hooks/use-hype-data';
 import { apiHost } from '@/constant/config';
 
 import { LeaderboardData, LeaderboardRowData } from '@/types/responses';
@@ -68,7 +68,7 @@ const purrBalanceValueFormatter = (params: ValueFormatterParams): string => {
 const HoldersTable = () => {
   const [rowData, setRowData] = useState<LeaderboardRowData[]>([]);
   const [snapshotDate, setSnapshotDate] = useState<string>();
-  const data = useWebSocketData();
+  const data = useHypeData();
 
   const onGridReady = useCallback(() => {
     fetch(`${apiHost}/leaderboard?coin=hype`)

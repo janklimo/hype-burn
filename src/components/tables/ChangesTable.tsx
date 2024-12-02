@@ -12,7 +12,7 @@ ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
 import { columnTypes, defaultColDef } from '@/components/tables/shared';
 
-import useWebSocketData from '@/app/hooks/use-websocket-data';
+import useHypeData from '@/app/hooks/use-hype-data';
 import { apiHost } from '@/constant/config';
 import { useActiveTableStore } from '@/state/stores';
 
@@ -103,7 +103,7 @@ const rankDifferenceFormatter = (
 const ChangesTable = () => {
   const [rowData, setRowData] = useState<ChangesRowData[]>([]);
   const [snapshotDate, setSnapshotDate] = useState<string>();
-  const data = useWebSocketData();
+  const data = useHypeData();
   const activeTable = useActiveTableStore((state) => state.activeTable);
   const activePeriod = useActiveTableStore((state) => state.activePeriod);
 
