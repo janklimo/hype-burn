@@ -13,6 +13,7 @@ ModuleRegistry.registerModules([ClientSideRowModelModule]);
 import { columnTypes, defaultColDef } from '@/components/tables/shared';
 
 import useHypeData from '@/app/hooks/use-hype-data';
+import useTokenInfo from '@/app/hooks/use-token-info';
 import { apiHost } from '@/constant/config';
 
 import { LeaderboardData, LeaderboardRowData } from '@/types/responses';
@@ -69,6 +70,7 @@ const HoldersTable = () => {
   const [rowData, setRowData] = useState<LeaderboardRowData[]>([]);
   const [snapshotDate, setSnapshotDate] = useState<string>();
   const data = useHypeData();
+  const { tokenInfo } = useTokenInfo();
 
   const onGridReady = useCallback(() => {
     fetch(`${apiHost}/leaderboard?coin=hype`)
@@ -92,7 +94,7 @@ const HoldersTable = () => {
       field: 'balance',
       headerName: '% Total',
       valueGetter: (params) =>
-        purrShareValueGetter(params, data?.circulatingSupply),
+        purrShareValueGetter(params, tokenInfo?.totalSupply),
       valueFormatter: purrShareValueFormatter,
       minWidth: 150,
     },

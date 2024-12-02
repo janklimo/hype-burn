@@ -146,7 +146,7 @@ const ChangesTable = () => {
       headerName: 'Change (HYPE)',
       type: ['colorHighlight'],
       valueFormatter: purrChangeFormatter,
-      minWidth: 150,
+      minWidth: 120,
       flex: 3,
     },
     {
@@ -155,7 +155,7 @@ const ChangesTable = () => {
       type: ['colorHighlight'],
       valueGetter: (params) => purrBalanceValueGetter(params, data?.markPx),
       valueFormatter: purrBalanceValueFormatter,
-      minWidth: 150,
+      minWidth: 180,
     },
     {
       field: 'balance_rank',
