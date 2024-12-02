@@ -6,6 +6,7 @@ import Head from 'next/head';
 import 'react-circular-progressbar/dist/styles.css';
 
 import Chart from '@/components/Chart';
+import Disclaimer from '@/components/Disclaimer';
 import Headline from '@/components/Headline';
 import Peers from '@/components/Peers';
 import Stats from '@/components/Stats';
@@ -39,6 +40,9 @@ export default function HomePage() {
             <Peers data={data} />
           </div>
           <TradeCallout />
+          <div className='mt-6'>
+            <Disclaimer />
+          </div>
         </div>
       </section>
     </main>
