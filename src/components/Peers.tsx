@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react';
 
+import HypeCard from '@/components/HypeCard';
 import PeerCard from '@/components/PeerCard';
-import PurrCard from '@/components/PurrCard';
 import Skeleton from '@/components/Skeleton';
 
 import useWebSocketData from '@/app/hooks/use-websocket-data';
@@ -35,7 +35,7 @@ const Peers: FC<Props> = ({ data }) => {
     <div>
       <h2 className='md:flex items-center justify-center text-white text-base mb-6'>
         <span className='block md:inline mr-2'>Price of</span>
-        <PurrCard price={markPrice} />
+        <HypeCard price={markPrice} />
         <span className='block md:inline'>with the market cap of ...</span>
       </h2>
       <section className='flex justify-center items-center flex-wrap'>

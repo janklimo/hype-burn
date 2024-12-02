@@ -24,7 +24,7 @@ const Headline: FC = () => {
             width={64}
             height={64}
             priority
-            alt='PURR'
+            alt='HYPE'
           />
         </div>
       </h1>

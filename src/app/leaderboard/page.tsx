@@ -22,14 +22,15 @@ export default function Leaderboard() {
         <h2 className='text-white text-lg mb-3 text-center'>
           <div className='w-5 inline-block mr-1'>
             <Image
-              src='/images/purr.webp'
+              src='/images/hype.png'
               width={64}
               height={64}
               priority
-              alt='PURR'
+              alt='HYPE'
+              className='rounded-full'
             />
           </div>
-          <span className='text-accent'>PURR</span> leaderboard
+          <span className='text-accent'>HYPE</span> leaderboard
         </h2>
         <TableSelector />
         <PeriodSelector />

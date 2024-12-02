@@ -5,7 +5,7 @@ interface Props {
   price: number;
 }
 
-const PurrCard: FC<Props> = ({ price }) => {
+const HypeCard: FC<Props> = ({ price }) => {
   return (
     <a
       href='https://www.coingecko.com/en/coins/hyperliquid'
@@ -36,4 +36,4 @@ const PurrCard: FC<Props> = ({ price }) => {
   );
 };
 
-export default PurrCard;
+export default HypeCard;
