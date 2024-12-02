@@ -3,6 +3,7 @@ import useSWR from 'swr';
 
 import Skeleton from '@/components/Skeleton';
 
+import useTokenInfo from '@/app/hooks/use-token-info';
 import useWebSocketData from '@/app/hooks/use-websocket-data';
 import { apiHost } from '@/constant/config';
 
@@ -33,46 +34,29 @@ const toOrdinal = (n: number): string => {
   return `${n}${suffixes[n % 10] || 'th'}`;
 };
 
-const fetcher = (url: string) =>
-  fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      tokenId: '0x0d01dc56dcaaca66ad901c959b4011ec',
-      type: 'tokenDetails',
-    }),
-  }).then((res) => res.json());
-
 interface Props {
   data: ReturnType<typeof useWebSocketData>;
+  tokenInfo: ReturnType<typeof useTokenInfo>['tokenInfo'];
 }
 
-const DidYouKnow: FC<Props> = ({ data }) => {
-  const { data: leaderboardData, error: leaderboardError } =
-    useSWR<LeaderboardData>(`${apiHost}/leaderboard`, (url: string) =>
-      fetch(url).then((res) => res.json()),
-    );
-
-  const { data: hypeData, error: hypeError } = useSWR<HypeData>(
-    'https://api.hyperliquid.xyz/info',
-    fetcher,
-    { refreshInterval: 10_000 },
+const DidYouKnow: FC<Props> = ({ data, tokenInfo }) => {
+  const { data: leaderboardData } = useSWR<LeaderboardData>(
+    `${apiHost}/leaderboard`,
+    (url: string) => fetch(url).then((res) => res.json()),
   );
 
-  const renderContent = () => {
-    if (!data || !leaderboardData?.rows.length) {
+  const renderBurnedContent = () => {
+    if (!data || !tokenInfo || !leaderboardData?.rows.length) {
       return <Skeleton className='h-6 mb-3 w-full max-w-xl mx-auto' />;
     }
 
-    const supply = parseFloat(data.circulatingSupply);
-    const burntAmount = 600_000_000 - supply;
+    const supply = parseFloat(tokenInfo.totalSupply);
+    const burntAmount = 1_000_000_000 - supply;
     const markPrice = parseFloat(data.markPx);
 
     return (
       <p className='text-hlGray text-sm mb-3'>
-        The total amount of burned tokens would rank as the{' '}
+        The total amount of burned HYPE tokens would rank as the{' '}
         <span className='font-bold text-accent'>
           {toOrdinal(
             findFirstRankAboveBalance(leaderboardData.rows, burntAmount),
@@ -90,61 +74,10 @@ const DidYouKnow: FC<Props> = ({ data }) => {
     );
   };
 
-  const renderHypeContent = () => {
-    if (!hypeData || !data) {
-      return <Skeleton className='h-6 w-full max-w-xl mx-auto' />;
-    }
-
-    const purrSupply = parseFloat(data.circulatingSupply);
-    const purrPrice = parseFloat(data.markPx);
-    const purrMarketCap = purrSupply * purrPrice;
-
-    const hypeSupply = parseFloat(hypeData.totalSupply); // Using totalSupply instead of circulatingSupply
-    const hypePrice = parseFloat(hypeData.markPx);
-    const hypeMarketCap = hypeSupply * hypePrice;
-
-    return (
-      <p className='text-hlGray text-sm mb-3'>
-        With a fully diluted valuation of{' '}
-        <span className='font-bold text-accent'>
-          {(purrMarketCap / 1_000_000).toLocaleString('en-US', {
-            style: 'currency',
-            currency: 'USD',
-            maximumFractionDigits: 2,
-          })}
-          M
-        </span>
-        , PURR is currently valued at{' '}
-        <span className='font-bold text-accent'>
-          {(purrMarketCap / hypeMarketCap).toLocaleString('en-US', {
-            style: 'percent',
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })}
-        </span>{' '}
-        of HYPE's{' '}
-        <span className='font-bold text-accent'>
-          {(hypeMarketCap / 1_000_000_000).toLocaleString('en-US', {
-            style: 'currency',
-            currency: 'USD',
-            maximumFractionDigits: 2,
-          })}
-          B
-        </span>{' '}
-        FDV
-      </p>
-    );
-  };
-
-  if (leaderboardError || hypeError) {
-    return <div>Error loading data</div>;
-  }
-
   return (
     <div>
       <h2 className='text-white text-base mb-2'>💡 Did you know?</h2>
-      {renderHypeContent()}
-      {renderContent()}
+      {renderBurnedContent()}
     </div>
   );
 };

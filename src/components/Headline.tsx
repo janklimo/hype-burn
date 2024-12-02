@@ -3,7 +3,7 @@ import { FC } from 'react';
 
 const Headline: FC = () => {
   return (
-    <div className='my-8'>
+    <div className='md:mt-3 mb-8'>
       <div className='flex justify-center mt-2 mb-5'>
         <div className='w-10'>
           <Image

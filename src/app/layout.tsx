@@ -11,6 +11,7 @@ import '@ag-grid-community/styles/ag-theme-material.css';
 import '@/styles/ag-grid.css';
 
 import MobileCallout from '@/components/MobileCallout';
+import Navbar from '@/components/Navbar';
 
 import { siteConfig } from '@/constant/config';
 
@@ -65,6 +66,7 @@ export default function RootLayout({
     <html>
       <body className='bg-hl-dark hyperliquid'>
         <MobileCallout />
+        <Navbar />
         {children}
         <Toaster
           toastOptions={{

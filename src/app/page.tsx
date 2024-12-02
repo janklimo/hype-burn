@@ -5,6 +5,7 @@ import Head from 'next/head';
 
 import Chart from '@/components/Chart';
 import ChartInner from '@/components/ChartInner';
+import DidYouKnow from '@/components/DidYouKnow';
 import Disclaimer from '@/components/Disclaimer';
 import Headline from '@/components/Headline';
 import Peers from '@/components/Peers';
@@ -32,6 +33,9 @@ export default function HomePage() {
           </div>
           <div className='mb-6 w-full sm:w-3/4'>
             <Stats data={data} tokenInfo={tokenInfo} />
+          </div>
+          <div className='mt-4 mb-6 w-full'>
+            <DidYouKnow data={data} tokenInfo={tokenInfo} />
           </div>
           <div className='my-4 w-full'>
             <Peers data={data} />
