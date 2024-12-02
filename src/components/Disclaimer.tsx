@@ -2,7 +2,7 @@ import { FC } from 'react';
 
 const Disclaimer: FC = () => {
   return (
-    <p className='text-xs text-[#495856]'>
+    <p className='text-xs text-center text-[#495856]'>
       Disclaimer: HYPEBurn.com is an independent website that aggregates
       information and resources about the HYPE token. We are not affiliated with
       or endorsed by Hyper Foundation. All product names, logos, and brands are
