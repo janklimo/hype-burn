@@ -8,7 +8,7 @@ interface Props {
 }
 
 const ChartInner: FC<Props> = ({ tokenInfo }) => {
-  if (!tokenInfo) return;
+  if (!tokenInfo) return null;
 
   const totalSupply = parseFloat(tokenInfo.totalSupply);
 
