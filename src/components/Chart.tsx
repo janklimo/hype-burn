@@ -75,33 +75,6 @@ const Chart: FC<Props> = ({ tokenInfo }) => {
     innerRadiusRatio: 0.7,
     calloutLabel: { enabled: false },
     radiusKey: 'radius',
-    innerLabels: [
-      {
-        text: 'Total Supply',
-        fontWeight: 'bold',
-        color: '#bcc4c2',
-        spacing: 10,
-      },
-      {
-        text: totalSupply.toLocaleString('en-US', {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        }),
-        spacing: 4,
-        fontSize: isMobile ? 18 : 24,
-        fontFamily:
-          'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
-        color: '#98FCE4',
-      },
-      {
-        text: 'HYPE',
-        spacing: 8,
-        fontSize: isMobile ? 16 : 22,
-        fontFamily:
-          'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
-        color: '#98FCE4',
-      },
-    ],
     tooltip: {
       renderer: (params) => ({
         title: params.datum.asset,

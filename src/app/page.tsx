@@ -3,9 +3,8 @@
 import '@/lib/env';
 import Head from 'next/head';
 
-import 'react-circular-progressbar/dist/styles.css';
-
 import Chart from '@/components/Chart';
+import ChartInner from '@/components/ChartInner';
 import Disclaimer from '@/components/Disclaimer';
 import Headline from '@/components/Headline';
 import Peers from '@/components/Peers';
@@ -29,9 +28,7 @@ export default function HomePage() {
           <Headline />
           <div className='mb-4 h-96 w-80 md:h-[35rem] md:w-[70rem] relative'>
             <Chart tokenInfo={tokenInfo} />
-            {/* <span className='absolute top-1/2 left-1/2 text-white -translate-x-1/2 -translate-y-1/2'>
-              hi there
-            </span> */}
+            <ChartInner tokenInfo={tokenInfo} />
           </div>
           <div className='mb-6 w-full sm:w-3/4'>
             <Stats data={data} tokenInfo={tokenInfo} />
