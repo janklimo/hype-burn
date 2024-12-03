@@ -40,7 +40,7 @@ const DidYouKnow: FC<Props> = ({ data, tokenInfo }) => {
     (url: string) => fetch(url).then((res) => res.json()),
   );
 
-  const renderBurnedContent = () => {
+  const renderContent = () => {
     if (!data || !tokenInfo || !leaderboardData?.rows.length) {
       return <Skeleton className='h-6 mb-3 w-full max-w-xl mx-auto' />;
     }
@@ -48,31 +48,69 @@ const DidYouKnow: FC<Props> = ({ data, tokenInfo }) => {
     const supply = parseFloat(tokenInfo.totalSupply);
     const burntAmount = 1_000_000_000 - supply;
     const markPrice = parseFloat(data.markPx);
+    const pointToHypeRatio = 5.3507620321;
+    const pointValue = markPrice * pointToHypeRatio;
 
     return (
-      <p className='text-hlGray text-sm mb-3'>
-        The total amount of burned HYPE tokens would rank as the{' '}
-        <span className='font-bold text-accent'>
-          {toOrdinal(
-            findFirstRankAboveBalance(leaderboardData.rows, burntAmount),
-          )}
-        </span>{' '}
-        largest holder worth{' '}
-        <span className='font-bold text-accent'>
-          {(markPrice * burntAmount).toLocaleString('en-US', {
-            style: 'currency',
-            currency: 'USD',
-            maximumFractionDigits: 0,
-          })}
-        </span>
-      </p>
+      <div>
+        <p className='text-hlGray text-sm mb-3'>
+          The total amount of burned HYPE tokens would rank as the{' '}
+          <span className='font-bold text-accent'>
+            {toOrdinal(
+              findFirstRankAboveBalance(leaderboardData.rows, burntAmount),
+            )}
+          </span>{' '}
+          largest holder worth{' '}
+          <span className='font-bold text-accent'>
+            {(markPrice * burntAmount).toLocaleString('en-US', {
+              style: 'currency',
+              currency: 'USD',
+              maximumFractionDigits: 0,
+            })}
+          </span>
+        </p>
+        <p className='text-hlGray text-sm mb-3'>
+          The airdropped amount is currently valued at{' '}
+          <span className='font-bold text-accent'>
+            {((markPrice * 310_000_000) / 1_000_000_000).toLocaleString(
+              'en-US',
+              {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              },
+            )}
+            B
+          </span>
+          , making each point worth{' '}
+          <span className='font-bold text-accent'>
+            {pointValue.toLocaleString('en-US', {
+              style: 'currency',
+              currency: 'USD',
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
+          </span>
+          .
+          <br /> HYPE needs to do a{' '}
+          <span className='font-bold text-accent'>
+            {(800 / pointValue).toLocaleString('en-US', {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
+            x
+          </span>{' '}
+          from here to fulfill the prophecy of $800/point.
+        </p>
+      </div>
     );
   };
 
   return (
     <div>
       <h2 className='text-white text-base mb-2'>💡 Did you know?</h2>
-      {renderBurnedContent()}
+      {renderContent()}
     </div>
   );
 };
