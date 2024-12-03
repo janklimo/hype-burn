@@ -6,6 +6,7 @@ import Skeleton from '@/components/Skeleton';
 import useTokenInfo from '@/app/hooks/use-token-info';
 import useWebSocketData from '@/app/hooks/use-websocket-data';
 import { apiHost } from '@/constant/config';
+import { pointToHypeRatio } from '@/constant/constants';
 
 import { LeaderboardData, LeaderboardRowData } from '@/types/responses';
 
@@ -48,7 +49,6 @@ const DidYouKnow: FC<Props> = ({ data, tokenInfo }) => {
     const supply = parseFloat(tokenInfo.totalSupply);
     const burntAmount = 1_000_000_000 - supply;
     const markPrice = parseFloat(data.markPx);
-    const pointToHypeRatio = 5.3507620321;
     const pointValue = markPrice * pointToHypeRatio;
 
     return (

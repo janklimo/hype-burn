@@ -6,6 +6,7 @@ import Skeleton from '@/components/Skeleton';
 
 import useWebSocketData from '@/app/hooks/use-websocket-data';
 import { apiHost } from '@/constant/config';
+import { pointToHypeRatio } from '@/constant/constants';
 
 import { PeersData } from '@/types/responses';
 
@@ -30,6 +31,7 @@ const Peers: FC<Props> = ({ data }) => {
   const markPrice = parseFloat(data.markPx);
   const supply = parseFloat(data.circulatingSupply);
   const purrMarketCap = markPrice * supply;
+  const pointValue = markPrice * pointToHypeRatio;
 
   return (
     <div>
@@ -39,16 +41,29 @@ const Peers: FC<Props> = ({ data }) => {
         <span className='block md:inline'>with the market cap of ...</span>
       </h2>
       <section className='flex justify-center items-center flex-wrap'>
-        {coins.map((coin) => (
-          <PeerCard
-            key={coin.symbol}
-            symbol={coin.symbol}
-            price={coin.market_cap / supply}
-            multiple={coin.market_cap / purrMarketCap}
-            url={coin.url}
-            image_url={coin.image_url}
-          />
-        ))}
+        {coins.map((coin) => {
+          const isAdair = coin.symbol === '$800/pt';
+          const imageUrl = isAdair
+            ? '/images/crypto_adair.jpg'
+            : coin.image_url;
+          const price = isAdair
+            ? 800 / pointToHypeRatio
+            : coin.market_cap / supply;
+          const multiple = isAdair
+            ? 800 / pointValue
+            : coin.market_cap / purrMarketCap;
+
+          return (
+            <PeerCard
+              key={coin.symbol}
+              symbol={coin.symbol}
+              price={price}
+              multiple={multiple}
+              url={coin.url}
+              image_url={imageUrl}
+            />
+          );
+        })}
       </section>
     </div>
   );
