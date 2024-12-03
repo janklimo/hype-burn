@@ -29,8 +29,8 @@ const Headline: FC = () => {
         </div>
       </h1>
       <p className='text-hlGray mb-3'>
-        HYPE is hyper sound money ⚡🔊 Total supply is fixed and transaction
-        fees are automatically burned.
+        HYPE is hyper sound money ⚡🔊 Max supply is fixed and transaction fees
+        are automatically burned.
       </p>
     </div>
   );
