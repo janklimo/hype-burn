@@ -20,7 +20,7 @@ const HypeCard: FC<Props> = ({ price }) => {
           height={64}
           priority
           className='rounded-full'
-          alt='PURR'
+          alt='HYPE'
         />
       </div>
       <p className='text-hlGray mr-2 font-normal'>HYPE:</p>
