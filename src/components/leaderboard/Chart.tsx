@@ -16,6 +16,7 @@ import { trimAddress } from '@/lib/formatters';
 import Button from '@/components/buttons/Button';
 
 import useAddressFromURL from '@/app/hooks/use-address-from-url';
+import useHypeData from '@/app/hooks/use-hype-data';
 import useWebSocketData from '@/app/hooks/use-websocket-data';
 import { apiHost } from '@/constant/config';
 import { useAddressStore } from '@/state/stores';
@@ -29,7 +30,7 @@ const purrValue = (
   if (!userData) return '...';
   if (!wsData) return '...';
 
-  const value = userData.purr_balance * parseFloat(wsData.markPx);
+  const value = userData.balance * parseFloat(wsData.markPx);
 
   return value.toLocaleString('en-US', {
     style: 'currency',
@@ -49,8 +50,8 @@ const theme: AgChartTheme = {
 const barSeriesOptions: AgBarSeriesOptions = {
   type: 'bar',
   xKey: 'date',
-  yKey: 'purr_balance',
-  yName: 'PURR Balance',
+  yKey: 'balance',
+  yName: 'HYPE Balance',
   highlightStyle: {
     item: {
       stroke: '#4fc6b6',
@@ -60,7 +61,7 @@ const barSeriesOptions: AgBarSeriesOptions = {
   },
   tooltip: {
     renderer: ({ datum, yName }) => {
-      const value = `${datum.purr_balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} PURR`;
+      const value = `${datum.balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} HYPE`;
 
       return {
         title: `<b>${yName}</b> <small>(${datum.date})</small>`,
@@ -76,11 +77,11 @@ const axes: AgCartesianAxisOptions[] = [
     type: 'category',
     position: 'bottom',
   },
-  // Use left axis for 'purr_balance' series
+  // Use left axis for `balance` series
   {
     type: 'number',
     position: 'left',
-    keys: ['purr_balance'],
+    keys: ['balance'],
     // Format the label applied to this axis
     label: {
       formatter: (params) => {
@@ -127,7 +128,7 @@ const Chart = () => {
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const [isFailed, setIsFailed] = useState<boolean>(false);
   const [currentAddress, setCurrentAddress] = useState<string | undefined>('');
-  const wsData = useWebSocketData();
+  const wsData = useHypeData();
 
   const targetAddress = address || addressParam;
 
@@ -142,7 +143,7 @@ const Chart = () => {
       setIsFetching(true);
       setIsFailed(false);
 
-      fetch(`${apiHost}/users/${targetAddress}`)
+      fetch(`${apiHost}/users/${targetAddress}?coin=hype`)
         .then<UserSnapshotData>((resp) => resp.json())
         .then((data) => {
           setData(data);
@@ -205,13 +206,13 @@ const Chart = () => {
                   {trimAddress(targetAddress)}{' '}
                 </p>
                 <p className='text-center text-xs text-hlGray mb-6'>
-                  is PURR holder
+                  is HYPE holder
                 </p>
                 <p className='flex justify-center items-center text-center font-mono text-hl-primary text-4xl mb-4'>
                   #{data?.rank}
                 </p>
                 <p className='text-center text-white text-lg font-semibold mt-2 mb-1'>
-                  PURR value 🤑
+                  HYPE value 🤑
                 </p>
                 <p className='text-accent text-center font-semibold text-sm'>
                   {purrValue(data, wsData)}
@@ -222,7 +223,7 @@ const Chart = () => {
                       Level up 🔥
                     </p>
                     <p className='text-center text-xs text-hlGray mb-2'>
-                      PURR needed to reach ...
+                      HYPE needed to reach ...
                     </p>
                     <div className='bg-hl-light p-2 mt-1 text-hlGray'>
                       <Marquee
@@ -245,7 +246,7 @@ const Chart = () => {
                                   minimumFractionDigits: 2,
                                   maximumFractionDigits: 2,
                                 })}{' '}
-                                PURR
+                                HYPE
                               </p>
                               <p className='text-gray-500 mx-3'>/</p>
                             </div>
