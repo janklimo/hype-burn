@@ -39,7 +39,7 @@ export default function HomePage() {
             <DidYouKnow data={data} tokenInfo={tokenInfo} />
           </div>
           <div className='mt-4 mb-6 w-full'>
-            <SaltSheet />
+            <SaltSheet data={data} />
           </div>
           <div className='my-4 w-full'>
             <Peers data={data} />

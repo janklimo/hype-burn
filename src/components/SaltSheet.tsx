@@ -4,7 +4,13 @@ import { FC, useState } from 'react';
 import UnderlineLink from '@/components/links/UnderlineLink';
 import Modal from '@/components/Modal';
 
-const SaltSheet: FC = () => {
+import useHypeData from '@/app/hooks/use-hype-data';
+
+interface Props {
+  data: ReturnType<typeof useHypeData>;
+}
+
+const SaltSheet: FC<Props> = ({ data }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   return (
@@ -34,7 +40,11 @@ const SaltSheet: FC = () => {
           Full HYPE salt sheet
         </UnderlineLink>
       </p>
-      <Modal open={isModalOpen} closeModal={() => setIsModalOpen(false)} />
+      <Modal
+        open={isModalOpen}
+        closeModal={() => setIsModalOpen(false)}
+        hypePrice={parseFloat(data?.markPx ?? '0')}
+      />
     </div>
   );
 };

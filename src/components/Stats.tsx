@@ -5,8 +5,8 @@ import { downArrow, upArrow } from '@/lib/formatters';
 
 import Skeleton from '@/components/Skeleton';
 
+import useHypeData from '@/app/hooks/use-hype-data';
 import useTokenInfo from '@/app/hooks/use-token-info';
-import useWebSocketData from '@/app/hooks/use-websocket-data';
 
 const PriceChange: FC<{ change: number }> = ({ change }) => {
   if (change >= 1) {
@@ -39,7 +39,7 @@ const PriceChange: FC<{ change: number }> = ({ change }) => {
 };
 
 interface Props {
-  data: ReturnType<typeof useWebSocketData>;
+  data: ReturnType<typeof useHypeData>;
   tokenInfo: ReturnType<typeof useTokenInfo>['tokenInfo'];
 }
 

@@ -8,13 +8,16 @@ import {
 } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { toPng } from 'html-to-image';
-import { FC, useCallback, useRef } from 'react';
+import { FC, ReactNode, useCallback, useRef } from 'react';
+
+import { classNames } from '@/lib/utils';
+import Image from 'next/image';
 
 interface PriceLevel {
   price: number;
   lamboStack: number;
   lifeChangingStack: number;
-  gonnaStack: number;
+  gonnaMakeItStack: number;
   retirementStack: number;
   bloodlineStack: number;
 }
@@ -44,7 +47,7 @@ const levels: Level[] = [
         price: 1,
         lamboStack: 2000,
         lifeChangingStack: 5000,
-        gonnaStack: 25000,
+        gonnaMakeItStack: 25000,
         retirementStack: 100000,
         bloodlineStack: 1000000,
       },
@@ -52,7 +55,7 @@ const levels: Level[] = [
         price: 2,
         lamboStack: 4000,
         lifeChangingStack: 10000,
-        gonnaStack: 50000,
+        gonnaMakeItStack: 50000,
         retirementStack: 200000,
         bloodlineStack: 2000000,
       },
@@ -60,7 +63,7 @@ const levels: Level[] = [
         price: 2.5,
         lamboStack: 5000,
         lifeChangingStack: 12500,
-        gonnaStack: 62500,
+        gonnaMakeItStack: 62500,
         retirementStack: 250000,
         bloodlineStack: 2500000,
       },
@@ -68,7 +71,7 @@ const levels: Level[] = [
         price: 3,
         lamboStack: 6000,
         lifeChangingStack: 15000,
-        gonnaStack: 75000,
+        gonnaMakeItStack: 75000,
         retirementStack: 300000,
         bloodlineStack: 3000000,
       },
@@ -80,10 +83,18 @@ const levels: Level[] = [
     src: '/images/salt/disbelief.png',
     prices: [
       {
+        price: 4,
+        lamboStack: 8000,
+        lifeChangingStack: 20000,
+        gonnaMakeItStack: 100000,
+        retirementStack: 400000,
+        bloodlineStack: 4000000,
+      },
+      {
         price: 5,
         lamboStack: 10000,
         lifeChangingStack: 25000,
-        gonnaStack: 125000,
+        gonnaMakeItStack: 125000,
         retirementStack: 500000,
         bloodlineStack: 5000000,
       },
@@ -91,7 +102,7 @@ const levels: Level[] = [
         price: 6,
         lamboStack: 12000,
         lifeChangingStack: 30000,
-        gonnaStack: 150000,
+        gonnaMakeItStack: 150000,
         retirementStack: 600000,
         bloodlineStack: 6000000,
       },
@@ -99,17 +110,9 @@ const levels: Level[] = [
         price: 7,
         lamboStack: 14000,
         lifeChangingStack: 35000,
-        gonnaStack: 175000,
+        gonnaMakeItStack: 175000,
         retirementStack: 700000,
         bloodlineStack: 7000000,
-      },
-      {
-        price: 8,
-        lamboStack: 16000,
-        lifeChangingStack: 40000,
-        gonnaStack: 200000,
-        retirementStack: 800000,
-        bloodlineStack: 8000000,
       },
     ],
   },
@@ -119,10 +122,26 @@ const levels: Level[] = [
     src: '/images/salt/panic.png',
     prices: [
       {
+        price: 8,
+        lamboStack: 16000,
+        lifeChangingStack: 40000,
+        gonnaMakeItStack: 200000,
+        retirementStack: 800000,
+        bloodlineStack: 8000000,
+      },
+      {
+        price: 9,
+        lamboStack: 18000,
+        lifeChangingStack: 45000,
+        gonnaMakeItStack: 225000,
+        retirementStack: 900000,
+        bloodlineStack: 9000000,
+      },
+      {
         price: 10,
         lamboStack: 20000,
         lifeChangingStack: 50000,
-        gonnaStack: 250000,
+        gonnaMakeItStack: 250000,
         retirementStack: 1000000,
         bloodlineStack: 10000000,
       },
@@ -130,17 +149,9 @@ const levels: Level[] = [
         price: 15,
         lamboStack: 30000,
         lifeChangingStack: 75000,
-        gonnaStack: 375000,
+        gonnaMakeItStack: 375000,
         retirementStack: 1500000,
         bloodlineStack: 15000000,
-      },
-      {
-        price: 20,
-        lamboStack: 40000,
-        lifeChangingStack: 100000,
-        gonnaStack: 500000,
-        retirementStack: 2000000,
-        bloodlineStack: 20000000,
       },
     ],
   },
@@ -150,10 +161,18 @@ const levels: Level[] = [
     src: '/images/salt/despair.png',
     prices: [
       {
+        price: 20,
+        lamboStack: 40000,
+        lifeChangingStack: 100000,
+        gonnaMakeItStack: 500000,
+        retirementStack: 2000000,
+        bloodlineStack: 20000000,
+      },
+      {
         price: 30,
         lamboStack: 60000,
         lifeChangingStack: 150000,
-        gonnaStack: 750000,
+        gonnaMakeItStack: 750000,
         retirementStack: 3000000,
         bloodlineStack: 30000000,
       },
@@ -161,7 +180,7 @@ const levels: Level[] = [
         price: 40,
         lamboStack: 80000,
         lifeChangingStack: 200000,
-        gonnaStack: 1000000,
+        gonnaMakeItStack: 1000000,
         retirementStack: 4000000,
         bloodlineStack: 40000000,
       },
@@ -169,7 +188,7 @@ const levels: Level[] = [
         price: 50,
         lamboStack: 100000,
         lifeChangingStack: 250000,
-        gonnaStack: 1250000,
+        gonnaMakeItStack: 1250000,
         retirementStack: 5000000,
         bloodlineStack: 50000000,
       },
@@ -184,7 +203,7 @@ const levels: Level[] = [
         price: 60,
         lamboStack: 120000,
         lifeChangingStack: 300000,
-        gonnaStack: 1500000,
+        gonnaMakeItStack: 1500000,
         retirementStack: 6000000,
         bloodlineStack: 60000000,
       },
@@ -192,7 +211,7 @@ const levels: Level[] = [
         price: 70,
         lamboStack: 140000,
         lifeChangingStack: 350000,
-        gonnaStack: 1750000,
+        gonnaMakeItStack: 1750000,
         retirementStack: 7000000,
         bloodlineStack: 70000000,
       },
@@ -200,7 +219,7 @@ const levels: Level[] = [
         price: 80,
         lamboStack: 160000,
         lifeChangingStack: 400000,
-        gonnaStack: 2000000,
+        gonnaMakeItStack: 2000000,
         retirementStack: 8000000,
         bloodlineStack: 80000000,
       },
@@ -208,7 +227,7 @@ const levels: Level[] = [
         price: 100,
         lamboStack: 200000,
         lifeChangingStack: 500000,
-        gonnaStack: 2500000,
+        gonnaMakeItStack: 2500000,
         retirementStack: 10000000,
         bloodlineStack: 100000000,
       },
@@ -239,7 +258,37 @@ const getPriceColor = (
   }
 };
 
-const Table: FC = () => {
+interface CellProps {
+  hypePrice: number;
+  value: number;
+  children: ReactNode;
+}
+
+const StrikeThroughTableCell: FC<CellProps> = ({
+  value,
+  hypePrice,
+  children,
+}) => {
+  const isCrossed = hypePrice > value;
+
+  return (
+    <td
+      className={classNames(
+        'relative whitespace-nowrap px-3 py-1 text-sm',
+        isCrossed ? 'text-gray-500' : 'text-gray-900',
+      )}
+    >
+      {children}
+      {isCrossed && (
+        <div className='absolute inset-0'>
+          <div className='absolute top-1/2 left-0 right-0 h-0.5 bg-red-400' />
+        </div>
+      )}
+    </td>
+  );
+};
+
+const Table: FC<{ hypePrice: number }> = ({ hypePrice }) => {
   const maxPrices = Math.max(...levels.map((level) => level.prices.length));
 
   return (
@@ -312,7 +361,7 @@ const Table: FC = () => {
                   >
                     <div className='flex items-center'>
                       <div className='size-11 shrink-0'>
-                        <img
+                        <Image
                           src={level.src}
                           width={315}
                           height={350}
@@ -331,28 +380,46 @@ const Table: FC = () => {
                     </div>
                   </td>
                 )}
-                <td className='whitespace-nowrap px-3 py-1 text-sm text-gray-900'>
+                <StrikeThroughTableCell
+                  hypePrice={hypePrice}
+                  value={price.price}
+                >
                   <span
                     className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset ${getPriceColor(levelIndex, priceIndex, levels.length, maxPrices)}`}
                   >
                     ${price.price.toFixed(2)}
                   </span>
-                </td>
-                <td className='whitespace-nowrap px-3 py-1 text-sm text-gray-900'>
+                </StrikeThroughTableCell>
+                <StrikeThroughTableCell
+                  hypePrice={hypePrice}
+                  value={price.price}
+                >
                   {formatCurrency(price.lamboStack)}
-                </td>
-                <td className='whitespace-nowrap px-3 py-1 text-sm text-gray-900'>
+                </StrikeThroughTableCell>
+                <StrikeThroughTableCell
+                  hypePrice={hypePrice}
+                  value={price.price}
+                >
                   {formatCurrency(price.lifeChangingStack)}
-                </td>
-                <td className='whitespace-nowrap px-3 py-1 text-sm text-gray-900'>
-                  {formatCurrency(price.gonnaStack)}
-                </td>
-                <td className='whitespace-nowrap px-3 py-1 text-sm text-gray-900'>
+                </StrikeThroughTableCell>
+                <StrikeThroughTableCell
+                  hypePrice={hypePrice}
+                  value={price.price}
+                >
+                  {formatCurrency(price.gonnaMakeItStack)}
+                </StrikeThroughTableCell>
+                <StrikeThroughTableCell
+                  hypePrice={hypePrice}
+                  value={price.price}
+                >
                   {formatCurrency(price.retirementStack)}
-                </td>
-                <td className='whitespace-nowrap px-3 py-1 text-sm text-gray-900'>
+                </StrikeThroughTableCell>
+                <StrikeThroughTableCell
+                  hypePrice={hypePrice}
+                  value={price.price}
+                >
                   {formatCurrency(price.bloodlineStack)}
-                </td>
+                </StrikeThroughTableCell>
               </tr>
             )),
           )}
@@ -365,9 +432,10 @@ const Table: FC = () => {
 interface Props {
   open: boolean;
   closeModal: () => void;
+  hypePrice: number;
 }
 
-const Modal: FC<Props> = ({ open, closeModal }) => {
+const Modal: FC<Props> = ({ open, closeModal, hypePrice }) => {
   const ref = useRef<HTMLDivElement>(null);
 
   const downloadImage = useCallback(
@@ -427,11 +495,23 @@ const Modal: FC<Props> = ({ open, closeModal }) => {
                   HYPE Salt Sheet
                 </DialogTitle>
                 <div className='mt-2 overflow-x-auto'>
-                  <Table />
+                  <Table hypePrice={hypePrice} />
+                  <div className='flex justify-end items-center text-hl-primary text-right mt-3'>
+                    <div className='w-4 inline-block mr-1'>
+                      <Image
+                        src='/images/fire.svg'
+                        width={64}
+                        height={64}
+                        priority
+                        alt='HYPE'
+                      />
+                    </div>
+                    <span className='font-bold'>hypeburn.fun</span>
+                  </div>
                 </div>
               </div>
             </div>
-            <div className='mt-5 sm:mt-4 flex justify-center'>
+            <div className='flex justify-center'>
               <button
                 onClick={downloadImage}
                 className='inline-flex items-center bg-hl-primary text-sm px-4 py-3 hover:bg-accent transition-all rounded-md'
