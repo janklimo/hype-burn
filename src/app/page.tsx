@@ -9,6 +9,7 @@ import DidYouKnow from '@/components/DidYouKnow';
 import Disclaimer from '@/components/Disclaimer';
 import Headline from '@/components/Headline';
 import Peers from '@/components/Peers';
+import SaltSheet from '@/components/SaltSheet';
 import Stats from '@/components/Stats';
 import TradeCallout from '@/components/TradeCallout';
 
@@ -34,8 +35,11 @@ export default function HomePage() {
           <div className='mb-6 w-full sm:w-3/4'>
             <Stats data={data} tokenInfo={tokenInfo} />
           </div>
-          <div className='mt-4 mb-6 w-full'>
+          <div className='my-4 w-full'>
             <DidYouKnow data={data} tokenInfo={tokenInfo} />
+          </div>
+          <div className='mt-4 mb-6 w-full'>
+            <SaltSheet />
           </div>
           <div className='my-4 w-full'>
             <Peers data={data} />

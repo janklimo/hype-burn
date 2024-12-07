@@ -55,7 +55,7 @@ const Stats: FC<Props> = ({ data, tokenInfo }) => {
   const circulatingSupply = parseFloat(tokenInfo.circulatingSupply);
 
   return (
-    <div className='bg-hl-light p-2 mt-4 text-hlGray'>
+    <div className='bg-hl-light isolate p-2 mt-4 text-hlGray'>
       <Marquee pauseOnHover gradient gradientColor='#163832' gradientWidth={18}>
         {/* Burnt from trading */}
         <p className='text-hlGray text-sm mr-3'>Burn from trading fees:</p>
