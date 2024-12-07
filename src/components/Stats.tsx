@@ -53,6 +53,7 @@ const Stats: FC<Props> = ({ data, tokenInfo }) => {
   const previousDayPrice = parseFloat(data.prevDayPx);
   const volume = parseFloat(data.dayNtlVlm);
   const circulatingSupply = parseFloat(tokenInfo.circulatingSupply);
+  const totalSupply = parseFloat(tokenInfo.totalSupply);
 
   return (
     <div className='bg-hl-light isolate p-2 mt-4 text-hlGray'>
@@ -89,6 +90,16 @@ const Stats: FC<Props> = ({ data, tokenInfo }) => {
         <p className='text-hlGray text-sm mr-3'>Market cap:</p>
         <p className='text-accent text-sm font-mono'>
           {(markPrice * circulatingSupply).toLocaleString('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            maximumFractionDigits: 0,
+          })}
+        </p>
+        <p className='text-gray-500 mx-3'>/</p>
+        {/* FDV */}
+        <p className='text-hlGray text-sm mr-3'>Fully diluted valuation:</p>
+        <p className='text-accent text-sm font-mono'>
+          {(markPrice * totalSupply).toLocaleString('en-US', {
             style: 'currency',
             currency: 'USD',
             maximumFractionDigits: 0,

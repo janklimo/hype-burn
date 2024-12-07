@@ -4,17 +4,19 @@ import HypeCard from '@/components/HypeCard';
 import PeerCard from '@/components/PeerCard';
 import Skeleton from '@/components/Skeleton';
 
-import useWebSocketData from '@/app/hooks/use-websocket-data';
+import useHypeData from '@/app/hooks/use-hype-data';
+import useTokenInfo from '@/app/hooks/use-token-info';
 import { apiHost } from '@/constant/config';
 import { pointToHypeRatio } from '@/constant/constants';
 
 import { PeersData } from '@/types/responses';
 
 interface Props {
-  data: ReturnType<typeof useWebSocketData>;
+  data: ReturnType<typeof useHypeData>;
+  tokenInfo: ReturnType<typeof useTokenInfo>['tokenInfo'];
 }
 
-const Peers: FC<Props> = ({ data }) => {
+const Peers: FC<Props> = ({ data, tokenInfo }) => {
   const [coins, setCoins] = useState<PeersData>([]);
 
   useEffect(() => {
@@ -26,11 +28,12 @@ const Peers: FC<Props> = ({ data }) => {
       .catch(() => console.error('Failed to fetch peer coins.'));
   }, []);
 
-  if (!data || !coins.length) return <Skeleton className='flex w-full h-40' />;
+  if (!data || !coins.length || !tokenInfo)
+    return <Skeleton className='flex w-full h-40' />;
 
   const markPrice = parseFloat(data.markPx);
-  const supply = parseFloat(data.circulatingSupply);
-  const purrMarketCap = markPrice * supply;
+  const totalSupply = parseFloat(tokenInfo.totalSupply);
+  const hypeMarketCap = markPrice * totalSupply;
   const pointValue = markPrice * pointToHypeRatio;
 
   return (
@@ -48,10 +51,10 @@ const Peers: FC<Props> = ({ data }) => {
             : coin.image_url;
           const price = isAdair
             ? 800 / pointToHypeRatio
-            : coin.market_cap / supply;
+            : coin.fdv / totalSupply;
           const multiple = isAdair
             ? 800 / pointValue
-            : coin.market_cap / purrMarketCap;
+            : coin.fdv / hypeMarketCap;
 
           return (
             <PeerCard
