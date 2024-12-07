@@ -8,7 +8,6 @@ import {
 } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { toPng } from 'html-to-image';
-import Image from 'next/image';
 import { FC, useCallback, useRef } from 'react';
 
 interface Props {
@@ -19,41 +18,41 @@ interface Props {
 const levels = [
   {
     name: 'Smugness',
+    description: 'ez money, will sell now and rebuy lower after whales dump',
     title: 'Front-end Developer',
     department: 'Optimization',
-    email: 'lindsay.walton@example.com',
     role: 'Member',
     src: '/images/salt/smugness.png',
   },
   {
     name: 'Disbelief',
+    description: 'wtf, why is the price not dumping yet??',
     title: 'Front-end Developer',
     department: 'Optimization',
-    email: 'lindsay.walton@example.com',
     role: 'Member',
     src: '/images/salt/disbelief.png',
   },
   {
     name: 'Panic',
+    description: 'WHY IS IT STILL GOING UP?????',
     title: 'Front-end Developer',
     department: 'Optimization',
-    email: 'lindsay.walton@example.com',
     role: 'Member',
     src: '/images/salt/panic.png',
   },
   {
     name: 'Despair',
+    description: 'OH GOD OH NO OH NO',
     title: 'Front-end Developer',
     department: 'Optimization',
-    email: 'lindsay.walton@example.com',
     role: 'Member',
     src: '/images/salt/despair.png',
   },
   {
     name: 'Doom',
+    description: 'WTF DID I DO',
     title: 'Front-end Developer',
     department: 'Optimization',
-    email: 'lindsay.walton@example.com',
     role: 'Member',
     src: '/images/salt/doom.png',
   },
@@ -62,24 +61,24 @@ const levels = [
 function Example() {
   return (
     <div className='w-full overflow-x-auto'>
-      <table className='min-w-full divide-y divide-gray-300'>
+      <table className='w-full table-fixed divide-y divide-gray-300'>
         <thead>
           <tr>
             <th
               scope='col'
-              className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0'
+              className='py-3.5 w-80 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0'
             >
               Level
             </th>
             <th
               scope='col'
-              className='px-3 py-3.5 text-left text-sm font-semibold text-gray-900'
+              className='px-3 py-3.5 w-48 text-left text-sm font-semibold text-gray-900'
             >
               HYPE Price
             </th>
             <th
               scope='col'
-              className='px-3 py-3.5 text-left text-sm font-semibold text-gray-900'
+              className='px-3 py-3.5 w-48 text-left text-sm font-semibold text-gray-900'
             >
               Lambo Stack <br /> (2,000 HYPE)
             </th>
@@ -111,11 +110,11 @@ function Example() {
         </thead>
         <tbody className='divide-y divide-gray-200 bg-white'>
           {levels.map((level) => (
-            <tr key={level.email}>
-              <td className='whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-0'>
+            <tr key={level.src}>
+              <td className='py-5 pl-4 pr-3 text-sm sm:pl-0'>
                 <div className='flex items-center'>
                   <div className='size-11 shrink-0'>
-                    <Image
+                    <img
                       src={level.src}
                       width={315}
                       height={350}
@@ -126,7 +125,9 @@ function Example() {
                     <div className='font-medium text-gray-900'>
                       {level.name}
                     </div>
-                    <div className='mt-1 text-gray-500'>{level.email}</div>
+                    <div className='mt-1 text-sm text-gray-500'>
+                      {level.description}
+                    </div>
                   </div>
                 </div>
               </td>
@@ -162,7 +163,7 @@ const Modal: FC<Props> = ({ open, closeModal }) => {
         return;
       }
 
-      toPng(ref.current)
+      toPng(ref.current, { cacheBust: true, includeQueryParams: true })
         .then((dataUrl) => {
           const link = document.createElement('a');
           link.download = 'hype-salt-sheet.png';
@@ -215,13 +216,12 @@ const Modal: FC<Props> = ({ open, closeModal }) => {
                 </div>
               </div>
             </div>
-            <div className='mt-5 sm:mt-4 sm:flex sm:flex-row-reverse'>
+            <div className='mt-5 sm:mt-4 flex justify-center'>
               <button
-                type='button'
                 onClick={downloadImage}
-                className='mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto'
+                className='inline-flex items-center bg-hl-primary text-sm px-4 py-3 hover:bg-accent transition-all rounded-md'
               >
-                Cancel
+                Download
               </button>
             </div>
           </DialogPanel>
