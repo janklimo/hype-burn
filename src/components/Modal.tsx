@@ -216,7 +216,32 @@ const levels: Level[] = [
   },
 ];
 
+const getPriceColor = (
+  levelIndex: number,
+  priceIndex: number,
+  totalLevels: number,
+  totalPrices: number,
+) => {
+  // Calculate overall progress through all levels and prices
+  const progress =
+    (levelIndex * totalPrices + priceIndex) / (totalLevels * totalPrices);
+
+  if (progress < 0.2) {
+    return 'bg-green-50 text-green-700 ring-green-600/20';
+  } else if (progress < 0.4) {
+    return 'bg-yellow-50 text-yellow-700 ring-yellow-600/20';
+  } else if (progress < 0.6) {
+    return 'bg-orange-50 text-orange-700 ring-orange-600/20';
+  } else if (progress < 0.8) {
+    return 'bg-rose-50 text-rose-700 ring-rose-600/20';
+  } else {
+    return 'bg-red-50 text-red-700 ring-red-600/20';
+  }
+};
+
 const Table: FC = () => {
+  const maxPrices = Math.max(...levels.map((level) => level.prices.length));
+
   return (
     <div className='w-full overflow-x-auto'>
       <table className='w-full table-fixed divide-y divide-gray-300'>
@@ -277,7 +302,7 @@ const Table: FC = () => {
           </tr>
         </thead>
         <tbody className='divide-y divide-gray-200 bg-white'>
-          {levels.flatMap((level) =>
+          {levels.flatMap((level, levelIndex) =>
             level.prices.map((price, priceIndex) => (
               <tr key={`${level.name}-${price.price}`}>
                 {priceIndex === 0 && (
@@ -307,7 +332,9 @@ const Table: FC = () => {
                   </td>
                 )}
                 <td className='whitespace-nowrap px-3 py-1 text-sm text-gray-900'>
-                  <span className='inline-flex items-center rounded-md bg-pink-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-pink-600/20'>
+                  <span
+                    className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset ${getPriceColor(levelIndex, priceIndex, levels.length, maxPrices)}`}
+                  >
                     ${price.price.toFixed(2)}
                   </span>
                 </td>
