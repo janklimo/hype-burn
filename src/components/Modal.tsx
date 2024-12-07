@@ -10,55 +10,213 @@ import { XMarkIcon } from '@heroicons/react/24/outline';
 import { toPng } from 'html-to-image';
 import { FC, useCallback, useRef } from 'react';
 
-interface Props {
-  open: boolean;
-  closeModal: () => void;
+interface PriceLevel {
+  price: number;
+  lamboStack: number;
+  lifeChangingStack: number;
+  gonnaStack: number;
+  retirementStack: number;
+  bloodlineStack: number;
 }
 
-const levels = [
+interface Level {
+  name: string;
+  description: string;
+  src: string;
+  prices: PriceLevel[];
+}
+
+const formatCurrency = (amount: number) => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    maximumFractionDigits: 0,
+  }).format(amount);
+};
+
+const levels: Level[] = [
   {
     name: 'Smugness',
     description: 'ez money, will sell now and rebuy lower after whales dump',
-    title: 'Front-end Developer',
-    department: 'Optimization',
-    role: 'Member',
     src: '/images/salt/smugness.png',
+    prices: [
+      {
+        price: 1,
+        lamboStack: 2000,
+        lifeChangingStack: 5000,
+        gonnaStack: 25000,
+        retirementStack: 100000,
+        bloodlineStack: 1000000,
+      },
+      {
+        price: 2,
+        lamboStack: 4000,
+        lifeChangingStack: 10000,
+        gonnaStack: 50000,
+        retirementStack: 200000,
+        bloodlineStack: 2000000,
+      },
+      {
+        price: 2.5,
+        lamboStack: 5000,
+        lifeChangingStack: 12500,
+        gonnaStack: 62500,
+        retirementStack: 250000,
+        bloodlineStack: 2500000,
+      },
+      {
+        price: 3,
+        lamboStack: 6000,
+        lifeChangingStack: 15000,
+        gonnaStack: 75000,
+        retirementStack: 300000,
+        bloodlineStack: 3000000,
+      },
+    ],
   },
   {
     name: 'Disbelief',
     description: 'wtf, why is the price not dumping yet??',
-    title: 'Front-end Developer',
-    department: 'Optimization',
-    role: 'Member',
     src: '/images/salt/disbelief.png',
+    prices: [
+      {
+        price: 5,
+        lamboStack: 10000,
+        lifeChangingStack: 25000,
+        gonnaStack: 125000,
+        retirementStack: 500000,
+        bloodlineStack: 5000000,
+      },
+      {
+        price: 6,
+        lamboStack: 12000,
+        lifeChangingStack: 30000,
+        gonnaStack: 150000,
+        retirementStack: 600000,
+        bloodlineStack: 6000000,
+      },
+      {
+        price: 7,
+        lamboStack: 14000,
+        lifeChangingStack: 35000,
+        gonnaStack: 175000,
+        retirementStack: 700000,
+        bloodlineStack: 7000000,
+      },
+      {
+        price: 8,
+        lamboStack: 16000,
+        lifeChangingStack: 40000,
+        gonnaStack: 200000,
+        retirementStack: 800000,
+        bloodlineStack: 8000000,
+      },
+    ],
   },
   {
     name: 'Panic',
     description: 'WHY IS IT STILL GOING UP?????',
-    title: 'Front-end Developer',
-    department: 'Optimization',
-    role: 'Member',
     src: '/images/salt/panic.png',
+    prices: [
+      {
+        price: 10,
+        lamboStack: 20000,
+        lifeChangingStack: 50000,
+        gonnaStack: 250000,
+        retirementStack: 1000000,
+        bloodlineStack: 10000000,
+      },
+      {
+        price: 15,
+        lamboStack: 30000,
+        lifeChangingStack: 75000,
+        gonnaStack: 375000,
+        retirementStack: 1500000,
+        bloodlineStack: 15000000,
+      },
+      {
+        price: 20,
+        lamboStack: 40000,
+        lifeChangingStack: 100000,
+        gonnaStack: 500000,
+        retirementStack: 2000000,
+        bloodlineStack: 20000000,
+      },
+    ],
   },
   {
     name: 'Despair',
     description: 'OH GOD OH NO OH NO',
-    title: 'Front-end Developer',
-    department: 'Optimization',
-    role: 'Member',
     src: '/images/salt/despair.png',
+    prices: [
+      {
+        price: 30,
+        lamboStack: 60000,
+        lifeChangingStack: 150000,
+        gonnaStack: 750000,
+        retirementStack: 3000000,
+        bloodlineStack: 30000000,
+      },
+      {
+        price: 40,
+        lamboStack: 80000,
+        lifeChangingStack: 200000,
+        gonnaStack: 1000000,
+        retirementStack: 4000000,
+        bloodlineStack: 40000000,
+      },
+      {
+        price: 50,
+        lamboStack: 100000,
+        lifeChangingStack: 250000,
+        gonnaStack: 1250000,
+        retirementStack: 5000000,
+        bloodlineStack: 50000000,
+      },
+    ],
   },
   {
     name: 'Doom',
     description: 'WTF DID I DO',
-    title: 'Front-end Developer',
-    department: 'Optimization',
-    role: 'Member',
     src: '/images/salt/doom.png',
+    prices: [
+      {
+        price: 60,
+        lamboStack: 120000,
+        lifeChangingStack: 300000,
+        gonnaStack: 1500000,
+        retirementStack: 6000000,
+        bloodlineStack: 60000000,
+      },
+      {
+        price: 70,
+        lamboStack: 140000,
+        lifeChangingStack: 350000,
+        gonnaStack: 1750000,
+        retirementStack: 7000000,
+        bloodlineStack: 70000000,
+      },
+      {
+        price: 80,
+        lamboStack: 160000,
+        lifeChangingStack: 400000,
+        gonnaStack: 2000000,
+        retirementStack: 8000000,
+        bloodlineStack: 80000000,
+      },
+      {
+        price: 100,
+        lamboStack: 200000,
+        lifeChangingStack: 500000,
+        gonnaStack: 2500000,
+        retirementStack: 10000000,
+        bloodlineStack: 100000000,
+      },
+    ],
   },
 ];
 
-function Example() {
+const Table: FC = () => {
   return (
     <div className='w-full overflow-x-auto'>
       <table className='w-full table-fixed divide-y divide-gray-300'>
@@ -66,90 +224,118 @@ function Example() {
           <tr>
             <th
               scope='col'
-              className='py-3.5 w-80 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0'
+              className='w-72 py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0'
             >
               Level
             </th>
             <th
               scope='col'
-              className='px-3 py-3.5 w-48 text-left text-sm font-semibold text-gray-900'
+              className='w-32 whitespace-nowrap px-3 py-3.5 text-left text-sm font-semibold text-gray-900'
             >
               HYPE Price
             </th>
             <th
               scope='col'
-              className='px-3 py-3.5 w-48 text-left text-sm font-semibold text-gray-900'
+              className='whitespace-nowrap px-3 py-3.5 text-left text-sm font-semibold text-gray-900'
             >
-              Lambo Stack <br /> (2,000 HYPE)
+              Lambo Stack
+              <br />
+              (2,000 HYPE)
             </th>
             <th
               scope='col'
-              className='px-3 py-3.5 text-left text-sm font-semibold text-gray-900'
+              className='whitespace-nowrap px-3 py-3.5 text-left text-sm font-semibold text-gray-900'
             >
-              Life Changing Money Stack <br /> (5,000 HYPE)
+              Life Changing Money Stack
+              <br />
+              (5,000 HYPE)
             </th>
             <th
               scope='col'
-              className='px-3 py-3.5 text-left text-sm font-semibold text-gray-900'
+              className='whitespace-nowrap px-3 py-3.5 text-left text-sm font-semibold text-gray-900'
             >
-              Gonna Make It Stack <br /> (25,000 HYPE)
+              Gonna Make It Stack
+              <br />
+              (25,000 HYPE)
             </th>
             <th
               scope='col'
-              className='px-3 py-3.5 text-left text-sm font-semibold text-gray-900'
+              className='whitespace-nowrap px-3 py-3.5 text-left text-sm font-semibold text-gray-900'
             >
-              Retirement Stack <br /> (100,000 HYPE)
+              Retirement Stack
+              <br />
+              (100,000 HYPE)
             </th>
             <th
               scope='col'
-              className='px-3 py-3.5 text-left text-sm font-semibold text-gray-900'
+              className='whitespace-nowrap px-3 py-3.5 text-left text-sm font-semibold text-gray-900'
             >
-              Retire Your Bloodline Stack <br /> (1,000,000 HYPE)
+              Retire Your Bloodline Stack
+              <br />
+              (1,000,000 HYPE)
             </th>
           </tr>
         </thead>
         <tbody className='divide-y divide-gray-200 bg-white'>
-          {levels.map((level) => (
-            <tr key={level.src}>
-              <td className='py-5 pl-4 pr-3 text-sm sm:pl-0'>
-                <div className='flex items-center'>
-                  <div className='size-11 shrink-0'>
-                    <img
-                      src={level.src}
-                      width={315}
-                      height={350}
-                      alt='Smugness'
-                    />
-                  </div>
-                  <div className='ml-4'>
-                    <div className='font-medium text-gray-900'>
-                      {level.name}
+          {levels.flatMap((level) =>
+            level.prices.map((price, priceIndex) => (
+              <tr key={`${level.name}-${price.price}`}>
+                {priceIndex === 0 && (
+                  <td
+                    className='py-5 pl-4 pr-3 text-sm sm:pl-0'
+                    rowSpan={level.prices.length}
+                  >
+                    <div className='flex items-center'>
+                      <div className='size-11 shrink-0'>
+                        <img
+                          src={level.src}
+                          width={315}
+                          height={350}
+                          alt={level.name}
+                          className='size-11'
+                        />
+                      </div>
+                      <div className='ml-4'>
+                        <div className='font-medium text-gray-900'>
+                          {level.name}
+                        </div>
+                        <div className='mt-1 text-sm text-gray-500'>
+                          {level.description}
+                        </div>
+                      </div>
                     </div>
-                    <div className='mt-1 text-sm text-gray-500'>
-                      {level.description}
-                    </div>
-                  </div>
-                </div>
-              </td>
-              <td className='whitespace-nowrap px-3 py-5 text-sm text-gray-500'>
-                <div className='text-gray-900'>{level.title}</div>
-                <div className='mt-1 text-gray-500'>{level.department}</div>
-              </td>
-              <td className='whitespace-nowrap px-3 py-5 text-sm text-gray-500'>
-                <span className='inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20'>
-                  Active
-                </span>
-              </td>
-              <td className='whitespace-nowrap px-3 py-5 text-sm text-gray-500'>
-                {level.role}
-              </td>
-              <td className='relative whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium sm:pr-0'></td>
-            </tr>
-          ))}
+                  </td>
+                )}
+                <td className='whitespace-nowrap px-3 py-1 text-sm text-gray-900'>
+                  ${price.price.toFixed(2)}
+                </td>
+                <td className='whitespace-nowrap px-3 py-1 text-sm text-gray-900'>
+                  {formatCurrency(price.lamboStack)}
+                </td>
+                <td className='whitespace-nowrap px-3 py-1 text-sm text-gray-900'>
+                  {formatCurrency(price.lifeChangingStack)}
+                </td>
+                <td className='whitespace-nowrap px-3 py-1 text-sm text-gray-900'>
+                  {formatCurrency(price.gonnaStack)}
+                </td>
+                <td className='whitespace-nowrap px-3 py-1 text-sm text-gray-900'>
+                  {formatCurrency(price.retirementStack)}
+                </td>
+                <td className='whitespace-nowrap px-3 py-1 text-sm text-gray-900'>
+                  {formatCurrency(price.bloodlineStack)}
+                </td>
+              </tr>
+            )),
+          )}
         </tbody>
       </table>
     </div>
   );
+};
+
+interface Props {
+  open: boolean;
+  closeModal: () => void;
 }
 
 const Modal: FC<Props> = ({ open, closeModal }) => {
@@ -212,7 +398,7 @@ const Modal: FC<Props> = ({ open, closeModal }) => {
                   HYPE Salt Sheet
                 </DialogTitle>
                 <div className='mt-2 overflow-x-auto'>
-                  <Example />
+                  <Table />
                 </div>
               </div>
             </div>
