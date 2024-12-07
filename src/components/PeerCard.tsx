@@ -46,7 +46,7 @@ const PeerCard: FC<Props> = ({ symbol, price, multiple, url, image_url }) => {
       <p className='text-hlGray mr-2'>{symbol}:</p>
       <p
         className={clsx(
-          multiple >= 1 ? 'text-accent' : 'text-red',
+          multiple >= 1 ? 'text-accent' : 'text-hl-red',
           'font-bold',
         )}
       >
@@ -60,7 +60,7 @@ const PeerCard: FC<Props> = ({ symbol, price, multiple, url, image_url }) => {
       <p className='text-gray-500 mx-2'>/</p>
       <p
         className={clsx(
-          multiple >= 1 ? 'text-accent' : 'text-red',
+          multiple >= 1 ? 'text-accent' : 'text-hl-red',
           'font-bold',
         )}
       >

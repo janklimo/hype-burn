@@ -26,7 +26,7 @@ const PriceChange: FC<{ change: number }> = ({ change }) => {
     const percent = 1 - change;
 
     return (
-      <span className='text-red'>
+      <span className='text-hl-red'>
         {downArrow}{' '}
         {percent.toLocaleString(undefined, {
           style: 'percent',

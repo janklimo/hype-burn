@@ -307,7 +307,9 @@ const Table: FC = () => {
                   </td>
                 )}
                 <td className='whitespace-nowrap px-3 py-1 text-sm text-gray-900'>
-                  ${price.price.toFixed(2)}
+                  <span className='inline-flex items-center rounded-md bg-pink-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-pink-600/20'>
+                    ${price.price.toFixed(2)}
+                  </span>
                 </td>
                 <td className='whitespace-nowrap px-3 py-1 text-sm text-gray-900'>
                   {formatCurrency(price.lamboStack)}
