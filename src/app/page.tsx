@@ -23,7 +23,7 @@ export default function HomePage() {
   return (
     <main>
       <Head>
-        <title>HYPE Burn</title>
+        <title>HYPE Burn Dashboard - Live Token Metrics & Market Data 🔥</title>
       </Head>
       <section className='bg-hl-dark'>
         <div className='layout relative flex min-h-screen flex-col items-center justify-center py-4 text-center'>

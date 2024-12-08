@@ -1,5 +1,5 @@
 export const siteConfig = {
-  title: 'HYPE Burn 🔥',
+  title: 'HYPE Burn - Live Token Metrics & Market Data 🔥',
   description: 'Track HYPE stats in real time',
   url: 'https://hypeburn.fun',
 };
