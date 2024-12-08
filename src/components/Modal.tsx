@@ -8,10 +8,10 @@ import {
 } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { toPng } from 'html-to-image';
+import Image from 'next/image';
 import { FC, ReactNode, useCallback, useRef } from 'react';
 
 import { classNames } from '@/lib/utils';
-import Image from 'next/image';
 
 interface PriceLevel {
   price: number;
@@ -360,17 +360,17 @@ const Table: FC<{ hypePrice: number }> = ({ hypePrice }) => {
                     rowSpan={level.prices.length}
                   >
                     <div className='flex items-center'>
-                      <div className='size-11 shrink-0'>
+                      <div className='size-16 shrink-0'>
                         <Image
                           src={level.src}
                           width={315}
                           height={350}
                           alt={level.name}
-                          className='size-11'
+                          className='size-16'
                         />
                       </div>
                       <div className='ml-4'>
-                        <div className='font-medium text-gray-900'>
+                        <div className='font-medium text-gray-900 text-lg'>
                           {level.name}
                         </div>
                         <div className='mt-1 text-sm text-gray-500'>
