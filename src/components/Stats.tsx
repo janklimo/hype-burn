@@ -5,6 +5,7 @@ import { downArrow, upArrow } from '@/lib/formatters';
 
 import Skeleton from '@/components/Skeleton';
 
+import { useAssistanceFundBalance } from '@/app/hooks/use-assistance-fund-balance';
 import useHypeData from '@/app/hooks/use-hype-data';
 import useTokenInfo from '@/app/hooks/use-token-info';
 
@@ -41,9 +42,12 @@ const PriceChange: FC<{ change: number }> = ({ change }) => {
 interface Props {
   data: ReturnType<typeof useHypeData>;
   tokenInfo: ReturnType<typeof useTokenInfo>['tokenInfo'];
+  assistanceFundBalance: ReturnType<
+    typeof useAssistanceFundBalance
+  >['assistanceFundBalance'];
 }
 
-const Stats: FC<Props> = ({ data, tokenInfo }) => {
+const Stats: FC<Props> = ({ data, tokenInfo, assistanceFundBalance }) => {
   if (!data || !tokenInfo)
     return <Skeleton className='h-96 w-80 md:h-[35rem] md:w-[70rem]' />;
 
@@ -62,6 +66,16 @@ const Stats: FC<Props> = ({ data, tokenInfo }) => {
         <p className='text-hlGray text-sm mr-3'>Burn from trading fees:</p>
         <p className='text-accent text-sm font-mono'>
           {burntAmount.toLocaleString(undefined, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}{' '}
+          HYPE
+        </p>
+        <p className='text-gray-500 mx-3'>/</p>
+        {/* Assistance fund balance */}
+        <p className='text-hlGray text-sm mr-3'>Assistance fund:</p>
+        <p className='text-accent text-sm font-mono'>
+          {assistanceFundBalance.toLocaleString(undefined, {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
           })}{' '}
@@ -97,7 +111,7 @@ const Stats: FC<Props> = ({ data, tokenInfo }) => {
         </p>
         <p className='text-gray-500 mx-3'>/</p>
         {/* FDV */}
-        <p className='text-hlGray text-sm mr-3'>Fully diluted valuation:</p>
+        <p className='text-hlGray text-sm mr-3'>FDV:</p>
         <p className='text-accent text-sm font-mono'>
           {(markPrice * totalSupply).toLocaleString('en-US', {
             style: 'currency',

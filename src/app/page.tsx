@@ -13,12 +13,14 @@ import SaltSheet from '@/components/SaltSheet';
 import Stats from '@/components/Stats';
 import TradeCallout from '@/components/TradeCallout';
 
+import { useAssistanceFundBalance } from '@/app/hooks/use-assistance-fund-balance';
 import useHypeData from '@/app/hooks/use-hype-data';
 import useTokenInfo from '@/app/hooks/use-token-info';
 
 export default function HomePage() {
   const data = useHypeData();
   const { tokenInfo } = useTokenInfo();
+  const { assistanceFundBalance } = useAssistanceFundBalance();
 
   return (
     <main>
@@ -29,11 +31,18 @@ export default function HomePage() {
         <div className='layout relative flex min-h-screen flex-col items-center justify-center py-4 text-center'>
           <Headline />
           <div className='mb-4 h-96 w-80 md:h-[35rem] md:w-[70rem] relative'>
-            <Chart tokenInfo={tokenInfo} />
+            <Chart
+              tokenInfo={tokenInfo}
+              assistanceFundBalance={assistanceFundBalance}
+            />
             <ChartInner tokenInfo={tokenInfo} />
           </div>
           <div className='mb-6 w-full sm:w-3/4'>
-            <Stats data={data} tokenInfo={tokenInfo} />
+            <Stats
+              data={data}
+              tokenInfo={tokenInfo}
+              assistanceFundBalance={assistanceFundBalance}
+            />
           </div>
           <div className='my-4 w-full'>
             <DidYouKnow data={data} tokenInfo={tokenInfo} />

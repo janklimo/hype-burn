@@ -13,8 +13,8 @@ import useTokenInfo from '@/app/hooks/use-token-info';
 
 const theme: AgChartTheme = {
   palette: {
-    fills: ['#98FCE4', '#f69318', '#163832'],
-    strokes: ['#98FCE4', '#f69318', '#163832'],
+    fills: ['#98FCE4', '#65b09a', '#f69318', '#163832'], // Added color for Assistance Fund
+    strokes: ['#98FCE4', '#65b09a', '#f69318', '#163832'],
   },
 };
 
@@ -27,9 +27,10 @@ const sumBalances = (balances: [string, string][]): number => {
 
 interface Props {
   tokenInfo: ReturnType<typeof useTokenInfo>['tokenInfo'];
+  assistanceFundBalance: number;
 }
 
-const Chart: FC<Props> = ({ tokenInfo }) => {
+const Chart: FC<Props> = ({ tokenInfo, assistanceFundBalance }) => {
   const { width } = useWindowSize();
   const isMobile = Number(width) <= 768;
 
@@ -47,24 +48,32 @@ const Chart: FC<Props> = ({ tokenInfo }) => {
   const minVisiblePercentage = 0.25;
   const minSegmentSize = (totalSupply * minVisiblePercentage) / 100;
 
+  const otherCirculatingSupply = circulatingSupply - assistanceFundBalance;
+
   const series = [
     {
-      asset: 'Circulating Supply',
-      amount: circulatingSupply,
+      asset: 'Other Circulating Supply',
+      amount: otherCirculatingSupply,
       radius: 1,
-      displayAmount: circulatingSupply, // Original amount for tooltip
+      displayAmount: otherCirculatingSupply,
+    },
+    {
+      asset: 'Assistance Fund',
+      amount: assistanceFundBalance,
+      radius: 1,
+      displayAmount: assistanceFundBalance,
     },
     {
       asset: 'Burn From Trading Fees',
-      amount: Math.max(burntAmount, minSegmentSize), // Ensure minimum visible size
-      radius: 1.4,
-      displayAmount: burntAmount, // Original amount for tooltip
+      amount: Math.max(burntAmount, minSegmentSize),
+      radius: 1,
+      displayAmount: burntAmount,
     },
     {
       asset: 'Non Circulating Supply',
       amount: nonCirculatingSupply,
       radius: 1,
-      displayAmount: nonCirculatingSupply, // Original amount for tooltip
+      displayAmount: nonCirculatingSupply,
     },
   ];
 
