@@ -93,6 +93,18 @@ const Chart: FC<Props> = ({ tokenInfo, assistanceFundBalance }) => {
         })} HYPE`,
       }),
     },
+    listeners: {
+      nodeClick: (event) => {
+        const { datum } = event;
+
+        if (datum.asset === 'Assistance Fund') {
+          window.open(
+            'https://hypurrscan.io/address/0xfefefefefefefefefefefefefefefefefefefefe',
+            '_blank',
+          );
+        }
+      },
+    },
   };
 
   const chartOptions: AgChartOptions = {
