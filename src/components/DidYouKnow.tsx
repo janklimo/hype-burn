@@ -60,7 +60,15 @@ const DidYouKnow: FC<Props> = ({ data, tokenInfo }) => {
               findFirstRankAboveBalance(leaderboardData.rows, burntAmount),
             )}
           </span>{' '}
-          largest holder worth{' '}
+          largest holder with{' '}
+          <span className='font-bold text-accent'>
+            {burntAmount.toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}{' '}
+            HYPE
+          </span>{' '}
+          worth{' '}
           <span className='font-bold text-accent'>
             {(markPrice * burntAmount).toLocaleString('en-US', {
               style: 'currency',
