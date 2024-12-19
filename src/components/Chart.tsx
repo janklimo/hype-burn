@@ -3,8 +3,10 @@ import {
   AgChartOptions,
   AgChartTheme,
   AgDonutSeriesOptions,
+  AgSeriesTooltipRendererParams,
 } from 'ag-charts-community';
 import { AgCharts } from 'ag-charts-react';
+import { Segment } from 'next/dist/server/app-render/types';
 import { FC } from 'react';
 
 import Skeleton from '@/components/Skeleton';
@@ -23,6 +25,24 @@ const sumBalances = (balances: [string, string][]): number => {
     const balance = parseFloat(balanceStr);
     return sum + balance;
   }, 0);
+};
+
+const tooltipContent = (
+  params: AgSeriesTooltipRendererParams<Segment>,
+): string => {
+  const value = params.datum.displayAmount;
+  const amount = `${value.toLocaleString('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })} HYPE`;
+  const share = `${(value / 1_000_000_000).toLocaleString('en-US', {
+    style: 'percent',
+    minimumFractionDigits: 3,
+    maximumFractionDigits: 3,
+  })}`;
+
+  return `<div><b>Amount</b>: ${amount}</div>
+          <div><b>Share</b>: ${share}</div>`;
 };
 
 interface Props {
@@ -50,7 +70,14 @@ const Chart: FC<Props> = ({ tokenInfo, assistanceFundBalance }) => {
 
   const otherCirculatingSupply = circulatingSupply - assistanceFundBalance;
 
-  const series = [
+  type Segment = {
+    asset: string;
+    amount: number;
+    displayAmount: number;
+    radius: number;
+  };
+
+  const series: Segment[] = [
     {
       asset: 'Other Circulating Supply',
       amount: otherCirculatingSupply,
@@ -86,11 +113,8 @@ const Chart: FC<Props> = ({ tokenInfo, assistanceFundBalance }) => {
     radiusKey: 'radius',
     tooltip: {
       renderer: (params) => ({
-        title: params.datum.asset,
-        content: `${params.datum.displayAmount.toLocaleString('en-US', {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        })} HYPE`,
+        title: `<b>${params.datum.asset}</b>`,
+        content: tooltipContent(params),
       }),
     },
     listeners: {

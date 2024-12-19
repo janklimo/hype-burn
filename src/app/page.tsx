@@ -30,7 +30,7 @@ export default function HomePage() {
       <section className='bg-hl-dark'>
         <div className='layout relative flex min-h-screen flex-col items-center justify-center py-4 text-center'>
           <Headline />
-          <div className='mb-4 h-96 w-80 md:h-[35rem] md:w-[70rem] relative'>
+          <div className='mb-4 h-96 w-80 md:h-[35rem] md:w-[70rem] relative text-left'>
             <Chart
               tokenInfo={tokenInfo}
               assistanceFundBalance={assistanceFundBalance}
