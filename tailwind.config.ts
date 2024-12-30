@@ -32,6 +32,10 @@ export default {
           red: '#ed7088',
         },
         accent: '#98FCE4',
+        beige: {
+          DEFAULT: '#FFFAEE',
+          hover: '#fcf3dc',
+        },
         hlGray: '#bcc4c2',
         white: '#f6fefd',
         black: '#02231e',

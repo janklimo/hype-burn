@@ -1,15 +1,15 @@
 import Image from 'next/image';
 import { FC } from 'react';
 
-const TradeButton: FC = () => {
+const StakeButton: FC = () => {
   return (
     <a
-      href='https://app.hyperliquid.xyz/join/AK194'
-      className='inline-flex items-center bg-hl-primary text-sm px-4 py-3 hover:bg-accent transition-all duration-300 rounded-md'
+      href='https://app.hyperliquid.xyz/staking'
+      className='inline-flex items-center bg-beige text-sm text-yellow-900 px-3 py-2 hover:bg-beige-hover transition-all duration-300 rounded-md'
       target='_blank'
       rel='noopener noreferrer'
     >
-      <span className='mr-1'>Buy</span>
+      <span className='mr-1'>Stake</span>
       <div className='w-5 inline-block mr-1'>
         <Image
           src='/images/hype.png'
@@ -20,18 +20,19 @@ const TradeButton: FC = () => {
           className='rounded-full'
         />
       </div>
-      <span className='mr-1'>HYPE on Hyperliquid</span>
-      <div className='w-5 inline-block'>
+      <span className='mr-1'>HYPE with</span>
+      <div className='w-8 inline-block mr-1'>
         <Image
-          src='/images/blob.gif'
+          src='/images/node-logo.png'
           width={64}
           height={64}
           priority
           alt='HYPE'
         />
       </div>
+      <span>PurrposefulNode</span>
     </a>
   );
 };
 
-export default TradeButton;
+export default StakeButton;

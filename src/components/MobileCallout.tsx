@@ -7,7 +7,7 @@ const MobileCallout: FC = () => {
   return (
     <div className='bg-primary-100 py-3 md:hidden'>
       <div className='flex justify-center text-sm mb-1'>
-        <span className='mr-1'>Trade</span>
+        <span className='mr-1'>Buy</span>
         <div className='w-5 inline-block mr-1'>
           <Image
             src='/images/hype.png'
