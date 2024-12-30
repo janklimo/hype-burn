@@ -8,6 +8,7 @@ import Skeleton from '@/components/Skeleton';
 import { useAssistanceFundBalance } from '@/app/hooks/use-assistance-fund-balance';
 import useHypeData from '@/app/hooks/use-hype-data';
 import useTokenInfo from '@/app/hooks/use-token-info';
+import { adjustCirculatingSupply } from '@/utils/token';
 
 const PriceChange: FC<{ change: number }> = ({ change }) => {
   if (change >= 1) {
@@ -59,6 +60,8 @@ const Stats: FC<Props> = ({ data, tokenInfo, assistanceFundBalance }) => {
   const circulatingSupply = parseFloat(tokenInfo.circulatingSupply);
   const totalSupply = parseFloat(tokenInfo.totalSupply);
 
+  const adjustedCirculatingSupply = adjustCirculatingSupply(circulatingSupply);
+
   return (
     <div className='bg-hl-light isolate p-2 mt-4 text-hlGray'>
       <Marquee pauseOnHover gradient gradientColor='#163832' gradientWidth={18}>
@@ -103,7 +106,7 @@ const Stats: FC<Props> = ({ data, tokenInfo, assistanceFundBalance }) => {
         {/* Market cap */}
         <p className='text-hlGray text-sm mr-3'>Market cap:</p>
         <p className='text-accent text-sm font-mono'>
-          {(markPrice * circulatingSupply).toLocaleString('en-US', {
+          {(markPrice * adjustedCirculatingSupply).toLocaleString('en-US', {
             style: 'currency',
             currency: 'USD',
             maximumFractionDigits: 0,
