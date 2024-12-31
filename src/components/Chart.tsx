@@ -14,10 +14,19 @@ import Skeleton from '@/components/Skeleton';
 import useTokenInfo from '@/app/hooks/use-token-info';
 import { FOUNDATION_STAKED_AMOUNT } from '@/utils/token';
 
+const colors = [
+  '#98FCE4',
+  '#c0fff0',
+  '#9afdff',
+  '#f69318',
+  '#2a4d46',
+  '#163832',
+];
+
 const theme: AgChartTheme = {
   palette: {
-    fills: ['#98FCE4', '#c0fff0', '#9afdff', '#f69318', '#163832', '#2a4d46'],
-    strokes: ['#98FCE4', '#c0fff0', '#9afdff', '#f69318', '#163832', '#2a4d46'],
+    fills: colors,
+    strokes: colors,
   },
 };
 
@@ -113,16 +122,16 @@ const Chart: FC<Props> = ({
       displayAmount: burntAmount,
     },
     {
-      asset: 'Non Circulating Supply',
-      amount: nonCirculatingSupply,
-      radius: 1,
-      displayAmount: nonCirculatingSupply,
-    },
-    {
-      asset: 'Future Emissions',
+      asset: 'Non Circulating Supply: Future Emissions',
       amount: futureEmissions,
       radius: 1,
       displayAmount: futureEmissions,
+    },
+    {
+      asset: 'Non Circulating Supply: Other',
+      amount: nonCirculatingSupply,
+      radius: 1,
+      displayAmount: nonCirculatingSupply,
     },
   ];
 
@@ -169,14 +178,13 @@ const Chart: FC<Props> = ({
     },
     series: [seriesOptions],
     legend: {
-      spacing: 10,
-      maxWidth: 350,
+      spacing: 25,
+      maxWidth: isMobile ? 350 : 1000,
+      position: 'bottom',
       item: {
-        paddingX: 32,
+        paddingX: 24,
         paddingY: 8,
-        label: {
-          color: '#bcc4c2',
-        },
+        label: { color: '#bcc4c2' },
       },
     },
   };
