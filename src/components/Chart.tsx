@@ -45,6 +45,27 @@ const tooltipContent = (
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })} HYPE`;
+
+  // Special handling for staked balance to show both shares
+  if (params.datum.asset === 'Circulating Supply: Staked') {
+    const shareOfTotal = `${(value / 1_000_000_000).toLocaleString('en-US', {
+      style: 'percent',
+      minimumFractionDigits: 3,
+      maximumFractionDigits: 3,
+    })}`;
+    const shareOfCirculating = `${(
+      value / params.datum.circulatingSupply
+    ).toLocaleString('en-US', {
+      style: 'percent',
+      minimumFractionDigits: 3,
+      maximumFractionDigits: 3,
+    })}`;
+    return `<div><b>Amount</b>: ${amount}</div>
+            <div><b>Share of Circulating</b>: ${shareOfCirculating}</div>
+            <div><b>Share of Total</b>: ${shareOfTotal}</div>`;
+  }
+
+  // Default handling for other segments
   const share = `${(value / 1_000_000_000).toLocaleString('en-US', {
     style: 'percent',
     minimumFractionDigits: 3,
@@ -94,6 +115,7 @@ const Chart: FC<Props> = ({
     amount: number;
     displayAmount: number;
     radius: number;
+    circulatingSupply?: number;
   };
 
   const series: Segment[] = [
@@ -108,6 +130,7 @@ const Chart: FC<Props> = ({
       amount: stakedSupply,
       radius: 1,
       displayAmount: stakedSupply,
+      circulatingSupply,
     },
     {
       asset: 'Circulating Supply: Assistance Fund',
