@@ -12,14 +12,10 @@ import { FC } from 'react';
 import Skeleton from '@/components/Skeleton';
 
 import useTokenInfo from '@/app/hooks/use-token-info';
-import {
-  ADDITIONAL_NON_CIRCULATING_AMOUNT,
-  adjustCirculatingSupply,
-} from '@/utils/token';
 
 const theme: AgChartTheme = {
   palette: {
-    fills: ['#98FCE4', '#65b09a', '#f69318', '#163832'],
+    fills: ['#98FCE4', '#65b09a', '#f69318', '#163832'], // Added color for Assistance Fund
     strokes: ['#98FCE4', '#65b09a', '#f69318', '#163832'],
   },
 };
@@ -64,19 +60,15 @@ const Chart: FC<Props> = ({ tokenInfo, assistanceFundBalance }) => {
   const circulatingSupply = parseFloat(tokenInfo.circulatingSupply);
   const totalSupply = parseFloat(tokenInfo.totalSupply);
   const burntAmount = 1_000_000_000 - totalSupply;
-
-  const adjustedCirculatingSupply = adjustCirculatingSupply(circulatingSupply);
-
-  const nonCirculatingSupply =
-    sumBalances(tokenInfo.nonCirculatingUserBalances) +
-    (circulatingSupply > 900_000_000 ? ADDITIONAL_NON_CIRCULATING_AMOUNT : 0);
+  const nonCirculatingSupply = sumBalances(
+    tokenInfo.nonCirculatingUserBalances,
+  );
 
   // Calculate minimum segment size for better visibility
   const minVisiblePercentage = 0.25;
   const minSegmentSize = (totalSupply * minVisiblePercentage) / 100;
 
-  const otherCirculatingSupply =
-    adjustedCirculatingSupply - assistanceFundBalance;
+  const otherCirculatingSupply = circulatingSupply - assistanceFundBalance;
 
   type Segment = {
     asset: string;

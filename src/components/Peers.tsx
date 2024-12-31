@@ -8,7 +8,6 @@ import useHypeData from '@/app/hooks/use-hype-data';
 import useTokenInfo from '@/app/hooks/use-token-info';
 import { apiHost } from '@/constant/config';
 import { pointToHypeRatio } from '@/constant/constants';
-import { adjustCirculatingSupply } from '@/utils/token';
 
 import { PeersData } from '@/types/responses';
 
@@ -76,8 +75,6 @@ const Peers: FC<Props> = ({ data, tokenInfo }) => {
   const circulatingSupply = parseFloat(tokenInfo.circulatingSupply);
   const totalSupply = parseFloat(tokenInfo.totalSupply);
 
-  const adjustedCirculatingSupply = adjustCirculatingSupply(circulatingSupply);
-
   return (
     <div>
       <h2 className='md:flex items-center justify-center text-white text-base mb-6'>
@@ -102,7 +99,7 @@ const Peers: FC<Props> = ({ data, tokenInfo }) => {
         {processCoinData(
           coins,
           markPrice,
-          adjustedCirculatingSupply,
+          circulatingSupply,
           totalSupply,
           sort,
         ).map((coinData) => (
