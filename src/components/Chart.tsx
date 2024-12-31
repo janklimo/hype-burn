@@ -152,11 +152,13 @@ const Chart: FC<Props> = ({
       nodeClick: (event) => {
         const { datum } = event;
 
-        if (datum.asset === 'Assistance Fund') {
+        if (datum.asset === 'Circulating Supply: Assistance Fund') {
           window.open(
             'https://hypurrscan.io/address/0xfefefefefefefefefefefefefefefefefefefefe',
             '_blank',
           );
+        } else if (datum.asset === 'Circulating Supply: Staked') {
+          window.open('https://app.hyperliquid.xyz/staking', '_blank');
         }
       },
     },
