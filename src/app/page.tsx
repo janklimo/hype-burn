@@ -15,12 +15,14 @@ import TradeCallout from '@/components/TradeCallout';
 
 import { useAssistanceFundBalance } from '@/app/hooks/use-assistance-fund-balance';
 import useHypeData from '@/app/hooks/use-hype-data';
+import { useStakedBalance } from '@/app/hooks/use-staked-balance';
 import useTokenInfo from '@/app/hooks/use-token-info';
 
 export default function HomePage() {
   const data = useHypeData();
   const { tokenInfo } = useTokenInfo();
   const { assistanceFundBalance } = useAssistanceFundBalance();
+  const { stakedBalance } = useStakedBalance();
 
   return (
     <main>
@@ -34,6 +36,7 @@ export default function HomePage() {
             <Chart
               tokenInfo={tokenInfo}
               assistanceFundBalance={assistanceFundBalance}
+              stakedBalance={stakedBalance}
             />
             <ChartInner tokenInfo={tokenInfo} />
           </div>

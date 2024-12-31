@@ -12,11 +12,12 @@ import { FC } from 'react';
 import Skeleton from '@/components/Skeleton';
 
 import useTokenInfo from '@/app/hooks/use-token-info';
+import { FOUNDATION_STAKED_AMOUNT } from '@/utils/token';
 
 const theme: AgChartTheme = {
   palette: {
-    fills: ['#98FCE4', '#65b09a', '#f69318', '#163832'], // Added color for Assistance Fund
-    strokes: ['#98FCE4', '#65b09a', '#f69318', '#163832'],
+    fills: ['#98FCE4', '#c0fff0', '#9afdff', '#f69318', '#163832', '#2a4d46'],
+    strokes: ['#98FCE4', '#c0fff0', '#9afdff', '#f69318', '#163832', '#2a4d46'],
   },
 };
 
@@ -48,9 +49,14 @@ const tooltipContent = (
 interface Props {
   tokenInfo: ReturnType<typeof useTokenInfo>['tokenInfo'];
   assistanceFundBalance: number;
+  stakedBalance: number;
 }
 
-const Chart: FC<Props> = ({ tokenInfo, assistanceFundBalance }) => {
+const Chart: FC<Props> = ({
+  tokenInfo,
+  assistanceFundBalance,
+  stakedBalance,
+}) => {
   const { width } = useWindowSize();
   const isMobile = Number(width) <= 768;
 
@@ -63,12 +69,16 @@ const Chart: FC<Props> = ({ tokenInfo, assistanceFundBalance }) => {
   const nonCirculatingSupply = sumBalances(
     tokenInfo.nonCirculatingUserBalances,
   );
+  const futureEmissions = parseFloat(tokenInfo.futureEmissions);
 
   // Calculate minimum segment size for better visibility
   const minVisiblePercentage = 0.25;
   const minSegmentSize = (totalSupply * minVisiblePercentage) / 100;
 
-  const otherCirculatingSupply = circulatingSupply - assistanceFundBalance;
+  const stakedSupply = stakedBalance - FOUNDATION_STAKED_AMOUNT;
+
+  const otherCirculatingSupply =
+    circulatingSupply - assistanceFundBalance - stakedSupply;
 
   type Segment = {
     asset: string;
@@ -79,13 +89,19 @@ const Chart: FC<Props> = ({ tokenInfo, assistanceFundBalance }) => {
 
   const series: Segment[] = [
     {
-      asset: 'Other Circulating Supply',
+      asset: 'Circulating Supply: Other',
       amount: otherCirculatingSupply,
       radius: 1,
       displayAmount: otherCirculatingSupply,
     },
     {
-      asset: 'Assistance Fund',
+      asset: 'Circulating Supply: Staked',
+      amount: stakedSupply,
+      radius: 1,
+      displayAmount: stakedSupply,
+    },
+    {
+      asset: 'Circulating Supply: Assistance Fund',
       amount: assistanceFundBalance,
       radius: 1,
       displayAmount: assistanceFundBalance,
@@ -101,6 +117,12 @@ const Chart: FC<Props> = ({ tokenInfo, assistanceFundBalance }) => {
       amount: nonCirculatingSupply,
       radius: 1,
       displayAmount: nonCirculatingSupply,
+    },
+    {
+      asset: 'Future Emissions',
+      amount: futureEmissions,
+      radius: 1,
+      displayAmount: futureEmissions,
     },
   ];
 

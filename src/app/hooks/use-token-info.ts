@@ -3,6 +3,7 @@ import useSWR from 'swr';
 interface TokenInfo {
   totalSupply: string;
   circulatingSupply: string;
+  futureEmissions: string;
   nonCirculatingUserBalances: [string, string][];
 }
 
