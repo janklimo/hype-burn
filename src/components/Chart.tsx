@@ -14,6 +14,15 @@ import Skeleton from '@/components/Skeleton';
 import useTokenInfo from '@/app/hooks/use-token-info';
 import { FOUNDATION_STAKED_AMOUNT } from '@/utils/token';
 
+const SERIES_NAMES = {
+  CIRCULATING_OTHER: 'Circulating Supply: Other',
+  CIRCULATING_STAKED: 'Circulating Supply: Staked',
+  CIRCULATING_ASSISTANCE: 'Circulating Supply: Assistance Fund',
+  BURN_TRADING_FEES: 'Burn From Trading Fees',
+  NON_CIRCULATING_EMISSIONS: 'Non Circulating Supply: Future Emissions',
+  NON_CIRCULATING_OTHER: 'Non Circulating Supply: Other',
+} as const;
+
 const colors = [
   '#98FCE4',
   '#c0fff0',
@@ -39,20 +48,29 @@ const sumBalances = (balances: [string, string][]): number => {
 
 const tooltipContent = (
   params: AgSeriesTooltipRendererParams<Segment>,
-): string => {
+): { title: string; content: string } => {
   const value = params.datum.displayAmount;
   const amount = `${value.toLocaleString('en-US', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })} HYPE`;
 
+  // Determine title color based on segment
+  const isDarkTitle = [
+    SERIES_NAMES.CIRCULATING_OTHER,
+    SERIES_NAMES.CIRCULATING_STAKED,
+    SERIES_NAMES.CIRCULATING_ASSISTANCE,
+  ].includes(params.datum.asset);
+  const titleStyle = isDarkTitle ? 'color: #03251F;' : '';
+
   // Special handling for staked balance to show both shares
-  if (params.datum.asset === 'Circulating Supply: Staked') {
+  if (params.datum.asset === SERIES_NAMES.CIRCULATING_STAKED) {
     const shareOfTotal = `${(value / 1_000_000_000).toLocaleString('en-US', {
       style: 'percent',
       minimumFractionDigits: 3,
       maximumFractionDigits: 3,
     })}`;
+
     const shareOfCirculating = `${(
       value / params.datum.circulatingSupply
     ).toLocaleString('en-US', {
@@ -60,9 +78,13 @@ const tooltipContent = (
       minimumFractionDigits: 3,
       maximumFractionDigits: 3,
     })}`;
-    return `<div><b>Amount</b>: ${amount}</div>
-            <div><b>Share of Circulating</b>: ${shareOfCirculating}</div>
-            <div><b>Share of Total</b>: ${shareOfTotal}</div>`;
+
+    return {
+      title: `<b style="${titleStyle}">${params.datum.asset}</b>`,
+      content: `<div><b>Amount</b>: ${amount}</div>
+                <div><b>Share of Circulating</b>: ${shareOfCirculating}</div>
+                <div><b>Share of Total</b>: ${shareOfTotal}</div>`,
+    };
   }
 
   // Default handling for other segments
@@ -72,8 +94,11 @@ const tooltipContent = (
     maximumFractionDigits: 3,
   })}`;
 
-  return `<div><b>Amount</b>: ${amount}</div>
-          <div><b>Share</b>: ${share}</div>`;
+  return {
+    title: `<b style="${titleStyle}">${params.datum.asset}</b>`,
+    content: `<div><b>Amount</b>: ${amount}</div>
+              <div><b>Share</b>: ${share}</div>`,
+  };
 };
 
 interface Props {
@@ -120,38 +145,38 @@ const Chart: FC<Props> = ({
 
   const series: Segment[] = [
     {
-      asset: 'Circulating Supply: Other',
+      asset: SERIES_NAMES.CIRCULATING_OTHER,
       amount: otherCirculatingSupply,
       radius: 1,
       displayAmount: otherCirculatingSupply,
     },
     {
-      asset: 'Circulating Supply: Staked',
+      asset: SERIES_NAMES.CIRCULATING_STAKED,
       amount: stakedSupply,
       radius: 1,
       displayAmount: stakedSupply,
       circulatingSupply,
     },
     {
-      asset: 'Circulating Supply: Assistance Fund',
+      asset: SERIES_NAMES.CIRCULATING_ASSISTANCE,
       amount: assistanceFundBalance,
       radius: 1,
       displayAmount: assistanceFundBalance,
     },
     {
-      asset: 'Burn From Trading Fees',
+      asset: SERIES_NAMES.BURN_TRADING_FEES,
       amount: Math.max(burntAmount, minSegmentSize),
       radius: 1,
       displayAmount: burntAmount,
     },
     {
-      asset: 'Non Circulating Supply: Future Emissions',
+      asset: SERIES_NAMES.NON_CIRCULATING_EMISSIONS,
       amount: futureEmissions,
       radius: 1,
       displayAmount: futureEmissions,
     },
     {
-      asset: 'Non Circulating Supply: Other',
+      asset: SERIES_NAMES.NON_CIRCULATING_OTHER,
       amount: nonCirculatingSupply,
       radius: 1,
       displayAmount: nonCirculatingSupply,
@@ -166,21 +191,18 @@ const Chart: FC<Props> = ({
     calloutLabel: { enabled: false },
     radiusKey: 'radius',
     tooltip: {
-      renderer: (params) => ({
-        title: `<b>${params.datum.asset}</b>`,
-        content: tooltipContent(params),
-      }),
+      renderer: tooltipContent,
     },
     listeners: {
       nodeClick: (event) => {
         const { datum } = event;
 
-        if (datum.asset === 'Circulating Supply: Assistance Fund') {
+        if (datum.asset === SERIES_NAMES.CIRCULATING_ASSISTANCE) {
           window.open(
             'https://hypurrscan.io/address/0xfefefefefefefefefefefefefefefefefefefefe',
             '_blank',
           );
-        } else if (datum.asset === 'Circulating Supply: Staked') {
+        } else if (datum.asset === SERIES_NAMES.CIRCULATING_STAKED) {
           window.open('https://app.hyperliquid.xyz/staking', '_blank');
         }
       },
