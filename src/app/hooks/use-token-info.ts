@@ -1,4 +1,7 @@
+import { useEffect, useState } from 'react';
 import useSWR from 'swr';
+
+import { apiHost } from '@/constant/config';
 
 interface TokenInfo {
   totalSupply: string;
@@ -27,6 +30,23 @@ async function fetcher(url: string) {
 }
 
 const useTokenInfo = () => {
+  const [initialData, setInitialData] = useState<TokenInfo | null>(null);
+
+  useEffect(() => {
+    const fetchInitialData = async () => {
+      try {
+        const res = await fetch(`${apiHost}/hype`);
+        if (!res.ok) throw new Error('Network response was not ok');
+        const data = await res.json();
+        setInitialData(data);
+      } catch (error) {
+        console.error('Failed to fetch initial data:', error);
+      }
+    };
+
+    fetchInitialData();
+  }, []);
+
   const { data, error } = useSWR<TokenInfo>(
     ['https://api.hyperliquid.xyz/info', 'fetchHypeTokenInfo'],
     ([url]) => fetcher(url),
@@ -36,9 +56,9 @@ const useTokenInfo = () => {
   );
 
   return {
-    tokenInfo: data,
+    tokenInfo: data || initialData,
     error,
-    isLoading: !error && !data,
+    isLoading: !error && !initialData && !data,
   };
 };
 
