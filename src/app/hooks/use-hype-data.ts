@@ -20,7 +20,7 @@ const useHypeData = () => {
   const [data, setData] = useState<MessageContext | undefined>();
 
   useEffect(() => {
-    const socket = new WebSocket('wss://api-ui.hyperliquid.xyz/ws');
+    const socket = new WebSocket('wss://api.hyperliquid.xyz/ws');
 
     // Listen for the connection to open and send the message
     socket.addEventListener('open', () => {

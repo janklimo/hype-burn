@@ -14,7 +14,7 @@ import SaltSheet from '@/components/SaltSheet';
 import Stats from '@/components/Stats';
 import TradeCallout from '@/components/TradeCallout';
 
-import { useAssistanceFundBalance } from '@/app/hooks/use-assistance-fund-balance';
+import useAssistanceFundBalances from '@/app/hooks/use-assistance-fund-balances';
 import useHypeData from '@/app/hooks/use-hype-data';
 import { useStakedBalance } from '@/app/hooks/use-staked-balance';
 import useTokenInfo from '@/app/hooks/use-token-info';
@@ -22,8 +22,8 @@ import useTokenInfo from '@/app/hooks/use-token-info';
 export default function HomePage() {
   const data = useHypeData();
   const { tokenInfo } = useTokenInfo();
-  const { assistanceFundBalance } = useAssistanceFundBalance();
   const { stakedBalance } = useStakedBalance();
+  const balances = useAssistanceFundBalances();
 
   return (
     <main>
@@ -36,7 +36,7 @@ export default function HomePage() {
           <div className='mb-4 h-[32rem] w-80 md:h-[35rem] md:w-[70rem] relative text-left'>
             <Chart
               tokenInfo={tokenInfo}
-              assistanceFundBalance={assistanceFundBalance}
+              assistanceFundBalance={balances.HYPE}
               stakedBalance={stakedBalance}
             />
             <ChartInner tokenInfo={tokenInfo} />
@@ -45,14 +45,11 @@ export default function HomePage() {
             <Stats
               data={data}
               tokenInfo={tokenInfo}
-              assistanceFundBalance={assistanceFundBalance}
+              assistanceFundBalance={balances.HYPE}
             />
           </div>
           <div className='my-4 w-full'>
-            <AssistanceFund
-              data={data}
-              assistanceFundBalance={assistanceFundBalance}
-            />
+            <AssistanceFund data={data} balances={balances} />
           </div>
           <div className='my-4 w-full'>
             <DidYouKnow data={data} tokenInfo={tokenInfo} />

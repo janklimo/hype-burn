@@ -132,3 +132,51 @@
       100% 2px;
   }
 }
+
+:root {
+  --highcharts-color-0: #f69318;
+  --highcharts-color-1: #97fde4;
+  --highcharts-background-color: #0e1a1e;
+  --bright-color: #97fde4;
+}
+
+.highcharts-grid-line {
+  stroke-width: 0;
+}
+
+.highcharts-graph {
+  stroke-width: 1.5px;
+}
+
+.highcharts-series-0 .highcharts-graph {
+  filter: url(#neon);
+}
+
+.highcharts-background {
+  fill: #0e1a1e;
+}
+
+.highcharts-yaxis-labels {
+  fill: #bbc4c2;
+}
+
+.highcharts-crosshair {
+  stroke-dasharray: 1, 3;
+  stroke: var(--bright-color);
+}
+
+.highcharts-point {
+  fill: none;
+  stroke: none;
+}
+
+.highcharts-tooltip-box {
+  stroke: var(--bright-color);
+  stroke-width: 1px;
+  stroke-opacity: 0.4;
+  opacity: 0.9;
+}
+
+.highcharts-tooltip text {
+  fill: #bdc4c2;
+}

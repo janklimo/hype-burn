@@ -17,7 +17,6 @@ import Button from '@/components/buttons/Button';
 
 import useAddressFromURL from '@/app/hooks/use-address-from-url';
 import useHypeData from '@/app/hooks/use-hype-data';
-import useWebSocketData from '@/app/hooks/use-websocket-data';
 import { apiHost } from '@/constant/config';
 import { useAddressStore } from '@/state/stores';
 
@@ -25,7 +24,7 @@ import { UserSnapshotData } from '@/types/responses';
 
 const purrValue = (
   userData: UserSnapshotData | undefined,
-  wsData: ReturnType<typeof useWebSocketData>,
+  wsData: ReturnType<typeof useHypeData>,
 ): string => {
   if (!userData) return '...';
   if (!wsData) return '...';

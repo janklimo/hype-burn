@@ -5,7 +5,6 @@ import { downArrow, upArrow } from '@/lib/formatters';
 
 import Skeleton from '@/components/Skeleton';
 
-import { useAssistanceFundBalance } from '@/app/hooks/use-assistance-fund-balance';
 import useHypeData from '@/app/hooks/use-hype-data';
 import useTokenInfo from '@/app/hooks/use-token-info';
 
@@ -42,9 +41,7 @@ const PriceChange: FC<{ change: number }> = ({ change }) => {
 interface Props {
   data: ReturnType<typeof useHypeData>;
   tokenInfo: ReturnType<typeof useTokenInfo>['tokenInfo'];
-  assistanceFundBalance: ReturnType<
-    typeof useAssistanceFundBalance
-  >['assistanceFundBalance'];
+  assistanceFundBalance: number;
 }
 
 const Stats: FC<Props> = ({ data, tokenInfo, assistanceFundBalance }) => {

@@ -31,6 +31,8 @@
     "ag-charts-react": "^10.0.2",
     "ag-grid-react": "^10.0.2",
     "clsx": "^2.0.0",
+    "highcharts": "^12.1.2",
+    "highcharts-react-official": "^3.2.1",
     "html-to-image": "^1.11.11",
     "lucide-react": "^0.365.0",
     "next": "^14.0.4",
