@@ -3,6 +3,7 @@
 import '@/lib/env';
 import Head from 'next/head';
 
+import AssistanceFund from '@/components/AssistanceFund';
 import Chart from '@/components/Chart';
 import ChartInner from '@/components/ChartInner';
 import DidYouKnow from '@/components/DidYouKnow';
@@ -44,6 +45,12 @@ export default function HomePage() {
             <Stats
               data={data}
               tokenInfo={tokenInfo}
+              assistanceFundBalance={assistanceFundBalance}
+            />
+          </div>
+          <div className='my-4 w-full'>
+            <AssistanceFund
+              data={data}
               assistanceFundBalance={assistanceFundBalance}
             />
           </div>
