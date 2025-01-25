@@ -9,6 +9,12 @@ import { FC, useEffect, useRef, useState } from 'react';
 
 import { Balances } from '@/app/hooks/use-assistance-fund-balances';
 
+Highcharts.setOptions({
+  time: {
+    timezoneOffset: new Date().getTimezoneOffset(),
+  },
+});
+
 interface Props {
   balances: Balances;
 }
