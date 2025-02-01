@@ -3,6 +3,7 @@ export interface LeaderboardRowData {
   address: string;
   display_address: string;
   balance: number;
+  balance_staked: number;
 }
 
 export interface LeaderboardData {

@@ -21,20 +21,26 @@ import { LeaderboardData, LeaderboardRowData } from '@/types/responses';
 /**
  * Table value getters and formatters.
  */
-const purrShareValueGetter = (
+const getTotalBalance = (params: ValueGetterParams<LeaderboardRowData>) => {
+  const unstaked = Number(params.data?.balance) || 0;
+  const staked = Number(params.data?.balance_staked) || 0;
+  return unstaked + staked;
+};
+
+const shareOfTotalValueGetter = (
   params: ValueGetterParams<LeaderboardRowData>,
   supply: string | undefined,
 ) => {
-  const purrBalance = Number(params.data?.balance);
+  const totalBalance = getTotalBalance(params);
 
-  if (!purrBalance || !supply) return null;
+  if (!totalBalance || !supply) return null;
 
   const circulatingSupply = parseFloat(supply);
 
-  return purrBalance / circulatingSupply;
+  return totalBalance / circulatingSupply;
 };
 
-const purrShareValueFormatter = (params: ValueFormatterParams): string => {
+const shareOfTotalValueFormatter = (params: ValueFormatterParams): string => {
   if (!params.value) return '...';
 
   return params.value.toLocaleString('en-US', {
@@ -44,18 +50,18 @@ const purrShareValueFormatter = (params: ValueFormatterParams): string => {
   });
 };
 
-const purrBalanceValueGetter = (
+const balanceValueGetter = (
   params: ValueGetterParams<LeaderboardRowData>,
   price: string | undefined,
 ) => {
-  const purrBalance = Number(params.data?.balance);
+  const totalBalance = getTotalBalance(params);
 
-  if (!purrBalance || !price) return null;
+  if (!totalBalance || !price) return null;
 
-  return purrBalance * parseFloat(price);
+  return totalBalance * parseFloat(price);
 };
 
-const purrBalanceValueFormatter = (params: ValueFormatterParams): string => {
+const balanceValueFormatter = (params: ValueFormatterParams): string => {
   if (!params.value) return '...';
 
   return params.value.toLocaleString('en-US', {
@@ -85,24 +91,37 @@ const HoldersTable = () => {
     { field: 'rank', pinned: 'left', width: 80 },
     { field: 'display_address', headerName: 'Address', pinned: 'left' },
     {
+      field: 'balance_staked',
+      headerName: 'Staked',
+      type: ['tokenBalance'],
+      minWidth: 150,
+    },
+    {
       field: 'balance',
-      headerName: 'HYPE Balance',
-      type: ['purrBalance'],
+      headerName: 'Unstaked',
+      type: ['tokenBalance'],
+      minWidth: 150,
+    },
+    {
+      field: 'balance',
+      headerName: 'Total',
+      valueGetter: getTotalBalance,
+      type: ['tokenBalance'],
       minWidth: 150,
     },
     {
       field: 'balance',
       headerName: '% Total',
       valueGetter: (params) =>
-        purrShareValueGetter(params, tokenInfo?.totalSupply),
-      valueFormatter: purrShareValueFormatter,
+        shareOfTotalValueGetter(params, tokenInfo?.totalSupply),
+      valueFormatter: shareOfTotalValueFormatter,
       minWidth: 150,
     },
     {
       field: 'balance',
       headerName: 'Value (USD)',
-      valueGetter: (params) => purrBalanceValueGetter(params, data?.markPx),
-      valueFormatter: purrBalanceValueFormatter,
+      valueGetter: (params) => balanceValueGetter(params, data?.markPx),
+      valueFormatter: balanceValueFormatter,
       minWidth: 150,
     },
     {

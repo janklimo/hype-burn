@@ -33,7 +33,7 @@ export const columnTypes: { [key: string]: ColTypeDef } = {
     cellRenderer: Actions,
     minWidth: 200,
   },
-  purrBalance: {
+  tokenBalance: {
     valueFormatter: formatPurrBalance,
   },
   colorHighlight: {
