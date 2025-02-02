@@ -40,26 +40,9 @@ const purrValue = (
 };
 
 const colors = [
+  '#FFFAEE', // Stake button color
   '#51D2C1', // Hyperliquid green
   '#F69318', // Hyperliquid gold
-  '#FFD93D', // Bright yellow
-  '#FF8C42', // Orange
-  '#6A0572', // Deep purple
-  '#4E9F3D', // Forest green
-  '#F038FF', // Bright pink
-  '#465775', // Steel blue
-  '#D63AF9', // Vibrant purple
-  '#7F8C8D', // Concrete gray
-  '#00A8E8', // Azure blue
-  '#9B59B6', // Amethyst purple
-  '#2ECC71', // Emerald green
-  '#E74C3C', // Crimson red
-  '#3498DB', // Dodger blue
-  '#1ABC9C', // Turquoise
-  '#F1C40F', // Sunflower yellow
-  '#34495E', // Wet asphalt
-  '#16A085', // Green sea
-  '#FFA500', // Classic orange
 ];
 
 const theme: AgChartTheme = {
@@ -69,29 +52,42 @@ const theme: AgChartTheme = {
   },
 };
 
-const barSeriesOptions: AgBarSeriesOptions = {
-  type: 'bar',
-  xKey: 'date',
-  yKey: 'balance',
-  yName: 'HYPE Balance',
-  highlightStyle: {
-    item: {
-      stroke: '#4fc6b6',
-      fill: '#98FCE4',
-      fillOpacity: 0.3,
-    },
-  },
-  tooltip: {
-    renderer: ({ datum, yName }) => {
-      const value = `${datum.balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} HYPE`;
+const barSeriesOptions: AgBarSeriesOptions[] = [
+  {
+    type: 'bar',
+    xKey: 'date',
+    yKey: 'balance_staked',
+    yName: 'Staked HYPE',
+    stacked: true,
+    tooltip: {
+      renderer: ({ datum, yName }) => {
+        const value = `${datum.balance_staked.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} HYPE`;
 
-      return {
-        title: `<b>${yName}</b> <small>(${datum.date})</small>`,
-        content: value,
-      };
+        return {
+          title: `<b style="color: #713F11;">${yName}</b> <small>(${datum.date})</small>`,
+          content: value,
+        };
+      },
     },
   },
-};
+  {
+    type: 'bar',
+    xKey: 'date',
+    yKey: 'balance',
+    yName: 'Unstaked HYPE',
+    stacked: true,
+    tooltip: {
+      renderer: ({ datum, yName }) => {
+        const value = `${datum.balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} HYPE`;
+
+        return {
+          title: `<b>${yName}</b> <small>(${datum.date})</small>`,
+          content: value,
+        };
+      },
+    },
+  },
+];
 
 const axes: AgCartesianAxisOptions[] = [
   {
@@ -105,16 +101,15 @@ const axes: AgCartesianAxisOptions[] = [
       minSpacing: 30,
     },
   },
-  // Use left axis for `balance` series
+  // Update left axis to include both balance keys
   {
     type: 'number',
     position: 'left',
-    keys: ['balance'],
+    keys: ['balance', 'balance_staked'],
     title: {
       text: 'HYPE Balance',
       color: '#9ca3af',
     },
-    // Format the label applied to this axis
     label: {
       color: '#9ca3af',
       formatter: (params) => parseFloat(params.value).toLocaleString(),
@@ -338,7 +333,7 @@ const Chart = () => {
                 left: 25,
               },
               data: data?.snapshots,
-              series: [barSeriesOptions, lineSeriesOptions],
+              series: [...barSeriesOptions, lineSeriesOptions],
               axes,
               legend: {
                 position: 'bottom',

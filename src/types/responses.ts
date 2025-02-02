@@ -26,6 +26,7 @@ export interface UserSnapshotData {
   snapshots: Snapshot[];
   rank: number;
   balance: number;
+  balance_staked: number;
   tag: string | null;
   levels: Level[];
 }
