@@ -39,10 +39,33 @@ const purrValue = (
   });
 };
 
+const colors = [
+  '#51D2C1', // Hyperliquid green
+  '#F69318', // Hyperliquid gold
+  '#FFD93D', // Bright yellow
+  '#FF8C42', // Orange
+  '#6A0572', // Deep purple
+  '#4E9F3D', // Forest green
+  '#F038FF', // Bright pink
+  '#465775', // Steel blue
+  '#D63AF9', // Vibrant purple
+  '#7F8C8D', // Concrete gray
+  '#00A8E8', // Azure blue
+  '#9B59B6', // Amethyst purple
+  '#2ECC71', // Emerald green
+  '#E74C3C', // Crimson red
+  '#3498DB', // Dodger blue
+  '#1ABC9C', // Turquoise
+  '#F1C40F', // Sunflower yellow
+  '#34495E', // Wet asphalt
+  '#16A085', // Green sea
+  '#FFA500', // Classic orange
+];
+
 const theme: AgChartTheme = {
   palette: {
-    fills: ['#51D2C1', '#072723'],
-    strokes: ['#51D2C1', '#072723'],
+    fills: colors,
+    strokes: colors,
   },
 };
 
@@ -71,33 +94,61 @@ const barSeriesOptions: AgBarSeriesOptions = {
 };
 
 const axes: AgCartesianAxisOptions[] = [
-  // Display category (xKey) as the bottom axis
   {
     type: 'category',
     position: 'bottom',
+    label: {
+      color: '#9ca3af',
+      rotation: -30,
+    },
+    interval: {
+      minSpacing: 30,
+    },
   },
   // Use left axis for `balance` series
   {
     type: 'number',
     position: 'left',
     keys: ['balance'],
+    title: {
+      text: 'HYPE Balance',
+      color: '#9ca3af',
+    },
     // Format the label applied to this axis
     label: {
-      formatter: (params) => {
-        return parseFloat(params.value).toLocaleString();
-      },
+      color: '#9ca3af',
+      formatter: (params) => parseFloat(params.value).toLocaleString(),
+    },
+    gridLine: {
+      style: [
+        {
+          stroke: 'rgba(255, 255, 255, 0.2)',
+          lineDash: [4, 2],
+        },
+      ],
     },
   },
   // Use right axis for 'rank' series
   {
     type: 'number',
     position: 'right',
-    reverse: true,
     keys: ['rank'],
+    reverse: true,
+    title: {
+      text: 'Rank',
+      color: '#9ca3af',
+    },
+    gridLine: {
+      style: [
+        {
+          stroke: 'rgba(255, 255, 255, 0.2)',
+          lineDash: [4, 2],
+        },
+      ],
+    },
     label: {
-      formatter: (params) => {
-        return '#' + params.value;
-      },
+      color: '#9ca3af',
+      formatter: (params) => '#' + params.value,
     },
   },
 ];
@@ -274,8 +325,12 @@ const Chart = () => {
             options={{
               theme,
               height: 700,
-              background: { fill: '#F5FEFD' },
-              title: { text: `Stats for ${trimAddress(targetAddress)}` },
+              background: { fill: '#0f1a1f' },
+              title: {
+                text: `Stats for ${trimAddress(targetAddress)}`,
+                color: 'white',
+                spacing: 40,
+              },
               padding: {
                 top: 40,
                 right: 25,
@@ -285,7 +340,14 @@ const Chart = () => {
               data: data?.snapshots,
               series: [barSeriesOptions, lineSeriesOptions],
               axes,
-              legend: { position: 'bottom' },
+              legend: {
+                position: 'bottom',
+                item: {
+                  label: {
+                    color: '#9ca3af',
+                  },
+                },
+              },
             }}
           />
         </>
