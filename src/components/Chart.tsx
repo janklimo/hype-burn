@@ -63,8 +63,13 @@ const tooltipContent = (
   ].includes(params.datum.asset);
   const titleStyle = isDarkTitle ? 'color: #03251F;' : '';
 
-  // Special handling for staked balance to show both shares
-  if (params.datum.asset === SERIES_NAMES.CIRCULATING_STAKED) {
+  if (
+    [
+      SERIES_NAMES.CIRCULATING_OTHER,
+      SERIES_NAMES.CIRCULATING_STAKED,
+      SERIES_NAMES.CIRCULATING_ASSISTANCE,
+    ].includes(params.datum.asset)
+  ) {
     const shareOfTotal = `${(value / 1_000_000_000).toLocaleString('en-US', {
       style: 'percent',
       minimumFractionDigits: 3,
@@ -149,6 +154,7 @@ const Chart: FC<Props> = ({
       amount: otherCirculatingSupply,
       radius: 1,
       displayAmount: otherCirculatingSupply,
+      circulatingSupply,
     },
     {
       asset: SERIES_NAMES.CIRCULATING_STAKED,
@@ -162,6 +168,7 @@ const Chart: FC<Props> = ({
       amount: assistanceFundBalance,
       radius: 1,
       displayAmount: assistanceFundBalance,
+      circulatingSupply,
     },
     {
       asset: SERIES_NAMES.BURN_TRADING_FEES,
