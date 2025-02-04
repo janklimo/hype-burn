@@ -14,7 +14,7 @@ const findFirstRankAboveBalance = (
   data: LeaderboardRowData[],
   balance: number,
 ): number => {
-  const found = data.find((row) => balance > row.balance)!;
+  const found = data.find((row) => balance > row.balance + row.balance_staked)!;
   return found.rank;
 };
 
