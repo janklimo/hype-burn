@@ -11,6 +11,7 @@ import { FC } from 'react';
 
 import Skeleton from '@/components/Skeleton';
 
+import useEVMBalance from '@/app/hooks/use-evm-balance';
 import useTokenInfo from '@/app/hooks/use-token-info';
 import { FOUNDATION_STAKED_AMOUNT } from '@/utils/token';
 
@@ -18,6 +19,7 @@ const SERIES_NAMES = {
   CIRCULATING_OTHER: 'Circulating Supply: Other',
   CIRCULATING_STAKED: 'Circulating Supply: Staked',
   CIRCULATING_ASSISTANCE: 'Circulating Supply: Assistance Fund',
+  CIRCULATING_EVM: 'Circulating Supply: HyperEVM',
   BURN_TRADING_FEES: 'Burn From Trading Fees',
   NON_CIRCULATING_EMISSIONS: 'Non Circulating Supply: Future Emissions',
   NON_CIRCULATING_OTHER: 'Non Circulating Supply: Other',
@@ -25,6 +27,7 @@ const SERIES_NAMES = {
 
 const colors = [
   '#98FCE4',
+  '#faf3dd',
   '#c0fff0',
   '#9afdff',
   '#f69318',
@@ -60,6 +63,7 @@ const tooltipContent = (
     SERIES_NAMES.CIRCULATING_OTHER,
     SERIES_NAMES.CIRCULATING_STAKED,
     SERIES_NAMES.CIRCULATING_ASSISTANCE,
+    SERIES_NAMES.CIRCULATING_EVM,
   ].includes(params.datum.asset);
   const titleStyle = isDarkTitle ? 'color: #03251F;' : '';
 
@@ -68,6 +72,7 @@ const tooltipContent = (
       SERIES_NAMES.CIRCULATING_OTHER,
       SERIES_NAMES.CIRCULATING_STAKED,
       SERIES_NAMES.CIRCULATING_ASSISTANCE,
+      SERIES_NAMES.CIRCULATING_EVM,
     ].includes(params.datum.asset)
   ) {
     const shareOfTotal = `${(value / 1_000_000_000).toLocaleString('en-US', {
@@ -119,6 +124,7 @@ const Chart: FC<Props> = ({
 }) => {
   const { width } = useWindowSize();
   const isMobile = Number(width) <= 768;
+  const { evmBalance } = useEVMBalance();
 
   if (!tokenInfo)
     return <Skeleton className='h-96 w-80 md:h-[35rem] md:w-[70rem]' />;
@@ -138,7 +144,7 @@ const Chart: FC<Props> = ({
   const stakedSupply = stakedBalance - FOUNDATION_STAKED_AMOUNT;
 
   const otherCirculatingSupply =
-    circulatingSupply - assistanceFundBalance - stakedSupply;
+    circulatingSupply - assistanceFundBalance - stakedSupply - evmBalance;
 
   type Segment = {
     asset: string;
@@ -154,6 +160,13 @@ const Chart: FC<Props> = ({
       amount: otherCirculatingSupply,
       radius: 1,
       displayAmount: otherCirculatingSupply,
+      circulatingSupply,
+    },
+    {
+      asset: SERIES_NAMES.CIRCULATING_EVM,
+      amount: Math.max(evmBalance, minSegmentSize),
+      radius: 1,
+      displayAmount: evmBalance,
       circulatingSupply,
     },
     {
@@ -219,7 +232,7 @@ const Chart: FC<Props> = ({
   const chartOptions: AgChartOptions = {
     data: series,
     width: isMobile ? 320 : 1120,
-    height: isMobile ? 500 : 560,
+    height: isMobile ? 550 : 560,
     theme,
     background: {
       fill: '#03251F',
