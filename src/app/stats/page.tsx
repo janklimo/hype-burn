@@ -4,7 +4,6 @@ import { FC, useEffect, useState } from 'react';
 
 import TradeCallout from '@/components/TradeCallout';
 
-import DominanceChart from '@/app/stats/DominanceChart';
 import { apiHost } from '@/constant/config';
 
 import { MarketStat } from '@/types/responses';
@@ -27,7 +26,7 @@ const Stats: FC = () => {
       <section className='bg-hl-dark p-3 md:p-4'>
         <div className='flex justify-center items-center flex-col mb-8'>
           <div className='relative w-full md:w-3/4 max-w-5xl'>
-            <DominanceChart data={data} />
+            {/* <DominanceChart data={data} /> */}
           </div>
         </div>
         <TradeCallout />
