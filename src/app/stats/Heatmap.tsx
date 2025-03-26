@@ -191,6 +191,7 @@ const Heatmap = () => (
       legend: 'Price',
       legendPosition: 'middle',
       legendOffset: 45,
+      format: (value) => `$${value}`,
     }}
     axisLeft={{
       tickSize: 5,
@@ -199,6 +200,7 @@ const Heatmap = () => (
       legend: 'Price',
       legendPosition: 'middle',
       legendOffset: -45,
+      format: (value) => `$${value}`,
     }}
     axisBottom={{
       tickSize: 5,
@@ -207,10 +209,11 @@ const Heatmap = () => (
       legend: 'Daily Revenue',
       legendPosition: 'middle',
       legendOffset: 45,
+      format: (value) => `$${(Number(value) / 1000000).toFixed(2)}M`,
     }}
     colors={{
       type: 'diverging',
-      divergeAt: 0.45,
+      divergeAt: 0.38,
       scheme: 'red_blue',
     }}
     emptyColor='#555555'
