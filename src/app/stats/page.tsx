@@ -6,6 +6,8 @@ import TradeCallout from '@/components/TradeCallout';
 
 import { apiHost } from '@/constant/config';
 
+import Heatmap from './Heatmap';
+
 import { MarketStat } from '@/types/responses';
 
 const Stats: FC = () => {
@@ -25,8 +27,8 @@ const Stats: FC = () => {
     <main>
       <section className='bg-hl-dark p-3 md:p-4'>
         <div className='flex justify-center items-center flex-col mb-8'>
-          <div className='relative w-full md:w-3/4 max-w-5xl'>
-            {/* <DominanceChart data={data} /> */}
+          <div className='relative w-full md:w-3/4 max-w-5xl h-[500px]'>
+            <Heatmap />
           </div>
         </div>
         <TradeCallout />
