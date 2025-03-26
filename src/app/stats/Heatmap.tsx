@@ -1,332 +1,155 @@
 import { ResponsiveHeatMap } from '@nivo/heatmap';
 
+const labelTextColor = ({ color }: { color: string }) => {
+  // get RGB numbers from string
+  const [r, g, b] = color
+    .replace(/[^\d,]/g, '')
+    .split(',')
+    .map(Number);
+
+  // Calculate relative luminance
+  return r * 0.299 + g * 0.587 + b * 0.114 > 186 ? '#000000' : '#ffffff';
+};
+
 const data = [
   {
-    id: 'Japan',
+    id: '15',
     data: [
-      {
-        x: 'Train',
-        y: 14381,
-      },
-      {
-        x: 'Subway',
-        y: 69277,
-      },
-      {
-        x: 'Bus',
-        y: -29405,
-      },
-      {
-        x: 'Car',
-        y: 72410,
-      },
-      {
-        x: 'Boat',
-        y: 44730,
-      },
-      {
-        x: 'Moto',
-        y: 77451,
-      },
-      {
-        x: 'Moped',
-        y: -13678,
-      },
-      {
-        x: 'Bicycle',
-        y: -87746,
-      },
-      {
-        x: 'Others',
-        y: 98491,
-      },
+      { x: '1000000', y: 5.14 },
+      { x: '1250000', y: 4.11 },
+      { x: '1500000', y: 3.42 },
+      { x: '1750000', y: 2.94 },
+      { x: '2000000', y: 2.57 },
+      { x: '2250000', y: 2.28 },
+      { x: '2500000', y: 2.05 },
+      { x: '2750000', y: 1.87 },
+      { x: '3000000', y: 1.71 },
     ],
   },
   {
-    id: 'France',
+    id: '14',
     data: [
-      {
-        x: 'Train',
-        y: 61322,
-      },
-      {
-        x: 'Subway',
-        y: -38631,
-      },
-      {
-        x: 'Bus',
-        y: -43877,
-      },
-      {
-        x: 'Car',
-        y: 55636,
-      },
-      {
-        x: 'Boat',
-        y: -91974,
-      },
-      {
-        x: 'Moto',
-        y: 47885,
-      },
-      {
-        x: 'Moped',
-        y: 29321,
-      },
-      {
-        x: 'Bicycle',
-        y: 78996,
-      },
-      {
-        x: 'Others',
-        y: 5612,
-      },
+      { x: '1000000', y: 4.79 },
+      { x: '1250000', y: 3.84 },
+      { x: '1500000', y: 3.2 },
+      { x: '1750000', y: 2.74 },
+      { x: '2000000', y: 2.4 },
+      { x: '2250000', y: 2.13 },
+      { x: '2500000', y: 1.92 },
+      { x: '2750000', y: 1.74 },
+      { x: '3000000', y: 1.6 },
     ],
   },
   {
-    id: 'US',
+    id: '13',
     data: [
-      {
-        x: 'Train',
-        y: -12437,
-      },
-      {
-        x: 'Subway',
-        y: 19619,
-      },
-      {
-        x: 'Bus',
-        y: -88635,
-      },
-      {
-        x: 'Car',
-        y: -93885,
-      },
-      {
-        x: 'Boat',
-        y: 22480,
-      },
-      {
-        x: 'Moto',
-        y: -55636,
-      },
-      {
-        x: 'Moped',
-        y: 52865,
-      },
-      {
-        x: 'Bicycle',
-        y: 59736,
-      },
-      {
-        x: 'Others',
-        y: 43676,
-      },
+      { x: '1000000', y: 4.45 },
+      { x: '1250000', y: 3.56 },
+      { x: '1500000', y: 2.97 },
+      { x: '1750000', y: 2.54 },
+      { x: '2000000', y: 2.23 },
+      { x: '2250000', y: 1.98 },
+      { x: '2500000', y: 1.78 },
+      { x: '2750000', y: 1.62 },
+      { x: '3000000', y: 1.48 },
     ],
   },
   {
-    id: 'Germany',
+    id: '12',
     data: [
-      {
-        x: 'Train',
-        y: 33319,
-      },
-      {
-        x: 'Subway',
-        y: 15495,
-      },
-      {
-        x: 'Bus',
-        y: -42093,
-      },
-      {
-        x: 'Car',
-        y: -98942,
-      },
-      {
-        x: 'Boat',
-        y: -71838,
-      },
-      {
-        x: 'Moto',
-        y: 21217,
-      },
-      {
-        x: 'Moped',
-        y: -80300,
-      },
-      {
-        x: 'Bicycle',
-        y: -27411,
-      },
-      {
-        x: 'Others',
-        y: -4106,
-      },
+      { x: '1000000', y: 4.11 },
+      { x: '1250000', y: 3.29 },
+      { x: '1500000', y: 2.74 },
+      { x: '1750000', y: 2.35 },
+      { x: '2000000', y: 2.05 },
+      { x: '2250000', y: 1.83 },
+      { x: '2500000', y: 1.64 },
+      { x: '2750000', y: 1.49 },
+      { x: '3000000', y: 1.37 },
     ],
   },
   {
-    id: 'Norway',
+    id: '11',
     data: [
-      {
-        x: 'Train',
-        y: -53806,
-      },
-      {
-        x: 'Subway',
-        y: 50132,
-      },
-      {
-        x: 'Bus',
-        y: 901,
-      },
-      {
-        x: 'Car',
-        y: 14352,
-      },
-      {
-        x: 'Boat',
-        y: -30586,
-      },
-      {
-        x: 'Moto',
-        y: -38517,
-      },
-      {
-        x: 'Moped',
-        y: 55157,
-      },
-      {
-        x: 'Bicycle',
-        y: 72251,
-      },
-      {
-        x: 'Others',
-        y: -14017,
-      },
+      { x: '1000000', y: 3.77 },
+      { x: '1250000', y: 3.01 },
+      { x: '1500000', y: 2.51 },
+      { x: '1750000', y: 2.15 },
+      { x: '2000000', y: 1.88 },
+      { x: '2250000', y: 1.67 },
+      { x: '2500000', y: 1.51 },
+      { x: '2750000', y: 1.37 },
+      { x: '3000000', y: 1.26 },
     ],
   },
   {
-    id: 'Iceland',
+    id: '10',
     data: [
-      {
-        x: 'Train',
-        y: 17218,
-      },
-      {
-        x: 'Subway',
-        y: -94725,
-      },
-      {
-        x: 'Bus',
-        y: -67553,
-      },
-      {
-        x: 'Car',
-        y: 12367,
-      },
-      {
-        x: 'Boat',
-        y: 29020,
-      },
-      {
-        x: 'Moto',
-        y: 9490,
-      },
-      {
-        x: 'Moped',
-        y: -1517,
-      },
-      {
-        x: 'Bicycle',
-        y: -66763,
-      },
-      {
-        x: 'Others',
-        y: 7115,
-      },
+      { x: '1000000', y: 3.42 },
+      { x: '1250000', y: 2.74 },
+      { x: '1500000', y: 2.28 },
+      { x: '1750000', y: 1.96 },
+      { x: '2000000', y: 1.71 },
+      { x: '2250000', y: 1.52 },
+      { x: '2500000', y: 1.37 },
+      { x: '2750000', y: 1.25 },
+      { x: '3000000', y: 1.14 },
     ],
   },
   {
-    id: 'UK',
+    id: '9',
     data: [
-      {
-        x: 'Train',
-        y: -91243,
-      },
-      {
-        x: 'Subway',
-        y: 17759,
-      },
-      {
-        x: 'Bus',
-        y: -80292,
-      },
-      {
-        x: 'Car',
-        y: 53883,
-      },
-      {
-        x: 'Boat',
-        y: -41313,
-      },
-      {
-        x: 'Moto',
-        y: -72041,
-      },
-      {
-        x: 'Moped',
-        y: 16402,
-      },
-      {
-        x: 'Bicycle',
-        y: 77199,
-      },
-      {
-        x: 'Others',
-        y: -33215,
-      },
+      { x: '1000000', y: 3.08 },
+      { x: '1250000', y: 2.47 },
+      { x: '1500000', y: 2.05 },
+      { x: '1750000', y: 1.76 },
+      { x: '2000000', y: 1.54 },
+      { x: '2250000', y: 1.37 },
+      { x: '2500000', y: 1.23 },
+      { x: '2750000', y: 1.12 },
+      { x: '3000000', y: 1.03 },
     ],
   },
   {
-    id: 'Vietnam',
+    id: '8',
     data: [
-      {
-        x: 'Train',
-        y: 33738,
-      },
-      {
-        x: 'Subway',
-        y: 24527,
-      },
-      {
-        x: 'Bus',
-        y: -11137,
-      },
-      {
-        x: 'Car',
-        y: -12463,
-      },
-      {
-        x: 'Boat',
-        y: 88558,
-      },
-      {
-        x: 'Moto',
-        y: 94503,
-      },
-      {
-        x: 'Moped',
-        y: -29017,
-      },
-      {
-        x: 'Bicycle',
-        y: -96755,
-      },
-      {
-        x: 'Others',
-        y: -61051,
-      },
+      { x: '1000000', y: 2.74 },
+      { x: '1250000', y: 2.19 },
+      { x: '1500000', y: 1.83 },
+      { x: '1750000', y: 1.57 },
+      { x: '2000000', y: 1.37 },
+      { x: '2250000', y: 1.22 },
+      { x: '2500000', y: 1.1 },
+      { x: '2750000', y: 1.0 },
+      { x: '3000000', y: 0.91 },
+    ],
+  },
+  {
+    id: '7',
+    data: [
+      { x: '1000000', y: 2.4 },
+      { x: '1250000', y: 1.92 },
+      { x: '1500000', y: 1.6 },
+      { x: '1750000', y: 1.37 },
+      { x: '2000000', y: 1.2 },
+      { x: '2250000', y: 1.07 },
+      { x: '2500000', y: 0.96 },
+      { x: '2750000', y: 0.87 },
+      { x: '3000000', y: 0.8 },
+    ],
+  },
+  {
+    id: '6',
+    data: [
+      { x: '1000000', y: 2.05 },
+      { x: '1250000', y: 1.64 },
+      { x: '1500000', y: 1.37 },
+      { x: '1750000', y: 1.17 },
+      { x: '2000000', y: 1.03 },
+      { x: '2250000', y: 0.91 },
+      { x: '2500000', y: 0.82 },
+      { x: '2750000', y: 0.75 },
+      { x: '3000000', y: 0.68 },
     ],
   },
 ];
@@ -358,58 +181,55 @@ const Heatmap = () => (
         },
       },
     }}
-    margin={{ top: 60, right: 90, bottom: 60, left: 90 }}
-    valueFormat='>-.2s'
-    axisBottom={null}
-    axisTop={{
-      tickSize: 5,
-      tickPadding: 5,
-      tickRotation: 0,
-      legend: '',
-      legendOffset: 46,
-      truncateTickAt: 0,
-    }}
+    margin={{ top: 60, right: 90, bottom: 120, left: 90 }}
+    valueFormat='>-.2f'
+    axisTop={null}
     axisRight={{
       tickSize: 5,
       tickPadding: 5,
       tickRotation: 0,
-      legend: 'country',
+      legend: 'Price',
       legendPosition: 'middle',
-      legendOffset: 70,
-      truncateTickAt: 0,
+      legendOffset: 45,
     }}
     axisLeft={{
       tickSize: 5,
       tickPadding: 5,
       tickRotation: 0,
-      legend: 'country',
+      legend: 'Price',
       legendPosition: 'middle',
-      legendOffset: -72,
-      truncateTickAt: 0,
+      legendOffset: -45,
+    }}
+    axisBottom={{
+      tickSize: 5,
+      tickPadding: 5,
+      tickRotation: 0,
+      legend: 'Daily Revenue',
+      legendPosition: 'middle',
+      legendOffset: 45,
     }}
     colors={{
       type: 'diverging',
-      scheme: 'greens',
-      divergeAt: 0.5,
-      minValue: -100000,
-      maxValue: 100000,
+      divergeAt: 0.45,
+      scheme: 'red_blue',
     }}
     emptyColor='#555555'
+    labelTextColor={labelTextColor}
     legends={[
       {
         anchor: 'bottom',
         translateX: 0,
-        translateY: 30,
+        translateY: 100,
         length: 400,
-        thickness: 8,
+        thickness: 20,
         direction: 'row',
         tickPosition: 'after',
         tickSize: 3,
         tickSpacing: 4,
         tickOverlap: false,
-        tickFormat: '>-.2s',
         titleAlign: 'start',
         titleOffset: 4,
+        title: 'Years to Buy Ready-for-Sale Supply',
       },
     ]}
   />

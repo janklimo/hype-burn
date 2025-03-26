@@ -27,7 +27,7 @@ const Stats: FC = () => {
     <main>
       <section className='bg-hl-dark p-3 md:p-4'>
         <div className='flex justify-center items-center flex-col mb-8'>
-          <div className='relative w-full md:w-3/4 max-w-5xl h-[500px]'>
+          <div className='relative w-full md:w-3/4 max-w-5xl h-[600px]'>
             <Heatmap />
           </div>
         </div>
