@@ -23,6 +23,8 @@
     "@ag-grid-community/styles": "^31.3.1",
     "@headlessui/react": "^2.0.3",
     "@heroicons/react": "^2.2.0",
+    "@nivo/core": "^0.88.0",
+    "@nivo/heatmap": "^0.88.0",
     "@number-flow/react": "^0.4.1",
     "@react-spring/web": "^9.7.3",
     "@uidotdev/usehooks": "^2.4.1",
