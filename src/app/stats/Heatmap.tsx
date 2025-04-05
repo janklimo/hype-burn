@@ -9,10 +9,14 @@ import useEVMBalance from '@/app/hooks/use-evm-balance';
 import useFees from '@/app/hooks/use-fees';
 import { useStakedBalance } from '@/app/hooks/use-staked-balance';
 import useTokenInfo from '@/app/hooks/use-token-info';
-import { calculateReadyForSaleSupply } from '@/utils/token';
+import {
+  calculateReadyForSaleSupply,
+  FOUNDATION_STAKED_AMOUNT,
+} from '@/utils/token';
 
 import useHypeData from '../hooks/use-hype-data';
 import EvmToggle from './EvmToggle';
+import { SupplyBreakdown } from './SupplyBreakdown';
 
 const generateHeatmapData = (
   markPrice: number,
@@ -210,15 +214,21 @@ const Heatmap = () => {
         </div>
       </div>
 
-      <p className='text-center text-sm text-gray-400 mb-4'>
+      <p className='flex items-center justify-center text-center text-sm text-gray-400 mb-4'>
         Ready-for-sale supply:{' '}
-        <span className='text-accent font-bold'>
+        <span className='text-accent font-bold ml-2'>
           {readyForSaleSupply.toLocaleString('en-US', {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
           })}{' '}
           HYPE
         </span>
+        <SupplyBreakdown
+          circulatingSupply={parseFloat(tokenInfo.circulatingSupply)}
+          assistanceFundBalance={assistanceFundBalances.HYPE}
+          stakedAmount={stakedBalance - FOUNDATION_STAKED_AMOUNT}
+          evmAmount={excludeEvm ? evmBalance : 0}
+        />
       </p>
 
       <div className='relative w-full h-[600px] mb-8'>
