@@ -1,5 +1,4 @@
 import {
-  arrow,
   autoUpdate,
   flip,
   FloatingPortal,
@@ -13,7 +12,7 @@ import {
   useRole,
 } from '@floating-ui/react';
 import { InformationCircleIcon } from '@heroicons/react/24/solid';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 
 interface TooltipProps {
   content: React.ReactNode;
@@ -22,7 +21,6 @@ interface TooltipProps {
 
 export function Tooltip({ content, children }: TooltipProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const arrowRef = useRef<HTMLDivElement>(null);
 
   const { refs, floatingStyles, context } = useFloating({
     open: isOpen,
@@ -35,9 +33,6 @@ export function Tooltip({ content, children }: TooltipProps) {
         fallbackAxisSideDirection: 'start',
       }),
       shift(),
-      arrow({
-        element: arrowRef,
-      }),
     ],
   });
 
@@ -67,15 +62,6 @@ export function Tooltip({ content, children }: TooltipProps) {
             {...getFloatingProps()}
           >
             {content}
-            <div
-              ref={arrowRef}
-              className='absolute w-2 h-2 bg-gray-800 rotate-45'
-              style={{
-                left: '50%',
-                transform: 'translateX(-50%)',
-                bottom: '-4px',
-              }}
-            />
           </div>
         )}
       </FloatingPortal>
