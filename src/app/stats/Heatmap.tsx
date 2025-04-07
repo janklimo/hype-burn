@@ -111,8 +111,9 @@ const Heatmap = () => {
       !assistanceFundBalances.HYPE
     )
       return null;
+    const roundedMarkPrice = Number(parseFloat(hypeData.markPx).toFixed(1));
     return generateHeatmapData(
-      parseFloat(hypeData.markPx),
+      roundedMarkPrice,
       fees[selectedPeriod],
       readyForSaleSupply,
     );
@@ -278,33 +279,37 @@ const Heatmap = () => {
             legend: 'Price',
             legendPosition: 'middle',
             legendOffset: -65,
-            format: (value) => `$${value}`,
-            renderTick: ({ x, y, value }) => (
-              <g transform={`translate(${x},${y})`} style={{ opacity: 1 }}>
-                <line
-                  x1='0'
-                  x2='-5'
-                  y1='0'
-                  y2='0'
-                  style={{ stroke: 'rgb(119, 119, 119)', strokeWidth: 1 }}
-                />
-                <text
-                  dominantBaseline='central'
-                  textAnchor='end'
-                  transform='translate(-10,0) rotate(0)'
-                  style={{
-                    fontFamily: 'sans-serif',
-                    fontSize: '11px',
-                    fill:
-                      Number(value) === parseFloat(hypeData.markPx)
-                        ? '#98FCE4'
-                        : '#bcc4c2',
-                  }}
-                >
-                  ${value}
-                </text>
-              </g>
-            ),
+            format: (value) => `$${Number(value).toFixed(1)}`,
+            renderTick: ({ x, y, value }) => {
+              const isCurrentPrice =
+                Number(value) === Number(Number(hypeData.markPx).toFixed(1));
+              return (
+                <g transform={`translate(${x},${y})`} style={{ opacity: 1 }}>
+                  <line
+                    x1='0'
+                    x2='-5'
+                    y1='0'
+                    y2='0'
+                    style={{ stroke: 'rgb(119, 119, 119)', strokeWidth: 1 }}
+                  />
+                  <text
+                    dominantBaseline='central'
+                    textAnchor='end'
+                    transform='translate(-10,0) rotate(0)'
+                    style={{
+                      fontFamily: 'sans-serif',
+                      fontSize: '11px',
+                      fill: isCurrentPrice ? '#98FCE4' : '#bcc4c2',
+                    }}
+                  >
+                    $
+                    {isCurrentPrice
+                      ? Number(value).toFixed(1)
+                      : Math.floor(value)}
+                  </text>
+                </g>
+              );
+            },
           }}
           axisBottom={{
             tickSize: 5,
