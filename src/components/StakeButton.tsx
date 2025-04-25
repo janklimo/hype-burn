@@ -4,15 +4,15 @@ import { FC } from 'react';
 const StakeButton: FC = () => {
   return (
     <a
-      href='https://app.hyperliquid.xyz/staking'
+      href='https://www.stakingrewards.com/stake-app?input=hyperliquid&best-deal=true&validator=purrposefulnode&locked=true'
       className='inline-flex items-center bg-beige text-sm text-yellow-900 px-3 py-2 hover:bg-beige-hover transition-all duration-300 rounded-md'
       target='_blank'
       rel='noopener noreferrer'
     >
-      <span className='mr-1'>Stake</span>
+      <span className='mr-1'>Boost your stake with</span>
       <div className='w-5 inline-block mr-1'>
         <Image
-          src='/images/hype.png'
+          src='/images/loopedhype.svg'
           width={64}
           height={64}
           priority
@@ -20,7 +20,7 @@ const StakeButton: FC = () => {
           className='rounded-full'
         />
       </div>
-      <span className='mr-1'>HYPE with</span>
+      <span className='mr-1'>loopedHYPE and</span>
       <div className='w-8 inline-block mr-1'>
         <Image
           src='/images/node-logo.png'
