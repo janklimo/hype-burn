@@ -135,13 +135,9 @@ const AssistanceFund: FC<Props> = ({ data, balances }) => {
                 })}{' '}
                 HYPE
               </span>
-              . At the current price{' '}
+              . The order value is{' '}
               <span className='font-bold text-accent'>
-                ${markPrice.toFixed(3)}
-              </span>{' '}
-              the order value is{' '}
-              <span className='font-bold text-accent'>
-                {(parseFloat(hypeOrders[0].sz) * markPrice).toLocaleString(
+                {(parseFloat(hypeOrders[0].sz) * orderPrice).toLocaleString(
                   'en-US',
                   {
                     style: 'currency',
