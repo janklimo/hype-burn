@@ -345,7 +345,7 @@ const Top: FC = () => {
         <h3 className='text-sm text-hlGray mb-1 text-center'>
           Choose a date to view data
         </h3>
-        <div className='w-1/3'>
+        <div className='w-4/5 md:w-1/2'>
           <PrettoSlider
             value={selectedIndex}
             onChange={(_, value) => setSelectedIndex(value as number)}

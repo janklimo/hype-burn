@@ -1,15 +1,11 @@
-import dynamic from 'next/dynamic';
 import { FC, useEffect, useRef, useState } from 'react';
 
-const AssistanceFundChart = dynamic(
-  () => import('@/components/AssistanceFundChart'),
-  { ssr: false },
-);
-
+import RealTimePriceChart from '@/components/RealTimePriceChart';
 import Skeleton from '@/components/Skeleton';
 
 import { Balances } from '@/app/hooks/use-assistance-fund-balances';
 import useHypeData from '@/app/hooks/use-hype-data';
+import useOrderData from '@/app/hooks/use-order-data';
 
 interface Props {
   data: ReturnType<typeof useHypeData>;
@@ -20,6 +16,7 @@ const AssistanceFund: FC<Props> = ({ data, balances }) => {
   const [elapsedTime, setElapsedTime] = useState(0);
   const [accumulatedUSDC, setAccumulatedUSDC] = useState(0);
   const [accumulatedHYPE, setAccumulatedHYPE] = useState(0);
+  const orders = useOrderData('0xfefefefefefefefefefefefefefefefefefefefe');
 
   const prevBalances = useRef<Balances | null>(null);
   const initialBalances = useRef<Balances | null>(null);
@@ -70,12 +67,15 @@ const AssistanceFund: FC<Props> = ({ data, balances }) => {
 
     const markPrice = parseFloat(data.markPx);
     const fundValue = markPrice * balances.HYPE;
+    const hypeOrders = orders.filter((order) => order.coin === '@107');
+    const orderPrice =
+      hypeOrders.length > 0 ? parseFloat(hypeOrders[0].limitPx) : 0;
 
     return (
       <>
         <div className='mb-8 flex flex-col gap-y-3'>
           <p className='text-hlGray text-sm'>
-            The Assistance Fund currently holds{' '}
+            The Assistance Fund (AF) currently holds{' '}
             <span className='font-bold text-accent'>
               {balances.HYPE.toLocaleString(undefined, {
                 minimumFractionDigits: 2,
@@ -115,8 +115,50 @@ const AssistanceFund: FC<Props> = ({ data, balances }) => {
               HYPE
             </span>
           </p>
+          {hypeOrders.length === 0 && (
+            <p className='text-hlGray text-sm'>
+              The AF currently has no open limit buy orders. The fund will begin
+              placing orders once it accumulates over 10,000 USDC.
+            </p>
+          )}
+          {hypeOrders.length > 0 && (
+            <p className='text-hlGray text-sm'>
+              The AF currently has an open limit buy order at{' '}
+              <span className='font-bold text-accent'>
+                ${parseFloat(hypeOrders[0].limitPx).toFixed(3)}
+              </span>{' '}
+              for{' '}
+              <span className='font-bold text-accent'>
+                {parseFloat(hypeOrders[0].sz).toLocaleString(undefined, {
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0,
+                })}{' '}
+                HYPE
+              </span>
+              . At the current price{' '}
+              <span className='font-bold text-accent'>
+                ${markPrice.toFixed(3)}
+              </span>{' '}
+              the order value is{' '}
+              <span className='font-bold text-accent'>
+                {(parseFloat(hypeOrders[0].sz) * markPrice).toLocaleString(
+                  'en-US',
+                  {
+                    style: 'currency',
+                    currency: 'USD',
+                    maximumFractionDigits: 0,
+                  },
+                )}
+              </span>
+              .
+            </p>
+          )}
         </div>
-        <AssistanceFundChart balances={balances} />
+        <RealTimePriceChart
+          balances={balances}
+          markPrice={markPrice}
+          orderPrice={orderPrice}
+        />
       </>
     );
   };

@@ -1,0 +1,69 @@
+{
+	"meta": {
+		"generatedAt": "2025-06-21T10:56:10.020Z",
+		"tasksAnalyzed": 1,
+		"totalTasks": 6,
+		"analysisCount": 7,
+		"thresholdScore": 5,
+		"projectName": "Taskmaster",
+		"usedResearch": true
+	},
+	"complexityAnalysis": [
+		{
+			"taskId": 1,
+			"taskTitle": "Install Chart.js Dependencies and Project Setup",
+			"complexityScore": 3,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down the Chart.js installation and project setup into specific steps for dependency management, environment configuration, and initial component structure.",
+			"reasoning": "This task is relatively straightforward but involves multiple steps that could benefit from clear separation."
+		},
+		{
+			"taskId": 2,
+			"taskTitle": "Create Static RealTimePriceChart Component with Dark Theme",
+			"complexityScore": 6,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "Divide the creation of the static RealTimePriceChart component into subtasks for chart configuration, dual y-axes setup, dark theme styling, and initial data structure implementation.",
+			"reasoning": "This task involves multiple complex aspects of Chart.js configuration and styling, warranting a more detailed breakdown."
+		},
+		{
+			"taskId": 3,
+			"taskTitle": "Implement WebSocket Data Stream Hook",
+			"complexityScore": 7,
+			"recommendedSubtasks": 5,
+			"expansionPrompt": "Break down the WebSocket data stream hook implementation into subtasks for connection management, data parsing, error handling, reconnection logic, and state management.",
+			"reasoning": "This task involves complex asynchronous operations and state management, requiring careful separation of concerns."
+		},
+		{
+			"taskId": 5,
+			"taskTitle": "Configure Interactive Tooltip and Chart Interactions",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down the tooltip and interaction configuration into subtasks for custom tooltip implementation, shared tooltip behavior, and styling enhancements.",
+			"reasoning": "While moderately complex, this task is more focused and can be effectively managed with fewer subtasks."
+		},
+		{
+			"taskId": 6,
+			"taskTitle": "Implement Performance Optimizations and Error Handling",
+			"complexityScore": 9,
+			"recommendedSubtasks": 7,
+			"expansionPrompt": "Divide performance optimizations and error handling into subtasks for data throttling, update batching, memory management, error boundaries, reconnection logic, UI state management, and monitoring setup.",
+			"reasoning": "This task covers a wide range of critical production-ready features, each requiring careful implementation and testing."
+		},
+		{
+			"taskId": 7,
+			"taskTitle": "Replace Legacy Component and Final Integration",
+			"complexityScore": 6,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "Break down the legacy component replacement into subtasks for import updates, prop compatibility checks, documentation updates, and final integration testing.",
+			"reasoning": "While not highly complex technically, this task involves careful coordination and testing to ensure smooth integration without regressions."
+		},
+		{
+			"taskId": 4,
+			"taskTitle": "Integrate Real-time Data with Chart Component",
+			"complexityScore": 8,
+			"recommendedSubtasks": 6,
+			"expansionPrompt": "Break down the integration of real-time Market Price and Order Price data streams with the Chart.js component into specific implementation steps, including data fetching, transformation, chart updates, and performance optimizations.",
+			"reasoning": "This task involves integrating multiple real-time data streams, implementing data transformations, handling synchronization, and optimizing performance. It requires working with WebSockets, Chart.js, and complex state management, making it a high-complexity task that would benefit from being broken down into smaller, manageable subtasks."
+		}
+	]
+}

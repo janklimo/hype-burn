@@ -10,7 +10,28 @@ interface TokenInfo {
   nonCirculatingUserBalances: [string, string][];
 }
 
-async function fetcher(url: string) {
+interface ServerTokenResponse {
+  name: string;
+  maxSupply: string;
+  totalSupply: string;
+  circulatingSupply: string;
+  szDecimals: number;
+  weiDecimals: number;
+  midPx: string;
+  markPx: string;
+  prevDayPx: string;
+  genesis: {
+    userBalances: [string, string][];
+  };
+  deployer: string | null;
+  deployGas: string;
+  deployTime: string;
+  seededUsdc: string;
+  nonCirculatingUserBalances: [string, string][];
+  futureEmissions: string;
+}
+
+async function fetcher(url: string): Promise<TokenInfo> {
   const res = await fetch(url, {
     method: 'POST',
     headers: {
@@ -26,7 +47,15 @@ async function fetcher(url: string) {
     throw new Error('Network response was not ok');
   }
 
-  return await res.json();
+  const serverResponse: ServerTokenResponse = await res.json();
+
+  // Transform server response to only include TokenInfo fields to save memory
+  return {
+    totalSupply: serverResponse.totalSupply,
+    circulatingSupply: serverResponse.circulatingSupply,
+    futureEmissions: serverResponse.futureEmissions,
+    nonCirculatingUserBalances: serverResponse.nonCirculatingUserBalances,
+  };
 }
 
 const useTokenInfo = () => {
@@ -37,8 +66,16 @@ const useTokenInfo = () => {
       try {
         const res = await fetch(`${apiHost}/hype`);
         if (!res.ok) throw new Error('Network response was not ok');
-        const data = await res.json();
-        setInitialData(data);
+        const serverResponse: ServerTokenResponse = await res.json();
+
+        const tokenInfo: TokenInfo = {
+          totalSupply: serverResponse.totalSupply,
+          circulatingSupply: serverResponse.circulatingSupply,
+          futureEmissions: serverResponse.futureEmissions,
+          nonCirculatingUserBalances: serverResponse.nonCirculatingUserBalances,
+        };
+
+        setInitialData(tokenInfo);
       } catch (error) {
         console.error('Failed to fetch initial data:', error);
       }
