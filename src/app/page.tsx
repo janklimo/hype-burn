@@ -52,13 +52,18 @@ export default function HomePage() {
               data={data}
               tokenInfo={tokenInfo}
               assistanceFundBalance={balances.HYPE}
+              burntEVMBalance={burntEVMBalance}
             />
           </div>
           <div className='my-4 w-full'>
             <AssistanceFund data={data} balances={balances} />
           </div>
           <div className='my-4 w-full'>
-            <DidYouKnow data={data} tokenInfo={tokenInfo} />
+            <DidYouKnow
+              data={data}
+              tokenInfo={tokenInfo}
+              burntEVMBalance={burntEVMBalance}
+            />
           </div>
           <div className='mt-4 mb-6 w-full'>
             <SaltSheet data={data} />

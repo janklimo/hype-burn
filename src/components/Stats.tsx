@@ -42,14 +42,21 @@ interface Props {
   data: ReturnType<typeof useHypeData>;
   tokenInfo: ReturnType<typeof useTokenInfo>['tokenInfo'];
   assistanceFundBalance: number;
+  burntEVMBalance: number;
 }
 
-const Stats: FC<Props> = ({ data, tokenInfo, assistanceFundBalance }) => {
+const Stats: FC<Props> = ({
+  data,
+  tokenInfo,
+  assistanceFundBalance,
+  burntEVMBalance,
+}) => {
   if (!data || !tokenInfo)
     return <Skeleton className='h-96 w-80 md:h-[35rem] md:w-[70rem]' />;
 
   const supply = parseFloat(tokenInfo.totalSupply);
-  const burntAmount = 1_000_000_000 - supply;
+  const burntFromTrading = 1_000_000_000 - supply;
+  const totalBurntAmount = burntFromTrading + burntEVMBalance;
   const markPrice = parseFloat(data.markPx);
   const previousDayPrice = parseFloat(data.prevDayPx);
   const volume = parseFloat(data.dayNtlVlm);
@@ -59,10 +66,30 @@ const Stats: FC<Props> = ({ data, tokenInfo, assistanceFundBalance }) => {
   return (
     <div className='bg-hl-light isolate p-2 mt-4 text-hlGray'>
       <Marquee pauseOnHover gradient gradientColor='#163832' gradientWidth={18}>
-        {/* Burnt from trading */}
-        <p className='text-hlGray text-sm mr-3'>Burn from trading fees:</p>
+        {/* Total burnt amount */}
+        <p className='text-hlGray text-sm mr-3'>Total burnt:</p>
         <p className='text-accent text-sm font-mono'>
-          {burntAmount.toLocaleString(undefined, {
+          {totalBurntAmount.toLocaleString(undefined, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}{' '}
+          HYPE
+        </p>
+        <p className='text-gray-500 mx-3'>/</p>
+        {/* Burnt from trading */}
+        <p className='text-hlGray text-sm mr-3'>Burnt (Core):</p>
+        <p className='text-accent text-sm font-mono'>
+          {burntFromTrading.toLocaleString(undefined, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}{' '}
+          HYPE
+        </p>
+        <p className='text-gray-500 mx-3'>/</p>
+        {/* Burnt from EVM */}
+        <p className='text-hlGray text-sm mr-3'>Burnt (EVM):</p>
+        <p className='text-accent text-sm font-mono'>
+          {burntEVMBalance.toLocaleString(undefined, {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
           })}{' '}

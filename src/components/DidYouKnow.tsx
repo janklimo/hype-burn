@@ -33,9 +33,10 @@ const toOrdinal = (n: number): string => {
 interface Props {
   data: ReturnType<typeof useHypeData>;
   tokenInfo: ReturnType<typeof useTokenInfo>['tokenInfo'];
+  burntEVMBalance: number;
 }
 
-const DidYouKnow: FC<Props> = ({ data, tokenInfo }) => {
+const DidYouKnow: FC<Props> = ({ data, tokenInfo, burntEVMBalance }) => {
   const { data: leaderboardData } = useSWR<LeaderboardData>(
     `${apiHost}/leaderboard?coin=hype`,
     (url: string) => fetch(url).then((res) => res.json()),
@@ -47,7 +48,7 @@ const DidYouKnow: FC<Props> = ({ data, tokenInfo }) => {
     }
 
     const supply = parseFloat(tokenInfo.totalSupply);
-    const burntAmount = 1_000_000_000 - supply;
+    const burntAmount = 1_000_000_000 - supply + burntEVMBalance;
     const markPrice = parseFloat(data.markPx);
 
     return (
