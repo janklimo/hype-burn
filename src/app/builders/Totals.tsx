@@ -12,28 +12,54 @@ import ChartSkeleton from '@/components/ChartSkeleton';
 
 import { apiHost } from '@/constant/config';
 
-const barSeriesOptions: AgBarSeriesOptions = {
-  type: 'bar' as const,
-  xKey: 'date',
-  yKey: 'revenue',
-  yName: 'Revenue',
-  fill: '#51D2C1',
-  tooltip: {
-    renderer: ({ datum, yName }) => {
-      const value = datum.revenue.toLocaleString('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      });
+const barSeriesOptions: AgBarSeriesOptions[] = [
+  {
+    type: 'bar' as const,
+    xKey: 'date',
+    yKey: 'revenue',
+    yName: 'Builder Code Fees',
+    fill: '#51D2C1',
+    stacked: true,
+    tooltip: {
+      renderer: ({ datum, yName }) => {
+        const value = datum.revenue.toLocaleString('en-US', {
+          style: 'currency',
+          currency: 'USD',
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        });
 
-      return {
-        title: `<b>${yName}</b> <small>(${datum.date})</small>`,
-        content: value,
-      };
+        return {
+          title: `<b>${yName}</b> <small>(${datum.date})</small>`,
+          content: value,
+        };
+      },
     },
   },
-};
+  {
+    type: 'bar' as const,
+    xKey: 'date',
+    yKey: 'referral_fees',
+    yName: 'Referral Fees',
+    fill: '#9AFEFF',
+    stacked: true,
+    tooltip: {
+      renderer: ({ datum, yName }) => {
+        const value = datum.referral_fees.toLocaleString('en-US', {
+          style: 'currency',
+          currency: 'USD',
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        });
+
+        return {
+          title: `<span style="color: #03251F;"><b>${yName}</b> <small>(${datum.date})</small></span>`,
+          content: value,
+        };
+      },
+    },
+  },
+];
 
 const lineSeriesOptions: AgLineSeriesOptions = {
   type: 'line' as const,
@@ -45,6 +71,7 @@ const lineSeriesOptions: AgLineSeriesOptions = {
   marker: {
     enabled: true,
     fill: '#F69318',
+    stroke: '#F69318',
   },
   tooltip: {
     renderer: ({ datum, yName }) => {
@@ -60,6 +87,7 @@ interface TotalsData {
   date: string;
   revenue: number;
   builders: number;
+  referral_fees: number;
 }
 
 const Totals: FC = () => {
@@ -86,14 +114,14 @@ const Totals: FC = () => {
 
   const options: AgCartesianChartOptions = {
     title: {
-      text: 'Builder Codes: Totals',
+      text: 'Builder Revenues',
     },
     subtitle: {
-      text: 'Aggregated builder revenue vs total active builders (builder codes win non-zero collected builder fees)',
+      text: 'Revenue breakdown (builder code fees + referral fees) vs total active builders (builder codes win non-zero collected builder fees)',
       spacing: 40,
     },
     data,
-    series: [barSeriesOptions, lineSeriesOptions],
+    series: [...barSeriesOptions, lineSeriesOptions],
     axes: [
       {
         type: 'category',
@@ -125,7 +153,7 @@ const Totals: FC = () => {
             }).format(value);
           },
         },
-        keys: ['revenue'],
+        keys: ['revenue', 'referral_fees'],
       },
       {
         type: 'number',
