@@ -115,12 +115,14 @@ interface Props {
   tokenInfo: ReturnType<typeof useTokenInfo>['tokenInfo'];
   assistanceFundBalance: number;
   stakedBalance: number;
+  burntEVMBalance: number;
 }
 
 const Chart: FC<Props> = ({
   tokenInfo,
   assistanceFundBalance,
   stakedBalance,
+  burntEVMBalance,
 }) => {
   const { width } = useWindowSize();
   const isMobile = Number(width) <= 768;
@@ -131,7 +133,7 @@ const Chart: FC<Props> = ({
 
   const circulatingSupply = parseFloat(tokenInfo.circulatingSupply);
   const totalSupply = parseFloat(tokenInfo.totalSupply);
-  const burntAmount = 1_000_000_000 - totalSupply;
+  const burntAmount = 1_000_000_000 - totalSupply + burntEVMBalance;
   const nonCirculatingSupply = sumBalances(
     tokenInfo.nonCirculatingUserBalances,
   );
@@ -142,9 +144,13 @@ const Chart: FC<Props> = ({
   const minSegmentSize = (totalSupply * minVisiblePercentage) / 100;
 
   const stakedSupply = stakedBalance - FOUNDATION_STAKED_AMOUNT;
+  const adjustedEvmBalance = evmBalance - burntEVMBalance;
 
   const otherCirculatingSupply =
-    circulatingSupply - assistanceFundBalance - stakedSupply - evmBalance;
+    circulatingSupply -
+    assistanceFundBalance -
+    stakedSupply -
+    adjustedEvmBalance;
 
   type Segment = {
     asset: string;
@@ -164,9 +170,9 @@ const Chart: FC<Props> = ({
     },
     {
       asset: SERIES_NAMES.CIRCULATING_EVM,
-      amount: Math.max(evmBalance, minSegmentSize),
+      amount: adjustedEvmBalance,
       radius: 1,
-      displayAmount: evmBalance,
+      displayAmount: adjustedEvmBalance,
       circulatingSupply,
     },
     {

@@ -15,6 +15,7 @@ import Stats from '@/components/Stats';
 import TradeCallout from '@/components/TradeCallout';
 
 import useAssistanceFundBalances from '@/app/hooks/use-assistance-fund-balances';
+import useBurntEVMBalance from '@/app/hooks/use-burnt-evm-balance';
 import useHypeData from '@/app/hooks/use-hype-data';
 import { useStakedBalance } from '@/app/hooks/use-staked-balance';
 import useTokenInfo from '@/app/hooks/use-token-info';
@@ -24,6 +25,7 @@ export default function HomePage() {
   const { tokenInfo } = useTokenInfo();
   const { stakedBalance } = useStakedBalance();
   const balances = useAssistanceFundBalances();
+  const { balance: burntEVMBalance } = useBurntEVMBalance();
 
   return (
     <main>
@@ -38,8 +40,12 @@ export default function HomePage() {
               tokenInfo={tokenInfo}
               assistanceFundBalance={balances.HYPE}
               stakedBalance={stakedBalance}
+              burntEVMBalance={burntEVMBalance}
             />
-            <ChartInner tokenInfo={tokenInfo} />
+            <ChartInner
+              tokenInfo={tokenInfo}
+              burntEVMBalance={burntEVMBalance}
+            />
           </div>
           <div className='mb-6 w-full sm:w-3/4'>
             <Stats
