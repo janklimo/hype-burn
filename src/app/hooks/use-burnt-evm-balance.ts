@@ -1,27 +1,51 @@
 import useSWR from 'swr';
-import { formatEther } from 'viem';
 
-import { publicClient } from '@/utils/evm';
+interface ChartEntry {
+  date: string;
+  date_to: string;
+  value: string;
+  is_approximate: boolean;
+}
 
-const NULL_ADDRESS = '0x0000000000000000000000000000000000000000' as const;
+interface ApiResponse {
+  chart: ChartEntry[];
+  info: {
+    id: string;
+    title: string;
+    description: string;
+    units: string;
+    resolutions: string[];
+  };
+}
 
-async function fetchNativeBalance(address: string) {
+async function fetchTransactionFees() {
   try {
-    const balance = await publicClient.getBalance({
-      address: address as `0x${string}`,
-    });
+    const response = await fetch(
+      'https://stats-hyperliquid.cloud.blockscout.com/api/v1/lines/txnsFee?resolution=YEAR',
+    );
 
-    return Number(formatEther(balance));
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data: ApiResponse = await response.json();
+
+    // Sum all values from the chart array
+    const totalFees = data.chart.reduce((sum, entry) => {
+      return sum + Number(entry.value);
+    }, 0);
+
+    return totalFees;
   } catch (error) {
-    console.error('Error fetching native balance:', error);
+    console.error('Error fetching transaction fees:', error);
     throw error;
   }
 }
 
-const useBurntEVMBalance = (address: string = NULL_ADDRESS) => {
+const useBurntEVMBalance = () => {
   const { data, error } = useSWR<number>(
-    ['nativeBalance', address],
-    ([, addr]: [string, string]) => fetchNativeBalance(addr),
+    'transactionFees',
+    fetchTransactionFees,
     {
       refreshInterval: 5_000,
       fallbackData: 0,
