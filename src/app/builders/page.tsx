@@ -23,7 +23,8 @@ const Builders: FC = () => {
           Builder Revenues
         </h2>
         <p className='text-white text-sm text-center'>
-          You can hide/show any chart series by{' '}
+          You can hide/show any chart series by clicking on the legend or double
+          click on it to focus on a specific series{' '}
           <UnderlineLink
             href='#'
             className='mr-2'
@@ -32,7 +33,7 @@ const Builders: FC = () => {
               openVideoModal();
             }}
           >
-            clicking on the legend
+            like this
           </UnderlineLink>
         </p>
         <div className='flex justify-center items-center flex-col mb-8'>
