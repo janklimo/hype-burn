@@ -44,9 +44,7 @@ const IndividualBuilders: FC = () => {
           const response = await fetch(nextUrl);
           const jsonData: Response = await response.json();
 
-          if (fetchedBuilders.length === 0) {
-            fetchedBuilders = jsonData.data.builders;
-          }
+          fetchedBuilders = jsonData.data.builders;
 
           fetchedData.push(...jsonData.data.individual_data);
           nextUrl =

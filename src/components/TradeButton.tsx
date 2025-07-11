@@ -9,19 +9,8 @@ const TradeButton: FC = () => {
       target='_blank'
       rel='noopener noreferrer'
     >
-      <span className='mr-1'>Buy</span>
+      <span className='mr-1'>Support me by using my</span>
       <div className='w-5 inline-block mr-1'>
-        <Image
-          src='/images/hype.png'
-          width={64}
-          height={64}
-          priority
-          alt='HYPE'
-          className='rounded-full'
-        />
-      </div>
-      <span className='mr-1'>HYPE on Hyperliquid</span>
-      <div className='w-5 inline-block'>
         <Image
           src='/images/blob.gif'
           width={64}
@@ -30,6 +19,7 @@ const TradeButton: FC = () => {
           alt='HYPE'
         />
       </div>
+      <span className='mr-1'>referral code</span>
     </a>
   );
 };

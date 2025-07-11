@@ -17,7 +17,7 @@ const TradeCallout: FC = () => (
         <TradeButton />
       </div>
       <p className='text-gray-400 text-sm mb-5'>
-        Using this referral link gives you a{' '}
+        It's free and it gives you a{' '}
         <a
           href='https://hyperliquid.gitbook.io/hyperliquid-docs/referrals'
           className='text-hl-primary hover:text-accent transition-all'
