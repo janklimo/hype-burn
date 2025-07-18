@@ -25,14 +25,14 @@ const generateHeatmapData = (
 ) => {
   const baseRevenues = [
     '2000000',
-    '2500000',
     '3000000',
-    '3500000',
     '4000000',
-    '4500000',
     '5000000',
-    '5500000',
     '6000000',
+    '7000000',
+    '8000000',
+    '9000000',
+    '10000000',
   ];
 
   const revenues = [...baseRevenues, dailyRevenue.toString()].sort(
