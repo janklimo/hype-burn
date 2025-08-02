@@ -7,6 +7,7 @@ import TradeCallout from '@/components/TradeCallout';
 import VideoModal from '@/components/VideoModal';
 
 import IndividualBuilders from '@/app/builders/IndividualBuilders';
+import ReferrerCodesChart from '@/app/builders/ReferrerCodesChart';
 import Top from '@/app/builders/Top';
 import Totals from '@/app/builders/Totals';
 
@@ -19,6 +20,15 @@ const Builders: FC = () => {
   return (
     <main>
       <section className='bg-hl-dark p-3 md:p-4'>
+        <div className='my-8'>
+          <h2 className='text-white text-lg mb-3 text-center'>Referrers</h2>
+          <div className='flex justify-center items-center flex-col'>
+            <div className='relative w-full max-w-5xl'>
+              <ReferrerCodesChart />
+            </div>
+          </div>
+        </div>
+
         <h2 className='text-white text-lg mb-3 text-center'>
           Builder Revenues
         </h2>
