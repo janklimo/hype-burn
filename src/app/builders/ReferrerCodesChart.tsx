@@ -23,17 +23,31 @@ interface ReferrerCodesResponse {
   fees: Entry[];
 }
 
-const ReferrerCodesChart: FC = () => {
+interface ReferrerCodesChartProps {
+  mode: 'users' | 'fees';
+}
+
+const formatCurrency = (value: number) =>
+  new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    maximumFractionDigits: 0,
+  }).format(value);
+
+const ReferrerCodesChart: FC<ReferrerCodesChartProps> = ({ mode }) => {
   const [data, setData] = useState<Entry[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [allData, setAllData] = useState<ReferrerCodesResponse | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const res = await fetch(ENDPOINT);
         const json: ReferrerCodesResponse = await res.json();
-        setData(json.users);
+        setAllData(json);
+        setData(json[mode]);
       } catch (e) {
+        setAllData(null);
         setData([]);
       } finally {
         setIsLoading(false);
@@ -42,21 +56,40 @@ const ReferrerCodesChart: FC = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    if (allData) {
+      setData(allData[mode]);
+    }
+  }, [mode, allData]);
+
+  const isUsers = mode === 'users';
+
   const options: AgCartesianChartOptions = {
-    title: { text: 'Top Referrer Codes by User Count' },
-    subtitle: { text: 'Codes that referred the most users', spacing: 40 },
+    title: {
+      text: isUsers
+        ? 'Top Referrer Codes by User Count'
+        : 'Top Referrer Codes by Fees',
+    },
+    subtitle: {
+      text: isUsers
+        ? 'Codes that referred the most users'
+        : 'Codes that earned the most fees',
+      spacing: 40,
+    },
     data,
     series: [
       {
         type: 'bar',
         xKey: 'code',
         yKey: 'amount',
-        yName: 'Users Referred',
+        yName: isUsers ? 'Users Referred' : 'Fees Generated',
         fill: '#51D2C1',
         tooltip: {
           renderer: ({ datum }) => ({
             title: `<b>${datum.code}</b>`,
-            content: `${datum.amount.toLocaleString()} users`,
+            content: isUsers
+              ? `${datum.amount.toLocaleString()} users`
+              : formatCurrency(datum.amount),
           }),
         },
       } as AgBarSeriesOptions,
@@ -70,9 +103,12 @@ const ReferrerCodesChart: FC = () => {
       {
         type: 'number',
         position: 'left',
-        title: { text: 'Users', color: '#9ca3af' },
+        title: { text: isUsers ? 'Users' : 'Fees', color: '#9ca3af' },
         label: {
-          formatter: (params) => params.value.toLocaleString(),
+          formatter: (params) =>
+            isUsers
+              ? params.value.toLocaleString()
+              : formatCurrency(params.value),
         },
       },
     ],
