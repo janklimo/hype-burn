@@ -2,6 +2,7 @@ import { ComputedNodeWithoutStyles, ResponsiveTreeMap } from '@nivo/treemap';
 import { FC, memo, useState } from 'react';
 
 import ChartSkeleton from '@/components/ChartSkeleton';
+import UnderlineLink from '@/components/links/UnderlineLink';
 
 import { ValidatorNode } from '@/app/hooks/use-staking-snapshot';
 
@@ -153,6 +154,14 @@ const ValidatorsTreeMap: FC<ValidatorsTreeMapProps> = ({
           }}
         />
       </div>
+      <p className='text-white text-xs text-right mt-2'>
+        <UnderlineLink
+          href='https://pub-759231fcf0d245e2b6195059e1902321.r2.dev/delegations.csv'
+          className='mr-2'
+        >
+          Download as CSV
+        </UnderlineLink>
+      </p>
     </div>
   );
 };
