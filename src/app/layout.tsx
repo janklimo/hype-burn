@@ -13,6 +13,7 @@ import 'highcharts/css/highcharts.css';
 
 import MobileCallout from '@/components/MobileCallout';
 import Navbar from '@/components/Navbar';
+import ReferralPromptWrapper from '@/components/ReferralPromptWrapper';
 
 import { siteConfig } from '@/constant/config';
 
@@ -80,6 +81,7 @@ export default function RootLayout({
             },
           }}
         />
+        <ReferralPromptWrapper />
       </body>
       <Analytics />
     </html>

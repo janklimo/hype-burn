@@ -5,7 +5,7 @@ const TradeButton: FC = () => {
   return (
     <a
       href='https://app.hyperliquid.xyz/join/AK194'
-      className='inline-flex items-center bg-hl-primary text-sm px-4 py-3 hover:bg-accent transition-all duration-300 rounded-md'
+      className='inline-flex items-center bg-hl-primary text-sm text-hl-dark px-4 py-3 hover:bg-accent transition-all duration-300 rounded-md'
       target='_blank'
       rel='noopener noreferrer'
     >
