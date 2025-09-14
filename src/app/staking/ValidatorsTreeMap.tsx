@@ -28,6 +28,7 @@ interface ValidatorsTreeMapProps {
   validatorNamesLoading: boolean;
   stakingData: ValidatorNode | null;
   snapshotDate: string;
+  filename: string | null;
   stakingDataLoading: boolean;
 }
 
@@ -36,6 +37,7 @@ const ValidatorsTreeMap: FC<ValidatorsTreeMapProps> = ({
   validatorNamesLoading,
   stakingData,
   snapshotDate,
+  filename,
   stakingDataLoading,
 }) => {
   const [selectedValidator, setSelectedValidator] = useState<string>('');
@@ -154,14 +156,16 @@ const ValidatorsTreeMap: FC<ValidatorsTreeMapProps> = ({
           }}
         />
       </div>
-      <p className='text-white text-xs text-right mt-2'>
-        <UnderlineLink
-          href='https://pub-759231fcf0d245e2b6195059e1902321.r2.dev/delegations.csv'
-          className='mr-2'
-        >
-          Download as CSV
-        </UnderlineLink>
-      </p>
+      {filename && (
+        <p className='text-white text-xs text-right mt-2'>
+          <UnderlineLink
+            href={`https://pub-759231fcf0d245e2b6195059e1902321.r2.dev/${filename}`}
+            className='mr-2'
+          >
+            Download as CSV
+          </UnderlineLink>
+        </p>
+      )}
     </div>
   );
 };

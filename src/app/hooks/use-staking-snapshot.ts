@@ -24,6 +24,7 @@ interface StakingSnapshotResponse {
   snapshot_dates: string[];
   delegations_count: DelegationCount[];
   total_stake: TotalStake[];
+  filename: string | null;
 }
 
 const ENDPOINT = `${apiHost}/staking_snapshots/show_by_date`;
@@ -36,6 +37,7 @@ const useStakingSnapshot = (date: string | null) => {
     [],
   );
   const [totalStake, setTotalStake] = useState<TotalStake[]>([]);
+  const [filename, setFilename] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -53,12 +55,14 @@ const useStakingSnapshot = (date: string | null) => {
         setSnapshotDates(json.snapshot_dates);
         setDelegationsCount(json.delegations_count || []);
         setTotalStake(json.total_stake || []);
+        setFilename(json.filename);
       } catch (e) {
         setData(null);
         setSnapshotDate('');
         setSnapshotDates([]);
         setDelegationsCount([]);
         setTotalStake([]);
+        setFilename(null);
       } finally {
         setIsLoading(false);
       }
@@ -72,6 +76,7 @@ const useStakingSnapshot = (date: string | null) => {
     snapshotDates,
     delegationsCount,
     totalStake,
+    filename,
     isLoading,
   };
 };

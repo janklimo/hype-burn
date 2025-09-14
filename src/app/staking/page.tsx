@@ -38,6 +38,7 @@ const Staking = () => {
     snapshotDates,
     delegationsCount,
     totalStake,
+    filename,
     isLoading: isStakingSnapshotLoading,
   } = useStakingSnapshot(formatDateForAPI(date));
 
@@ -118,6 +119,7 @@ const Staking = () => {
               validatorNamesLoading={validatorNamesLoading}
               stakingData={stakingData}
               snapshotDate={snapshotDate}
+              filename={filename}
               stakingDataLoading={isStakingSnapshotLoading}
             />
           </div>
