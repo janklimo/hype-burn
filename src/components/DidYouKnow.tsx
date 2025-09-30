@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import useSWR from 'swr';
 
+import UnderlineLink from '@/components/links/UnderlineLink';
 import Skeleton from '@/components/Skeleton';
 
 import useHypeData from '@/app/hooks/use-hype-data';
@@ -9,6 +10,16 @@ import { apiHost } from '@/constant/config';
 import { pointToHypeRatio } from '@/constant/constants';
 
 import { LeaderboardData, LeaderboardRowData } from '@/types/responses';
+
+interface OpenSeaCollectionStats {
+  volume: number;
+  sales: number;
+  num_owners: number;
+  market_cap: number;
+  floor_price: number;
+  floor_price_symbol: string;
+  average_price: number;
+}
 
 const findFirstRankAboveBalance = (
   data: LeaderboardRowData[],
@@ -42,9 +53,20 @@ const DidYouKnow: FC<Props> = ({ data, tokenInfo, burntEVMBalance }) => {
     (url: string) => fetch(url).then((res) => res.json()),
   );
 
+  const { data: nftData } = useSWR<{ total: OpenSeaCollectionStats }>(
+    'opensea-hypurr-stats',
+    () =>
+      fetch('https://api.opensea.io/api/v2/collections/hypurr-hyperevm/stats', {
+        headers: {
+          accept: 'application/json',
+          'x-api-key': '70033b83304d4167b752228846b1ae36',
+        },
+      }).then((res) => res.json()),
+  );
+
   const renderBurntContent = () => {
     if (!data || !tokenInfo || !leaderboardData?.rows.length) {
-      return <Skeleton className='h-6 mb-3 w-full max-w-xl mx-auto' />;
+      return <Skeleton className='h-6 w-full max-w-xl mx-auto' />;
     }
 
     const supply = parseFloat(tokenInfo.totalSupply);
@@ -52,7 +74,7 @@ const DidYouKnow: FC<Props> = ({ data, tokenInfo, burntEVMBalance }) => {
     const markPrice = parseFloat(data.markPx);
 
     return (
-      <p className='text-hlGray text-sm mb-3'>
+      <p className='text-hlGray text-sm'>
         The total amount of burned HYPE tokens would rank as the{' '}
         <span className='font-bold text-accent'>
           {toOrdinal(
@@ -81,14 +103,14 @@ const DidYouKnow: FC<Props> = ({ data, tokenInfo, burntEVMBalance }) => {
 
   const renderAirdropContent = () => {
     if (!data) {
-      return <Skeleton className='h-6 mb-3 w-full max-w-xl mx-auto' />;
+      return <Skeleton className='h-6 w-full max-w-xl mx-auto' />;
     }
 
     const markPrice = parseFloat(data.markPx);
     const pointValue = markPrice * pointToHypeRatio;
 
     return (
-      <p className='text-hlGray text-sm mb-3'>
+      <p className='text-hlGray text-sm'>
         The airdropped amount is currently valued at{' '}
         <span className='font-bold text-accent'>
           {((markPrice * 310_000_000) / 1_000_000_000).toLocaleString('en-US', {
@@ -122,11 +144,59 @@ const DidYouKnow: FC<Props> = ({ data, tokenInfo, burntEVMBalance }) => {
     );
   };
 
+  const renderNftContent = () => {
+    if (!data || !nftData?.total) {
+      return <Skeleton className='h-6 w-full max-w-xl mx-auto' />;
+    }
+
+    const markPrice = parseFloat(data.markPx);
+    const floorPriceHype = nftData.total.floor_price;
+    const floorPriceUsd = floorPriceHype * markPrice;
+    const totalNfts = 4_600;
+    const totalCollectionValueUsd = totalNfts * floorPriceUsd;
+
+    return (
+      <p className='text-hlGray text-sm'>
+        At the floor price of{' '}
+        <span className='font-bold text-accent'>
+          {floorPriceHype.toLocaleString()} HYPE
+        </span>{' '}
+        (
+        <span className='font-bold text-accent'>
+          {floorPriceUsd.toLocaleString('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            maximumFractionDigits: 0,
+          })}
+        </span>
+        ) the{' '}
+        <UnderlineLink
+          href='https://opensea.io/collection/hypurr-hyperevm'
+          className='text-white'
+        >
+          Hypurr NFT collection
+        </UnderlineLink>{' '}
+        airdropped to the community is worth{' '}
+        <span className='font-bold text-accent'>
+          {(totalCollectionValueUsd / 1_000_000).toLocaleString('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: 1,
+            maximumFractionDigits: 1,
+          })}
+          M
+        </span>
+        .
+      </p>
+    );
+  };
+
   const renderContent = () => {
     return (
-      <div>
+      <div className='flex flex-col gap-3'>
         {renderBurntContent()}
         {renderAirdropContent()}
+        {renderNftContent()}
       </div>
     );
   };
