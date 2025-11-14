@@ -7,12 +7,10 @@ import ChartSkeleton from '@/components/ChartSkeleton';
 import useAssistanceFundBalances from '@/app/hooks/use-assistance-fund-balances';
 import useEVMBalance from '@/app/hooks/use-evm-balance';
 import useFees from '@/app/hooks/use-fees';
+import { useFoundationDelegations } from '@/app/hooks/use-foundation-delegations';
 import { useStakedBalance } from '@/app/hooks/use-staked-balance';
 import useTokenInfo from '@/app/hooks/use-token-info';
-import {
-  calculateReadyForSaleSupply,
-  FOUNDATION_STAKED_AMOUNT,
-} from '@/utils/token';
+import { calculateReadyForSaleSupply } from '@/utils/token';
 
 import useHypeData from '../hooks/use-hype-data';
 import EvmToggle from './EvmToggle';
@@ -83,6 +81,7 @@ const Heatmap = () => {
   const { stakedBalance } = useStakedBalance();
   const { evmBalance } = useEVMBalance();
   const assistanceFundBalances = useAssistanceFundBalances();
+  const { foundationDelegations } = useFoundationDelegations();
   const [selectedPeriod, setSelectedPeriod] = useState<Period>('oneDay');
   const [excludeEvm, setExcludeEvm] = useState(false);
 
@@ -94,6 +93,7 @@ const Heatmap = () => {
       assistanceFundBalances.HYPE,
       stakedBalance,
       excludeEvm ? evmBalance : 0,
+      foundationDelegations,
     );
   }, [
     tokenInfo,
@@ -101,6 +101,7 @@ const Heatmap = () => {
     stakedBalance,
     evmBalance,
     excludeEvm,
+    foundationDelegations,
   ]);
 
   const data = useMemo(() => {
@@ -227,7 +228,7 @@ const Heatmap = () => {
         <SupplyBreakdown
           circulatingSupply={parseFloat(tokenInfo.circulatingSupply)}
           assistanceFundBalance={assistanceFundBalances.HYPE}
-          stakedAmount={stakedBalance - FOUNDATION_STAKED_AMOUNT}
+          stakedAmount={stakedBalance - foundationDelegations}
           evmAmount={excludeEvm ? evmBalance : 0}
         />
       </p>

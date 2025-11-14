@@ -11,7 +11,8 @@ export const calculateReadyForSaleSupply = (
   assistanceFundBalance: number,
   stakedBalance: number,
   evmBalance: number,
+  foundationStakedAmount: number,
 ): number => {
-  const stakedSupply = stakedBalance - FOUNDATION_STAKED_AMOUNT;
+  const stakedSupply = stakedBalance - foundationStakedAmount;
   return circulatingSupply - assistanceFundBalance - stakedSupply - evmBalance;
 };

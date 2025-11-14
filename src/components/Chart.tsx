@@ -12,8 +12,8 @@ import { FC } from 'react';
 import Skeleton from '@/components/Skeleton';
 
 import useEVMBalance from '@/app/hooks/use-evm-balance';
+import { useFoundationDelegations } from '@/app/hooks/use-foundation-delegations';
 import useTokenInfo from '@/app/hooks/use-token-info';
-import { FOUNDATION_STAKED_AMOUNT } from '@/utils/token';
 
 const SERIES_NAMES = {
   CIRCULATING_OTHER: 'Circulating Supply: Other',
@@ -127,6 +127,7 @@ const Chart: FC<Props> = ({
   const { width } = useWindowSize();
   const isMobile = Number(width) <= 768;
   const { evmBalance } = useEVMBalance();
+  const { foundationDelegations } = useFoundationDelegations();
 
   if (!tokenInfo)
     return <Skeleton className='h-96 w-80 md:h-[35rem] md:w-[70rem]' />;
@@ -143,7 +144,7 @@ const Chart: FC<Props> = ({
   const minVisiblePercentage = 0.25;
   const minSegmentSize = (totalSupply * minVisiblePercentage) / 100;
 
-  const stakedSupply = stakedBalance - FOUNDATION_STAKED_AMOUNT;
+  const stakedSupply = stakedBalance - foundationDelegations;
   const adjustedEvmBalance = evmBalance - burntEVMBalance;
 
   const otherCirculatingSupply =
