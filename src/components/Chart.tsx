@@ -13,11 +13,13 @@ import Skeleton from '@/components/Skeleton';
 
 import useEVMBalance from '@/app/hooks/use-evm-balance';
 import { useFoundationDelegations } from '@/app/hooks/use-foundation-delegations';
+import { usePerpDexsStake } from '@/app/hooks/use-perp-dexs-stake';
 import useTokenInfo from '@/app/hooks/use-token-info';
 
 const SERIES_NAMES = {
   CIRCULATING_OTHER: 'Circulating Supply: Other',
   CIRCULATING_STAKED: 'Circulating Supply: Staked',
+  CIRCULATING_PERP_DEXS: 'Circulating Supply: HIP-3 Builder Stakes',
   CIRCULATING_ASSISTANCE: 'Circulating Supply: Assistance Fund',
   CIRCULATING_EVM: 'Circulating Supply: HyperEVM',
   BURN_TRADING_FEES: 'Burn From Trading Fees',
@@ -30,6 +32,7 @@ const colors = [
   '#faf3dd',
   '#c0fff0',
   '#9afdff',
+  '#a8e6cf',
   '#f69318',
   '#2a4d46',
   '#163832',
@@ -62,6 +65,7 @@ const tooltipContent = (
   const isDarkTitle = [
     SERIES_NAMES.CIRCULATING_OTHER,
     SERIES_NAMES.CIRCULATING_STAKED,
+    SERIES_NAMES.CIRCULATING_PERP_DEXS,
     SERIES_NAMES.CIRCULATING_ASSISTANCE,
     SERIES_NAMES.CIRCULATING_EVM,
   ].includes(params.datum.asset);
@@ -71,6 +75,7 @@ const tooltipContent = (
     [
       SERIES_NAMES.CIRCULATING_OTHER,
       SERIES_NAMES.CIRCULATING_STAKED,
+      SERIES_NAMES.CIRCULATING_PERP_DEXS,
       SERIES_NAMES.CIRCULATING_ASSISTANCE,
       SERIES_NAMES.CIRCULATING_EVM,
     ].includes(params.datum.asset)
@@ -128,6 +133,7 @@ const Chart: FC<Props> = ({
   const isMobile = Number(width) <= 768;
   const { evmBalance } = useEVMBalance();
   const { foundationDelegations } = useFoundationDelegations();
+  const { perpDexsStake } = usePerpDexsStake();
 
   if (!tokenInfo)
     return <Skeleton className='h-96 w-80 md:h-[35rem] md:w-[70rem]' />;
@@ -144,13 +150,14 @@ const Chart: FC<Props> = ({
   const minVisiblePercentage = 0.25;
   const minSegmentSize = (totalSupply * minVisiblePercentage) / 100;
 
-  const stakedSupply = stakedBalance - foundationDelegations;
+  const stakedSupply = stakedBalance - foundationDelegations - perpDexsStake;
   const adjustedEvmBalance = evmBalance - burntEVMBalance;
 
   const otherCirculatingSupply =
     circulatingSupply -
     assistanceFundBalance -
     stakedSupply -
+    perpDexsStake -
     adjustedEvmBalance;
 
   type Segment = {
@@ -181,6 +188,13 @@ const Chart: FC<Props> = ({
       amount: stakedSupply,
       radius: 1,
       displayAmount: stakedSupply,
+      circulatingSupply,
+    },
+    {
+      asset: SERIES_NAMES.CIRCULATING_PERP_DEXS,
+      amount: Math.max(perpDexsStake, minSegmentSize),
+      radius: 1,
+      displayAmount: perpDexsStake,
       circulatingSupply,
     },
     {
