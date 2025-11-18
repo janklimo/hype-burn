@@ -253,7 +253,7 @@ const Chart: FC<Props> = ({
   const chartOptions: AgChartOptions = {
     data: series,
     width: isMobile ? 320 : 1120,
-    height: isMobile ? 600 : 560,
+    height: isMobile ? 615 : 560,
     theme,
     background: {
       fill: '#03251F',
