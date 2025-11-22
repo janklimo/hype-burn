@@ -28,8 +28,8 @@ const HypeCard: FC<Props> = ({ price }) => {
         {price.toLocaleString('en-US', {
           style: 'currency',
           currency: 'USD',
-          minimumFractionDigits: 4,
-          maximumFractionDigits: 4,
+          minimumFractionDigits: 3,
+          maximumFractionDigits: 3,
         })}
       </p>
     </a>

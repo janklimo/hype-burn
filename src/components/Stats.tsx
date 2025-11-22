@@ -109,7 +109,7 @@ const Stats: FC<Props> = ({
         {/* Price */}
         <p className='text-hlGray text-sm mr-3'>Price:</p>
         <p className='text-accent text-sm font-mono'>
-          {markPrice.toFixed(5)}{' '}
+          {markPrice.toFixed(3)}{' '}
           <PriceChange change={markPrice / previousDayPrice} />
         </p>
         <p className='text-gray-500 mx-3'>/</p>
