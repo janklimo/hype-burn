@@ -30,9 +30,26 @@ const AssistanceFund: FC<Props> = ({ data, balances }) => {
 
     if (!prevBalances.current) return;
 
+    // Track increases in USD-equivalent coins (USDC, USDT0, USDH)
+    let totalUSDIncrease = 0;
+
     if (balances.USDC > prevBalances.current.USDC) {
       const usdcDiff = balances.USDC - prevBalances.current.USDC;
-      setAccumulatedUSDC((prev) => prev + usdcDiff);
+      totalUSDIncrease += usdcDiff;
+    }
+
+    if (balances.USDT0 > prevBalances.current.USDT0) {
+      const usdt0Diff = balances.USDT0 - prevBalances.current.USDT0;
+      totalUSDIncrease += usdt0Diff;
+    }
+
+    if (balances.USDH > prevBalances.current.USDH) {
+      const usdhDiff = balances.USDH - prevBalances.current.USDH;
+      totalUSDIncrease += usdhDiff;
+    }
+
+    if (totalUSDIncrease > 0) {
+      setAccumulatedUSDC((prev) => prev + totalUSDIncrease);
     }
 
     if (balances.HYPE > prevBalances.current.HYPE) {

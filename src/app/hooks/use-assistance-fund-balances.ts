@@ -24,12 +24,16 @@ interface MessageData {
 export interface Balances {
   USDC: number;
   HYPE: number;
+  USDT0: number;
+  USDH: number;
 }
 
 const useAssistanceFundBalances = () => {
   const [balances, setBalances] = useState<Balances>({
     USDC: 0,
     HYPE: 0,
+    USDT0: 0,
+    USDH: 0,
   });
 
   useEffect(() => {
@@ -61,10 +65,18 @@ const useAssistanceFundBalances = () => {
         const hypeBalance = rawBalances.find(
           (balance) => balance.coin === 'HYPE',
         );
+        const usdt0Balance = rawBalances.find(
+          (balance) => balance.coin === 'USDT0',
+        );
+        const usdhBalance = rawBalances.find(
+          (balance) => balance.coin === 'USDH',
+        );
 
         setBalances({
           USDC: parseFloat(usdcBalance?.total || '0'),
           HYPE: parseFloat(hypeBalance?.total || '0'),
+          USDT0: parseFloat(usdt0Balance?.total || '0'),
+          USDH: parseFloat(usdhBalance?.total || '0'),
         });
       }
     });
