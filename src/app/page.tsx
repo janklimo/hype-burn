@@ -45,6 +45,7 @@ export default function HomePage() {
             <ChartInner
               tokenInfo={tokenInfo}
               burntEVMBalance={burntEVMBalance}
+              assistanceFundBalance={balances.HYPE}
             />
           </div>
           <div className='mb-6 w-full sm:w-3/4'>
@@ -63,6 +64,7 @@ export default function HomePage() {
               data={data}
               tokenInfo={tokenInfo}
               burntEVMBalance={burntEVMBalance}
+              assistanceFundBalance={balances.HYPE}
             />
           </div>
           <div className='mt-4 mb-6 w-full'>

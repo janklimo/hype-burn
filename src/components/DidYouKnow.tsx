@@ -25,8 +25,8 @@ const findFirstRankAboveBalance = (
   data: LeaderboardRowData[],
   balance: number,
 ): number => {
-  const found = data.find((row) => balance > row.balance + row.balance_staked)!;
-  return found.rank;
+  const found = data.find((row) => balance > row.balance + row.balance_staked);
+  return found?.rank ?? data.length + 1;
 };
 
 const toOrdinal = (n: number): string => {
@@ -45,9 +45,15 @@ interface Props {
   data: ReturnType<typeof useHypeData>;
   tokenInfo: ReturnType<typeof useTokenInfo>['tokenInfo'];
   burntEVMBalance: number;
+  assistanceFundBalance: number;
 }
 
-const DidYouKnow: FC<Props> = ({ data, tokenInfo, burntEVMBalance }) => {
+const DidYouKnow: FC<Props> = ({
+  data,
+  tokenInfo,
+  burntEVMBalance,
+  assistanceFundBalance,
+}) => {
   const { data: leaderboardData } = useSWR<LeaderboardData>(
     `${apiHost}/leaderboard?coin=hype`,
     (url: string) => fetch(url).then((res) => res.json()),
@@ -70,7 +76,8 @@ const DidYouKnow: FC<Props> = ({ data, tokenInfo, burntEVMBalance }) => {
     }
 
     const supply = parseFloat(tokenInfo.totalSupply);
-    const burntAmount = 1_000_000_000 - supply + burntEVMBalance;
+    const burntAmount =
+      1_000_000_000 - supply + burntEVMBalance + assistanceFundBalance;
     const markPrice = parseFloat(data.markPx);
 
     return (

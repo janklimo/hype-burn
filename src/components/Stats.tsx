@@ -56,20 +56,33 @@ const Stats: FC<Props> = ({
 
   const supply = parseFloat(tokenInfo.totalSupply);
   const burntFromTrading = 1_000_000_000 - supply;
-  const totalBurntAmount = burntFromTrading + burntEVMBalance;
+  const totalBurnedAmount =
+    burntFromTrading + burntEVMBalance + assistanceFundBalance;
   const markPrice = parseFloat(data.markPx);
   const previousDayPrice = parseFloat(data.prevDayPx);
   const volume = parseFloat(data.dayNtlVlm);
   const circulatingSupply = parseFloat(tokenInfo.circulatingSupply);
+  const availableSupply =
+    circulatingSupply - assistanceFundBalance - burntEVMBalance;
   const totalSupply = parseFloat(tokenInfo.totalSupply);
 
   return (
     <div className='bg-hl-light isolate p-2 mt-4 text-hlGray'>
       <Marquee pauseOnHover gradient gradientColor='#163832' gradientWidth={18}>
         {/* Total burnt amount */}
-        <p className='text-hlGray text-sm mr-3'>Total burnt:</p>
+        <p className='text-hlGray text-sm mr-3'>Total burned:</p>
         <p className='text-accent text-sm font-mono'>
-          {totalBurntAmount.toLocaleString(undefined, {
+          {totalBurnedAmount.toLocaleString(undefined, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}{' '}
+          HYPE
+        </p>
+        <p className='text-gray-500 mx-3'>/</p>
+        {/* Assistance fund balance */}
+        <p className='text-hlGray text-sm mr-3'>Burned (Assistance fund):</p>
+        <p className='text-accent text-sm font-mono'>
+          {assistanceFundBalance.toLocaleString(undefined, {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
           })}{' '}
@@ -77,7 +90,7 @@ const Stats: FC<Props> = ({
         </p>
         <p className='text-gray-500 mx-3'>/</p>
         {/* Burnt from trading */}
-        <p className='text-hlGray text-sm mr-3'>Burnt (Core):</p>
+        <p className='text-hlGray text-sm mr-3'>Burned (Core):</p>
         <p className='text-accent text-sm font-mono'>
           {burntFromTrading.toLocaleString(undefined, {
             minimumFractionDigits: 2,
@@ -87,19 +100,9 @@ const Stats: FC<Props> = ({
         </p>
         <p className='text-gray-500 mx-3'>/</p>
         {/* Burnt from EVM */}
-        <p className='text-hlGray text-sm mr-3'>Burnt (EVM):</p>
+        <p className='text-hlGray text-sm mr-3'>Burned (HyperEVM):</p>
         <p className='text-accent text-sm font-mono'>
           {burntEVMBalance.toLocaleString(undefined, {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })}{' '}
-          HYPE
-        </p>
-        <p className='text-gray-500 mx-3'>/</p>
-        {/* Assistance fund balance */}
-        <p className='text-hlGray text-sm mr-3'>Assistance fund:</p>
-        <p className='text-accent text-sm font-mono'>
-          {assistanceFundBalance.toLocaleString(undefined, {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
           })}{' '}
@@ -127,7 +130,7 @@ const Stats: FC<Props> = ({
         {/* Market cap */}
         <p className='text-hlGray text-sm mr-3'>Market cap:</p>
         <p className='text-accent text-sm font-mono'>
-          {(markPrice * circulatingSupply).toLocaleString('en-US', {
+          {(markPrice * availableSupply).toLocaleString('en-US', {
             style: 'currency',
             currency: 'USD',
             maximumFractionDigits: 0,
