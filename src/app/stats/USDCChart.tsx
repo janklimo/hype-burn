@@ -9,6 +9,7 @@ import { AgCharts } from 'ag-charts-react';
 import { FC, useEffect, useState } from 'react';
 
 import ChartSkeleton from '@/components/ChartSkeleton';
+import UnderlineLink from '@/components/links/UnderlineLink';
 
 const ENDPOINT = 'https://yprjg.hatchboxapp.com/api/v1/usdc_snapshots';
 
@@ -191,6 +192,23 @@ const USDCChart: FC = () => {
               <div className='text-left'>0%</div>
               <div className='text-right'>100%</div>
             </div>
+            <p className='text-center text-xs text-gray-400'>
+              <UnderlineLink
+                href='https://arbiscan.io/address/0x2df1c51e09aecf9cacb7bc98cb1742757f163df7'
+                openNewTab
+                className='text-gray-400 hover:text-gray-300'
+              >
+                View on Arbitrum
+              </UnderlineLink>
+              {' • '}
+              <UnderlineLink
+                href='https://hyperevmscan.io/address/0x6B9E773128f453f5c2C60935Ee2DE2CBc5390A24'
+                openNewTab
+                className='text-gray-400 hover:text-gray-300'
+              >
+                View on HyperEVM
+              </UnderlineLink>
+            </p>
           </div>
         </div>
       </div>
