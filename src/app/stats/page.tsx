@@ -14,7 +14,7 @@ const Stats: FC = () => {
         <div className='flex justify-center items-center flex-col mb-8'>
           <div className='relative w-full max-w-5xl'>
             <div className='mt-8 mb-16'>
-              <h2 className='text-white text-lg mb-2 text-center'>
+              <h2 className='text-white text-lg text-center'>
                 USDC on Hyperliquid
               </h2>
               <USDCChart />
