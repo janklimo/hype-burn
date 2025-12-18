@@ -113,12 +113,10 @@ const USDCChart: FC = () => {
           stroke: '#F69318',
         },
         tooltip: {
-          renderer: ({ datum, yName }) => {
-            return {
-              title: `<b>${yName}</b> <small>(${datum.date})</small>`,
-              content: datum.builders,
-            };
-          },
+          renderer: ({ datum }) => ({
+            title: `<span><b>${datum.date}</b></span>`,
+            content: `<span style="color: #03251F;">Total: ${formatCurrency(datum.total)}</span>`,
+          }),
         },
       } as AgLineSeriesOptions,
     ],

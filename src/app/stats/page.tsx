@@ -13,7 +13,9 @@ const Stats: FC = () => {
       <section className='bg-hl-dark p-3 md:p-4'>
         <div className='flex justify-center items-center flex-col mb-8'>
           <div className='relative w-full max-w-5xl'>
-            <USDCChart />
+            <div className='mt-8 mb-16'>
+              <USDCChart />
+            </div>
             <Heatmap />
             <TradeCallout />
           </div>
