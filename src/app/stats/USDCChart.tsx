@@ -64,12 +64,15 @@ const USDCChart: FC = () => {
     total: snapshot.total,
   }));
 
+  // Calculate migration progress from latest data
+  const latestData = data[data.length - 1];
+  const migrationProgress = latestData
+    ? latestData.hyperevm / latestData.total
+    : 0;
+
   const options: AgCartesianChartOptions = {
     title: {
-      text: 'USDC on Hyperliquid',
-    },
-    subtitle: {
-      text: 'USDC distribution across Arbitrum and HyperEVM',
+      text: 'Arbitrum vs HyperEVM',
       spacing: 40,
     },
     data: chartData,
@@ -149,14 +152,51 @@ const USDCChart: FC = () => {
 
   if (isLoading) {
     return (
-      <ChartSkeleton className='h-[500px]' message='Loading USDC data...' />
+      <ChartSkeleton className='h-[660px]' message='Loading USDC data...' />
     );
   }
 
   return (
-    <div className='bg-input-background mb-8'>
+    <>
+      <div className='p-6 pb-4 mb-4'>
+        <p className='text-hlGray text-sm text-center mb-4'>
+          <span className='font-bold text-accent'>
+            {formatCurrency(latestData?.hyperevm || 0)}
+          </span>{' '}
+          of{' '}
+          <span className='font-bold text-accent'>
+            {formatCurrency(latestData?.total || 0)}
+          </span>{' '}
+          USDC migrated to HyperEVM –{' '}
+          <span className='font-bold text-accent'>
+            {migrationProgress.toLocaleString(undefined, {
+              style: 'percent',
+              minimumFractionDigits: 1,
+              maximumFractionDigits: 1,
+            })}
+          </span>{' '}
+          complete
+        </p>
+        <div className='flex justify-center'>
+          <div className='w-4/5 max-w-2xl'>
+            <div className='rounded-full bg-hl-light'>
+              <div
+                style={{
+                  width: `${(Math.min(migrationProgress, 1) * 100).toFixed(1)}%`,
+                }}
+                className='h-3 rounded-full bg-accent'
+              />
+            </div>
+            <div className='mt-2 grid grid-cols-2 text-xs font-medium text-gray-400'>
+              <div className='text-left'>0%</div>
+              <div className='text-right'>100%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <AgCharts options={options} />
-    </div>
+    </>
   );
 };
 

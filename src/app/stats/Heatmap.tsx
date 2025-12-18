@@ -137,7 +137,7 @@ const Heatmap = () => {
 
   return (
     <div className='relative w-full'>
-      <h2 className='text-center text-xl font-semibold mb-4 text-gray-300'>
+      <h2 className='text-center text-xl font-semibold mb-4 text-white'>
         Years to Buy Ready-for-Sale Supply
       </h2>
       <p className='text-center text-sm text-gray-400 mb-6'>
