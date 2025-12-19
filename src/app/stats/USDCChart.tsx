@@ -159,7 +159,7 @@ const USDCChart: FC = () => {
 
   return (
     <>
-      <div className='p-6 pb-4 mb-4'>
+      <div className='p-4 pb-4 mb-4'>
         <p className='text-hlGray text-sm text-center mb-4'>
           <span className='font-bold text-accent'>
             {formatCurrency(latestData?.hyperevm || 0)}

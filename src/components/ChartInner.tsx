@@ -2,7 +2,7 @@ import NumberFlow from '@number-flow/react';
 import { FC } from 'react';
 
 import useTokenInfo from '@/app/hooks/use-token-info';
-import { QuestionMarkTooltip } from '@/app/stats/Tooltip';
+import { QuestionMarkTooltip, Tooltip } from '@/app/stats/Tooltip';
 
 interface Props {
   tokenInfo: ReturnType<typeof useTokenInfo>['tokenInfo'];
@@ -92,7 +92,9 @@ const ChartInner: FC<Props> = ({
   return (
     <div className='absolute text-center top-1/2 left-1/2 text-white -translate-x-1/2 -translate-y-1/2 -mt-24 md:-mt-10'>
       <div className='flex items-center justify-center'>
-        <span className='font-bold text-sm text-hlGray'>Total Supply</span>
+        <Tooltip content={tooltipContent}>
+          <span className='font-bold text-sm text-hlGray'>Total Supply</span>
+        </Tooltip>
         <QuestionMarkTooltip content={tooltipContent} />
       </div>
       <div className='text-accent font-mono font-semibold text-lg md:text-2xl mt-1'>
