@@ -3,11 +3,21 @@ import useSWR from 'swr';
 
 import { apiHost } from '@/constant/config';
 
+const ASSISTANCE_FUND_ADDRESS = '0xfefefefefefefefefefefefefefefefefefefefe';
+
+const getAssistanceFundBalance = (balances: [string, string][]): number => {
+  const entry = balances.find(
+    ([address]) => address.toLowerCase() === ASSISTANCE_FUND_ADDRESS,
+  );
+  return entry ? parseFloat(entry[1]) : 0;
+};
+
 interface TokenInfo {
   totalSupply: string;
   circulatingSupply: string;
   futureEmissions: string;
   nonCirculatingUserBalances: [string, string][];
+  assistanceFundBalance: number;
 }
 
 interface ServerTokenResponse {
@@ -55,6 +65,9 @@ async function fetcher(url: string): Promise<TokenInfo> {
     circulatingSupply: serverResponse.circulatingSupply,
     futureEmissions: serverResponse.futureEmissions,
     nonCirculatingUserBalances: serverResponse.nonCirculatingUserBalances,
+    assistanceFundBalance: getAssistanceFundBalance(
+      serverResponse.nonCirculatingUserBalances,
+    ),
   };
 }
 
@@ -73,6 +86,9 @@ const useTokenInfo = () => {
           circulatingSupply: serverResponse.circulatingSupply,
           futureEmissions: serverResponse.futureEmissions,
           nonCirculatingUserBalances: serverResponse.nonCirculatingUserBalances,
+          assistanceFundBalance: getAssistanceFundBalance(
+            serverResponse.nonCirculatingUserBalances,
+          ),
         };
 
         setInitialData(tokenInfo);

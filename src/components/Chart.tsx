@@ -112,17 +112,11 @@ const tooltipContent = (
 
 interface Props {
   tokenInfo: ReturnType<typeof useTokenInfo>['tokenInfo'];
-  assistanceFundBalance: number;
   stakedBalance: number;
   burntEVMBalance: number;
 }
 
-const Chart: FC<Props> = ({
-  tokenInfo,
-  assistanceFundBalance,
-  stakedBalance,
-  burntEVMBalance,
-}) => {
+const Chart: FC<Props> = ({ tokenInfo, stakedBalance, burntEVMBalance }) => {
   const { width } = useWindowSize();
   const isMobile = Number(width) <= 768;
   const { foundationDelegations } = useFoundationDelegations();
@@ -137,6 +131,7 @@ const Chart: FC<Props> = ({
   const totalNonCirculatingSupply = sumBalances(
     tokenInfo.nonCirculatingUserBalances,
   );
+  const { assistanceFundBalance } = tokenInfo;
   // Assistance fund is now part of nonCirculatingUserBalances, subtract it for "Other"
   const nonCirculatingOther = totalNonCirculatingSupply - assistanceFundBalance;
   const futureEmissions = parseFloat(tokenInfo.futureEmissions);
@@ -147,8 +142,9 @@ const Chart: FC<Props> = ({
 
   const stakedSupply = stakedBalance - foundationDelegations - perpDexsStake;
 
+  // Subtract burntEVMBalance to avoid double counting (also counted in burn segment)
   const otherCirculatingSupply =
-    circulatingSupply - stakedSupply - perpDexsStake;
+    circulatingSupply - stakedSupply - perpDexsStake - burntEVMBalance;
 
   type Segment = {
     asset: string;

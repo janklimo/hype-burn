@@ -38,14 +38,12 @@ export default function HomePage() {
           <div className='mb-4 h-[38rem] w-80 md:h-[35rem] md:w-[70rem] relative text-left'>
             <Chart
               tokenInfo={tokenInfo}
-              assistanceFundBalance={balances.HYPE}
               stakedBalance={stakedBalance}
               burntEVMBalance={burntEVMBalance}
             />
             <ChartInner
               tokenInfo={tokenInfo}
               burntEVMBalance={burntEVMBalance}
-              assistanceFundBalance={balances.HYPE}
             />
           </div>
           <div className='mb-6 w-full sm:w-3/4'>

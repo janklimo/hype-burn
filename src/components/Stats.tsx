@@ -62,9 +62,19 @@ const Stats: FC<Props> = ({
   const previousDayPrice = parseFloat(data.prevDayPx);
   const volume = parseFloat(data.dayNtlVlm);
   const circulatingSupply = parseFloat(tokenInfo.circulatingSupply);
-  const availableSupply =
-    circulatingSupply - assistanceFundBalance - burntEVMBalance;
+  const availableSupply = circulatingSupply - burntEVMBalance;
   const totalSupply = parseFloat(tokenInfo.totalSupply);
+  // FDV excludes non-circulating balances except foundation wallet (which counts towards FDV)
+  const FOUNDATION_WALLET = '0x43e9abea1910387c4292bca4b94de81462f8a251';
+  const nonCirculatingExcludingFoundation =
+    tokenInfo.nonCirculatingUserBalances.reduce(
+      (sum, [address, balance]) =>
+        address.toLowerCase() === FOUNDATION_WALLET
+          ? sum
+          : sum + parseFloat(balance),
+      0,
+    );
+  const fdvSupply = totalSupply - nonCirculatingExcludingFoundation;
 
   return (
     <div className='bg-hl-light isolate p-2 mt-4 text-hlGray'>
@@ -140,7 +150,7 @@ const Stats: FC<Props> = ({
         {/* FDV */}
         <p className='text-hlGray text-sm mr-3'>FDV:</p>
         <p className='text-accent text-sm font-mono'>
-          {(markPrice * totalSupply).toLocaleString('en-US', {
+          {(markPrice * fdvSupply).toLocaleString('en-US', {
             style: 'currency',
             currency: 'USD',
             maximumFractionDigits: 0,

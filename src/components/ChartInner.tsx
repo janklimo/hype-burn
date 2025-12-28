@@ -8,43 +8,22 @@ import { Tooltip } from '@/app/stats/Tooltip';
 interface Props {
   tokenInfo: ReturnType<typeof useTokenInfo>['tokenInfo'];
   burntEVMBalance: number;
-  assistanceFundBalance: number;
 }
 
-const ChartInner: FC<Props> = ({
-  tokenInfo,
-  burntEVMBalance,
-  assistanceFundBalance,
-}) => {
+const ChartInner: FC<Props> = ({ tokenInfo, burntEVMBalance }) => {
   if (!tokenInfo) return null;
 
-  const totalSupply = parseFloat(tokenInfo.totalSupply);
-  const adjustedSupply = totalSupply - burntEVMBalance - assistanceFundBalance;
-  const burntFromTrading = 1_000_000_000 - totalSupply;
+  const circulatingSupply = parseFloat(tokenInfo.circulatingSupply);
+  const adjustedCirculatingSupply = circulatingSupply - burntEVMBalance;
 
   const tooltipContent = (
     <div className='space-y-1'>
       <div className='flex justify-between'>
-        <span className='font-bold mr-3 text-gray-300'>Initial Supply:</span>
-        <span className='text-white font-bold'>1,000,000,000</span>
-      </div>
-      <div className='flex justify-between'>
-        <span className='font-bold mr-3 text-gray-300'>Assistance Fund:</span>
-        <span className='text-white'>
-          -
-          {assistanceFundBalance.toLocaleString(undefined, {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })}
-        </span>
-      </div>
-      <div className='flex justify-between'>
         <span className='font-bold mr-3 text-gray-300'>
-          Burned Trading Fees:
+          Circulating Supply:
         </span>
-        <span className='text-white'>
-          -
-          {burntFromTrading.toLocaleString(undefined, {
+        <span className='text-white font-bold'>
+          {circulatingSupply.toLocaleString(undefined, {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
           })}
@@ -61,27 +40,11 @@ const ChartInner: FC<Props> = ({
         </span>
       </div>
       <div className='flex justify-between font-bold mt-1 pt-1 border-t border-gray-600'>
-        <span className='font-bold mr-3' style={{ color: '#fab866' }}>
-          Total Burned:
-        </span>
-        <span style={{ color: '#fab866' }}>
-          -
-          {(
-            assistanceFundBalance +
-            burntFromTrading +
-            burntEVMBalance
-          ).toLocaleString(undefined, {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })}
-        </span>
-      </div>
-      <div className='flex justify-between font-bold mt-1'>
         <span className='font-bold mr-3 text-accent'>
-          Current Total Supply:
+          Adjusted Circulating:
         </span>
         <span className='text-accent'>
-          {adjustedSupply.toLocaleString(undefined, {
+          {adjustedCirculatingSupply.toLocaleString(undefined, {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
           })}
@@ -95,14 +58,16 @@ const ChartInner: FC<Props> = ({
       <div className='flex items-center justify-center'>
         <Tooltip content={tooltipContent}>
           <div className='flex items-center'>
-            <span className='font-bold text-sm text-hlGray'>Total Supply</span>
+            <span className='font-bold text-sm text-hlGray'>
+              Circulating Supply
+            </span>
             <InformationCircleIcon className='h-4 w-4 inline-block ml-1 text-white hover:text-beige-hover transition-colors duration-300' />
           </div>
         </Tooltip>
       </div>
       <div className='text-accent font-mono font-semibold text-lg md:text-2xl mt-1'>
         <NumberFlow
-          value={adjustedSupply}
+          value={adjustedCirculatingSupply}
           format={{
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
