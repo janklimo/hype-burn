@@ -2,10 +2,10 @@ import { ResponsiveHeatMap } from '@nivo/heatmap';
 import { BasicTooltip } from '@nivo/tooltip';
 import { useMemo, useState } from 'react';
 
+import { classNames } from '@/lib/utils';
+
 import ChartSkeleton from '@/components/ChartSkeleton';
 
-import useAssistanceFundBalances from '@/app/hooks/use-assistance-fund-balances';
-import useEVMBalance from '@/app/hooks/use-evm-balance';
 import useFees from '@/app/hooks/use-fees';
 import { useFoundationDelegations } from '@/app/hooks/use-foundation-delegations';
 import { useStakedBalance } from '@/app/hooks/use-staked-balance';
@@ -13,7 +13,6 @@ import useTokenInfo from '@/app/hooks/use-token-info';
 import { calculateReadyForSaleSupply } from '@/utils/token';
 
 import useHypeData from '../hooks/use-hype-data';
-import EvmToggle from './EvmToggle';
 import { SupplyBreakdown } from './SupplyBreakdown';
 
 const generateHeatmapData = (
@@ -79,55 +78,30 @@ const Heatmap = () => {
   const { fees } = useFees();
   const { tokenInfo } = useTokenInfo();
   const { stakedBalance } = useStakedBalance();
-  const { evmBalance } = useEVMBalance();
-  const assistanceFundBalances = useAssistanceFundBalances();
   const { foundationDelegations } = useFoundationDelegations();
   const [selectedPeriod, setSelectedPeriod] = useState<Period>('oneDay');
-  const [excludeEvm, setExcludeEvm] = useState(false);
 
   const readyForSaleSupply = useMemo(() => {
-    if (!tokenInfo || !assistanceFundBalances.HYPE) return 0;
+    if (!tokenInfo) return 0;
 
     return calculateReadyForSaleSupply(
       parseFloat(tokenInfo.circulatingSupply),
-      assistanceFundBalances.HYPE,
       stakedBalance,
-      excludeEvm ? evmBalance : 0,
       foundationDelegations,
     );
-  }, [
-    tokenInfo,
-    assistanceFundBalances.HYPE,
-    stakedBalance,
-    evmBalance,
-    excludeEvm,
-    foundationDelegations,
-  ]);
+  }, [tokenInfo, stakedBalance, foundationDelegations]);
 
   const data = useMemo(() => {
-    if (
-      !hypeData?.markPx ||
-      !fees?.[selectedPeriod] ||
-      !tokenInfo ||
-      !assistanceFundBalances.HYPE
-    )
-      return null;
+    if (!hypeData?.markPx || !fees?.[selectedPeriod] || !tokenInfo) return null;
     const roundedMarkPrice = Number(parseFloat(hypeData.markPx).toFixed(1));
     return generateHeatmapData(
       roundedMarkPrice,
       fees[selectedPeriod],
       readyForSaleSupply,
     );
-  }, [
-    hypeData?.markPx,
-    fees,
-    selectedPeriod,
-    readyForSaleSupply,
-    assistanceFundBalances.HYPE,
-    tokenInfo,
-  ]);
+  }, [hypeData?.markPx, fees, selectedPeriod, readyForSaleSupply, tokenInfo]);
 
-  if (!data || !fees || !hypeData || !tokenInfo || !assistanceFundBalances.HYPE)
+  if (!data || !fees || !hypeData || !tokenInfo)
     return (
       <ChartSkeleton
         className='my-14 h-[600px]'
@@ -146,73 +120,65 @@ const Heatmap = () => {
         supply at different prices and daily revenues.
       </p>
 
-      <div className='grid grid-cols-1 md:grid-cols-2 gap-6 mb-6'>
-        <div>
-          <h3 className='text-base font-medium text-gray-300 mb-2'>
-            Daily Revenue
-          </h3>
-          <p className='text-xs text-gray-400'>
-            Assumed daily revenue of the protocol based on historical averages.
-          </p>
-          <div className='grid grid-cols-3 gap-2 mt-2'>
-            <button
-              onClick={() => setSelectedPeriod('oneDay')}
-              className={`group relative flex flex-col items-start border border-hl-light cursor-pointer rounded-lg bg-white/5 py-2 px-3 text-white shadow-md transition focus:outline-none ${
-                selectedPeriod === 'oneDay' &&
-                'bg-primary-200/20 border-hl-primary'
-              }`}
-            >
-              <span className='font-semibold text-white text-xs'>24h</span>
-              <span className='font-normal text-gray-400 text-xs'>
-                {fees.oneDay.toLocaleString('en-US', {
-                  style: 'currency',
-                  currency: 'USD',
-                  maximumFractionDigits: 0,
-                })}
-              </span>
-            </button>
-            <button
-              onClick={() => setSelectedPeriod('sevenDays')}
-              className={`group relative flex flex-col items-start border border-hl-light cursor-pointer rounded-lg bg-white/5 py-2 px-3 text-white shadow-md transition focus:outline-none ${
-                selectedPeriod === 'sevenDays' &&
-                'bg-primary-200/20 border-hl-primary'
-              }`}
-            >
-              <span className='font-semibold text-white text-xs'>7d</span>
-              <span className='font-normal text-gray-400 text-xs'>
-                {fees.sevenDays.toLocaleString('en-US', {
-                  style: 'currency',
-                  currency: 'USD',
-                  maximumFractionDigits: 0,
-                })}
-              </span>
-            </button>
-            <button
-              onClick={() => setSelectedPeriod('thirtyDays')}
-              className={`group relative flex flex-col items-start border border-hl-light cursor-pointer rounded-lg bg-white/5 py-2 px-3 text-white shadow-md transition focus:outline-none ${
-                selectedPeriod === 'thirtyDays' &&
-                'bg-primary-200/20 border-hl-primary'
-              }`}
-            >
-              <span className='font-semibold text-white text-xs'>30d</span>
-              <span className='font-normal text-gray-400 text-xs'>
-                {fees.thirtyDays.toLocaleString('en-US', {
-                  style: 'currency',
-                  currency: 'USD',
-                  maximumFractionDigits: 0,
-                })}
-              </span>
-            </button>
-          </div>
-        </div>
-        <div>
-          <h3 className='text-base font-medium text-gray-300 mb-2'>HyperEVM</h3>
-          <p className='text-xs text-gray-400 mb-4'>
-            The Assistance Fund currently only buys HYPE from HyperCore spot
-            market. Toggle to exclude HYPE bridged to HyperEVM from
-            ready-for-sale supply calculations.
-          </p>
-          <EvmToggle enabled={excludeEvm} onChange={setExcludeEvm} />
+      <div className='mb-6 flex flex-col items-center'>
+        <h3 className='text-base font-medium text-gray-300 mb-2'>
+          Daily Revenue
+        </h3>
+        <p className='text-xs text-gray-400 text-center'>
+          Assumed daily revenue of the protocol based on historical averages.
+        </p>
+        <div className='grid grid-cols-3 gap-3 mt-2 w-full md:max-w-md'>
+          <button
+            onClick={() => setSelectedPeriod('oneDay')}
+            className={classNames(
+              'group relative flex flex-col items-start border border-hl-light cursor-pointer rounded-lg bg-white/5 py-3 px-4 text-white shadow-md transition focus:outline-none',
+              selectedPeriod === 'oneDay' &&
+                'bg-primary-200/20 border-hl-primary',
+            )}
+          >
+            <span className='font-semibold text-white text-sm'>24h</span>
+            <span className='font-normal text-gray-400 text-sm'>
+              {fees.oneDay.toLocaleString('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                maximumFractionDigits: 0,
+              })}
+            </span>
+          </button>
+          <button
+            onClick={() => setSelectedPeriod('sevenDays')}
+            className={classNames(
+              'group relative flex flex-col items-start border border-hl-light cursor-pointer rounded-lg bg-white/5 py-3 px-4 text-white shadow-md transition focus:outline-none',
+              selectedPeriod === 'sevenDays' &&
+                'bg-primary-200/20 border-hl-primary',
+            )}
+          >
+            <span className='font-semibold text-white text-sm'>7d</span>
+            <span className='font-normal text-gray-400 text-sm'>
+              {fees.sevenDays.toLocaleString('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                maximumFractionDigits: 0,
+              })}
+            </span>
+          </button>
+          <button
+            onClick={() => setSelectedPeriod('thirtyDays')}
+            className={classNames(
+              'group relative flex flex-col items-start border border-hl-light cursor-pointer rounded-lg bg-white/5 py-3 px-4 text-white shadow-md transition focus:outline-none',
+              selectedPeriod === 'thirtyDays' &&
+                'bg-primary-200/20 border-hl-primary',
+            )}
+          >
+            <span className='font-semibold text-white text-sm'>30d</span>
+            <span className='font-normal text-gray-400 text-sm'>
+              {fees.thirtyDays.toLocaleString('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                maximumFractionDigits: 0,
+              })}
+            </span>
+          </button>
         </div>
       </div>
 
@@ -227,9 +193,7 @@ const Heatmap = () => {
         </span>
         <SupplyBreakdown
           circulatingSupply={parseFloat(tokenInfo.circulatingSupply)}
-          assistanceFundBalance={assistanceFundBalances.HYPE}
           stakedAmount={stakedBalance - foundationDelegations}
-          evmAmount={excludeEvm ? evmBalance : 0}
         />
       </p>
 

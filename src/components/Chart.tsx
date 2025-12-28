@@ -11,7 +11,6 @@ import { FC } from 'react';
 
 import Skeleton from '@/components/Skeleton';
 
-import useEVMBalance from '@/app/hooks/use-evm-balance';
 import { useFoundationDelegations } from '@/app/hooks/use-foundation-delegations';
 import { usePerpDexsStake } from '@/app/hooks/use-perp-dexs-stake';
 import useTokenInfo from '@/app/hooks/use-token-info';
@@ -20,7 +19,6 @@ const SERIES_NAMES = {
   CIRCULATING_OTHER: 'Circulating Supply: Other',
   CIRCULATING_STAKED: 'Circulating Supply: Staked',
   CIRCULATING_PERP_DEXS: 'Circulating Supply: HIP-3 Builder Stakes',
-  CIRCULATING_EVM: 'Circulating Supply: HyperEVM',
   BURN_TRADING_FEES: 'Burn: Trading Fees',
   NON_CIRCULATING_EMISSIONS: 'Non Circulating Supply: Future Emissions',
   NON_CIRCULATING_ASSISTANCE: 'Non Circulating Supply: Assistance Fund',
@@ -29,9 +27,8 @@ const SERIES_NAMES = {
 
 const colors = [
   '#98FCE4', // Circulating Supply: Other
-  '#faf3dd', // Circulating Supply: HyperEVM
   '#c0fff0', // Circulating Supply: Staked
-  '#9afdff', // Circulating Supply: HIP-3 Builder Stakes
+  '#faf3dd', // Circulating Supply: HIP-3 Builder Stakes
   '#f69318', // Burn: Trading Fees
   '#2a4d46', // Non Circulating Supply: Future Emissions
   '#fab866', // Non Circulating Supply: Assistance Fund
@@ -66,7 +63,6 @@ const tooltipContent = (
     SERIES_NAMES.CIRCULATING_OTHER,
     SERIES_NAMES.CIRCULATING_STAKED,
     SERIES_NAMES.CIRCULATING_PERP_DEXS,
-    SERIES_NAMES.CIRCULATING_EVM,
     SERIES_NAMES.NON_CIRCULATING_ASSISTANCE,
   ].includes(params.datum.asset);
   const titleStyle = isDarkTitle ? 'color: #03251F;' : '';
@@ -76,7 +72,6 @@ const tooltipContent = (
       SERIES_NAMES.CIRCULATING_OTHER,
       SERIES_NAMES.CIRCULATING_STAKED,
       SERIES_NAMES.CIRCULATING_PERP_DEXS,
-      SERIES_NAMES.CIRCULATING_EVM,
     ].includes(params.datum.asset)
   ) {
     const shareOfTotal = `${(value / 1_000_000_000).toLocaleString('en-US', {
@@ -130,7 +125,6 @@ const Chart: FC<Props> = ({
 }) => {
   const { width } = useWindowSize();
   const isMobile = Number(width) <= 768;
-  const { evmBalance } = useEVMBalance();
   const { foundationDelegations } = useFoundationDelegations();
   const { perpDexsStake } = usePerpDexsStake();
 
@@ -152,10 +146,9 @@ const Chart: FC<Props> = ({
   const minSegmentSize = (totalSupply * minVisiblePercentage) / 100;
 
   const stakedSupply = stakedBalance - foundationDelegations - perpDexsStake;
-  const adjustedEvmBalance = evmBalance - burntEVMBalance;
 
   const otherCirculatingSupply =
-    circulatingSupply - stakedSupply - perpDexsStake - adjustedEvmBalance;
+    circulatingSupply - stakedSupply - perpDexsStake;
 
   type Segment = {
     asset: string;
@@ -171,13 +164,6 @@ const Chart: FC<Props> = ({
       amount: otherCirculatingSupply,
       radius: 1,
       displayAmount: otherCirculatingSupply,
-      circulatingSupply,
-    },
-    {
-      asset: SERIES_NAMES.CIRCULATING_EVM,
-      amount: adjustedEvmBalance,
-      radius: 1,
-      displayAmount: adjustedEvmBalance,
       circulatingSupply,
     },
     {

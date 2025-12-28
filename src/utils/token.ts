@@ -8,11 +8,9 @@ export const FOUNDATION_STAKED_AMOUNT =
 
 export const calculateReadyForSaleSupply = (
   circulatingSupply: number,
-  assistanceFundBalance: number,
   stakedBalance: number,
-  evmBalance: number,
   foundationStakedAmount: number,
 ): number => {
   const stakedSupply = stakedBalance - foundationStakedAmount;
-  return circulatingSupply - assistanceFundBalance - stakedSupply - evmBalance;
+  return circulatingSupply - stakedSupply;
 };
