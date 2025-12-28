@@ -20,22 +20,22 @@ const SERIES_NAMES = {
   CIRCULATING_OTHER: 'Circulating Supply: Other',
   CIRCULATING_STAKED: 'Circulating Supply: Staked',
   CIRCULATING_PERP_DEXS: 'Circulating Supply: HIP-3 Builder Stakes',
-  CIRCULATING_ASSISTANCE: 'Burn: Assistance Fund',
   CIRCULATING_EVM: 'Circulating Supply: HyperEVM',
   BURN_TRADING_FEES: 'Burn: Trading Fees',
   NON_CIRCULATING_EMISSIONS: 'Non Circulating Supply: Future Emissions',
+  NON_CIRCULATING_ASSISTANCE: 'Non Circulating Supply: Assistance Fund',
   NON_CIRCULATING_OTHER: 'Non Circulating Supply: Other',
 } as const;
 
 const colors = [
-  '#98FCE4',
-  '#faf3dd',
-  '#c0fff0',
-  '#9afdff',
-  '#fab866',
-  '#f69318',
-  '#2a4d46',
-  '#163832',
+  '#98FCE4', // Circulating Supply: Other
+  '#faf3dd', // Circulating Supply: HyperEVM
+  '#c0fff0', // Circulating Supply: Staked
+  '#9afdff', // Circulating Supply: HIP-3 Builder Stakes
+  '#f69318', // Burn: Trading Fees
+  '#2a4d46', // Non Circulating Supply: Future Emissions
+  '#fab866', // Non Circulating Supply: Assistance Fund
+  '#163832', // Non Circulating Supply: Other
 ];
 
 const theme: AgChartTheme = {
@@ -66,8 +66,8 @@ const tooltipContent = (
     SERIES_NAMES.CIRCULATING_OTHER,
     SERIES_NAMES.CIRCULATING_STAKED,
     SERIES_NAMES.CIRCULATING_PERP_DEXS,
-    SERIES_NAMES.CIRCULATING_ASSISTANCE,
     SERIES_NAMES.CIRCULATING_EVM,
+    SERIES_NAMES.NON_CIRCULATING_ASSISTANCE,
   ].includes(params.datum.asset);
   const titleStyle = isDarkTitle ? 'color: #03251F;' : '';
 
@@ -76,7 +76,6 @@ const tooltipContent = (
       SERIES_NAMES.CIRCULATING_OTHER,
       SERIES_NAMES.CIRCULATING_STAKED,
       SERIES_NAMES.CIRCULATING_PERP_DEXS,
-      SERIES_NAMES.CIRCULATING_ASSISTANCE,
       SERIES_NAMES.CIRCULATING_EVM,
     ].includes(params.datum.asset)
   ) {
@@ -141,9 +140,11 @@ const Chart: FC<Props> = ({
   const circulatingSupply = parseFloat(tokenInfo.circulatingSupply);
   const totalSupply = parseFloat(tokenInfo.totalSupply);
   const burntAmount = 1_000_000_000 - totalSupply + burntEVMBalance;
-  const nonCirculatingSupply = sumBalances(
+  const totalNonCirculatingSupply = sumBalances(
     tokenInfo.nonCirculatingUserBalances,
   );
+  // Assistance fund is now part of nonCirculatingUserBalances, subtract it for "Other"
+  const nonCirculatingOther = totalNonCirculatingSupply - assistanceFundBalance;
   const futureEmissions = parseFloat(tokenInfo.futureEmissions);
 
   // Calculate minimum segment size for better visibility
@@ -154,11 +155,7 @@ const Chart: FC<Props> = ({
   const adjustedEvmBalance = evmBalance - burntEVMBalance;
 
   const otherCirculatingSupply =
-    circulatingSupply -
-    assistanceFundBalance -
-    stakedSupply -
-    perpDexsStake -
-    adjustedEvmBalance;
+    circulatingSupply - stakedSupply - perpDexsStake - adjustedEvmBalance;
 
   type Segment = {
     asset: string;
@@ -198,13 +195,6 @@ const Chart: FC<Props> = ({
       circulatingSupply,
     },
     {
-      asset: SERIES_NAMES.CIRCULATING_ASSISTANCE,
-      amount: assistanceFundBalance,
-      radius: 1,
-      displayAmount: assistanceFundBalance,
-      circulatingSupply,
-    },
-    {
       asset: SERIES_NAMES.BURN_TRADING_FEES,
       amount: Math.max(burntAmount, minSegmentSize),
       radius: 1,
@@ -217,10 +207,16 @@ const Chart: FC<Props> = ({
       displayAmount: futureEmissions,
     },
     {
-      asset: SERIES_NAMES.NON_CIRCULATING_OTHER,
-      amount: nonCirculatingSupply,
+      asset: SERIES_NAMES.NON_CIRCULATING_ASSISTANCE,
+      amount: assistanceFundBalance,
       radius: 1,
-      displayAmount: nonCirculatingSupply,
+      displayAmount: assistanceFundBalance,
+    },
+    {
+      asset: SERIES_NAMES.NON_CIRCULATING_OTHER,
+      amount: nonCirculatingOther,
+      radius: 1,
+      displayAmount: nonCirculatingOther,
     },
   ];
 
@@ -234,20 +230,25 @@ const Chart: FC<Props> = ({
     tooltip: {
       renderer: tooltipContent,
     },
-    listeners: {
-      nodeClick: (event) => {
-        const { datum } = event;
+    // Only enable click listeners on desktop to avoid touch event issues on mobile
+    ...(isMobile
+      ? {}
+      : {
+          listeners: {
+            nodeClick: (event) => {
+              const { datum } = event;
 
-        if (datum.asset === SERIES_NAMES.CIRCULATING_ASSISTANCE) {
-          window.open(
-            'https://hypurrscan.io/address/0xfefefefefefefefefefefefefefefefefefefefe',
-            '_blank',
-          );
-        } else if (datum.asset === SERIES_NAMES.CIRCULATING_STAKED) {
-          window.open('https://app.hyperliquid.xyz/staking', '_blank');
-        }
-      },
-    },
+              if (datum.asset === SERIES_NAMES.NON_CIRCULATING_ASSISTANCE) {
+                window.open(
+                  'https://hypurrscan.io/address/0xfefefefefefefefefefefefefefefefefefefefe',
+                  '_blank',
+                );
+              } else if (datum.asset === SERIES_NAMES.CIRCULATING_STAKED) {
+                window.open('https://app.hyperliquid.xyz/staking', '_blank');
+              }
+            },
+          },
+        }),
   };
 
   const chartOptions: AgChartOptions = {
