@@ -125,7 +125,9 @@ const Chart: FC<Props> = ({ tokenInfo, stakedBalance, burntEVMBalance }) => {
   if (!tokenInfo)
     return <Skeleton className='h-96 w-80 md:h-[35rem] md:w-[70rem]' />;
 
-  const circulatingSupply = parseFloat(tokenInfo.circulatingSupply);
+  // Subtract burntEVMBalance from circulating to avoid double counting (also in burn segment)
+  const circulatingSupply =
+    parseFloat(tokenInfo.circulatingSupply) - burntEVMBalance;
   const totalSupply = parseFloat(tokenInfo.totalSupply);
   const burntAmount = 1_000_000_000 - totalSupply + burntEVMBalance;
   const totalNonCirculatingSupply = sumBalances(
@@ -142,9 +144,8 @@ const Chart: FC<Props> = ({ tokenInfo, stakedBalance, burntEVMBalance }) => {
 
   const stakedSupply = stakedBalance - foundationDelegations - perpDexsStake;
 
-  // Subtract burntEVMBalance to avoid double counting (also counted in burn segment)
   const otherCirculatingSupply =
-    circulatingSupply - stakedSupply - perpDexsStake - burntEVMBalance;
+    circulatingSupply - stakedSupply - perpDexsStake;
 
   type Segment = {
     asset: string;
