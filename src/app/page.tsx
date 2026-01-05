@@ -10,6 +10,7 @@ import DidYouKnow from '@/components/DidYouKnow';
 import Disclaimer from '@/components/Disclaimer';
 import Headline from '@/components/Headline';
 import Peers from '@/components/Peers';
+import PriceRevenueChart from '@/components/PriceRevenueChart';
 import SaltSheet from '@/components/SaltSheet';
 import Stats from '@/components/Stats';
 import TradeCallout from '@/components/TradeCallout';
@@ -70,6 +71,9 @@ export default function HomePage() {
           </div>
           <div className='my-4 w-full'>
             <Peers tokenInfo={tokenInfo} data={data} />
+          </div>
+          <div className='my-4 w-full'>
+            <PriceRevenueChart />
           </div>
           <TradeCallout />
           <div className='mt-6'>
