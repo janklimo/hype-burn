@@ -38,19 +38,20 @@ interface RevenueResponse {
 export interface CombinedChartData {
   date: string;
   price: number | null;
+  revenue7dMA: number | null;
   revenue30dMA: number | null;
+  revenue90dMA: number | null;
 }
 
 const fetcher = <T>(url: string): Promise<T> =>
   fetch(url).then((res) => res.json());
 
-function calculate30DayMA(data: RevenueData[]): Map<string, number> {
+function calculateMA(data: RevenueData[], window: number): Map<string, number> {
   const maMap = new Map<string, number>();
-  const window = 30;
 
   for (let i = 0; i < data.length; i++) {
     if (i < window - 1) {
-      // Not enough data for 30-day MA yet
+      // Not enough data for MA yet
       continue;
     }
 
@@ -82,7 +83,9 @@ export function usePriceRevenueData() {
     if (!priceData || !revenueResponse) return undefined;
 
     const revenueData = revenueResponse.data;
-    const revenue30dMA = calculate30DayMA(revenueData);
+    const revenue7dMA = calculateMA(revenueData, 7);
+    const revenue30dMA = calculateMA(revenueData, 30);
+    const revenue90dMA = calculateMA(revenueData, 90);
 
     // Create a map for price data by date
     const priceMap = new Map<string, number>();
@@ -101,7 +104,9 @@ export function usePriceRevenueData() {
     return sortedDates.map((date) => ({
       date,
       price: priceMap.get(date) ?? null,
+      revenue7dMA: revenue7dMA.get(date) ?? null,
       revenue30dMA: revenue30dMA.get(date) ?? null,
+      revenue90dMA: revenue90dMA.get(date) ?? null,
     }));
   })();
 

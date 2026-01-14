@@ -21,9 +21,17 @@ const PriceRevenueChart: FC = () => {
     .filter((d) => d.price !== null)
     .map((d) => [new Date(d.date).getTime(), d.price as number]);
 
-  const revenueData: [number, number][] = data
+  const revenue7dData: [number, number][] = data
+    .filter((d) => d.revenue7dMA !== null)
+    .map((d) => [new Date(d.date).getTime(), d.revenue7dMA as number]);
+
+  const revenue30dData: [number, number][] = data
     .filter((d) => d.revenue30dMA !== null)
     .map((d) => [new Date(d.date).getTime(), d.revenue30dMA as number]);
+
+  const revenue90dData: [number, number][] = data
+    .filter((d) => d.revenue90dMA !== null)
+    .map((d) => [new Date(d.date).getTime(), d.revenue90dMA as number]);
 
   const options: Highcharts.Options = {
     chart: {
@@ -58,7 +66,7 @@ const PriceRevenueChart: FC = () => {
     },
 
     title: {
-      text: 'HYPE Price vs 30-Day Revenue Moving Average',
+      text: 'HYPE Price vs Revenue Moving Averages',
       style: {
         color: '#98FCE4',
         fontSize: '18px',
@@ -66,7 +74,7 @@ const PriceRevenueChart: FC = () => {
     },
 
     subtitle: {
-      text: 'Daily close price and 30-day MA of total protocol revenue',
+      text: 'Daily close price and 7/30/90-day MA of total protocol revenue',
       style: {
         color: '#bcc4c2',
         fontSize: '12px',
@@ -119,7 +127,7 @@ const PriceRevenueChart: FC = () => {
       },
       {
         title: {
-          text: '30-Day Revenue MA ($)',
+          text: 'Revenue MA ($)',
           style: {
             color: '#f69318',
           },
@@ -165,10 +173,32 @@ const PriceRevenueChart: FC = () => {
       },
       {
         type: 'line',
+        name: '7-Day Revenue MA',
+        data: revenue7dData,
+        yAxis: 1,
+        color: '#9b59b6',
+        tooltip: {
+          valueDecimals: 0,
+          valuePrefix: '$',
+        },
+      },
+      {
+        type: 'line',
         name: '30-Day Revenue MA',
-        data: revenueData,
+        data: revenue30dData,
         yAxis: 1,
         color: '#f69318',
+        tooltip: {
+          valueDecimals: 0,
+          valuePrefix: '$',
+        },
+      },
+      {
+        type: 'line',
+        name: '90-Day Revenue MA',
+        data: revenue90dData,
+        yAxis: 1,
+        color: '#e74c3c',
         tooltip: {
           valueDecimals: 0,
           valuePrefix: '$',
