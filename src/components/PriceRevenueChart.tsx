@@ -36,8 +36,9 @@ const PriceRevenueChart: FC = () => {
   const options: Highcharts.Options = {
     chart: {
       styledMode: false,
-      height: 450,
-      backgroundColor: '#03251F',
+      height: 500,
+      backgroundColor: '#0f1a1f',
+      spacing: [30, 25, 20, 25],
       zooming: {
         mouseWheel: false,
       },
@@ -51,6 +52,13 @@ const PriceRevenueChart: FC = () => {
       shared: true,
       split: false,
       xDateFormat: '%b %e, %Y',
+      backgroundColor: '#1f2937',
+      borderColor: '#374151',
+      style: {
+        color: '#9ca3af',
+      },
+      headerFormat:
+        '<div style="font-size: 12px; font-weight: bold; color: #e5e7eb; margin-bottom: 8px;">{point.key}</div><br/>',
     },
 
     rangeSelector: {
@@ -68,7 +76,7 @@ const PriceRevenueChart: FC = () => {
     title: {
       text: 'HYPE Price vs Revenue Moving Averages',
       style: {
-        color: '#98FCE4',
+        color: '#e5e7eb',
         fontSize: '18px',
       },
     },
@@ -76,7 +84,7 @@ const PriceRevenueChart: FC = () => {
     subtitle: {
       text: 'Daily close price and 7/30/90-day MA of total protocol revenue',
       style: {
-        color: '#bcc4c2',
+        color: '#9ca3af',
         fontSize: '12px',
       },
     },
@@ -94,47 +102,49 @@ const PriceRevenueChart: FC = () => {
       crosshair: {
         width: 1,
         dashStyle: 'Dash',
-        color: '#98FCE4',
+        color: '#9ca3af',
       },
       labels: {
         style: {
-          color: '#bcc4c2',
+          color: '#9ca3af',
         },
       },
-      lineColor: '#2a4d46',
-      tickColor: '#2a4d46',
+      lineColor: '#374151',
+      tickColor: '#374151',
     },
 
     yAxis: [
       {
         title: {
           text: 'HYPE Price ($)',
+          margin: 16,
           style: {
-            color: '#98FCE4',
+            color: '#9ca3af',
           },
         },
         labels: {
           style: {
-            color: '#98FCE4',
+            color: '#9ca3af',
           },
           formatter: function () {
             return '$' + this.value;
           },
         },
-        gridLineColor: '#2a4d46',
+        gridLineColor: '#374151',
         gridLineDashStyle: 'Dash',
         opposite: false,
       },
       {
         title: {
           text: 'Revenue MA ($)',
+          margin: 16,
           style: {
-            color: '#f69318',
+            color: '#9ca3af',
           },
         },
         labels: {
           style: {
-            color: '#f69318',
+            color: '#9ca3af',
           },
           formatter: function () {
             const value = this.value as number;
@@ -152,10 +162,10 @@ const PriceRevenueChart: FC = () => {
     legend: {
       enabled: true,
       itemStyle: {
-        color: '#bcc4c2',
+        color: '#9ca3af',
       },
       itemHoverStyle: {
-        color: '#98FCE4',
+        color: '#e5e7eb',
       },
     },
 
