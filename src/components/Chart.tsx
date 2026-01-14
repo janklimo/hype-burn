@@ -88,9 +88,17 @@ const tooltipContent = (
       maximumFractionDigits: 3,
     })}`;
 
+    // Add DEX names for HIP-3 Builder Stakes segment
+    const dexNamesLine =
+      params.datum.asset === SERIES_NAMES.CIRCULATING_PERP_DEXS &&
+      params.datum.dexNames?.length > 0
+        ? `<div><b>DEXs</b>: ${params.datum.dexNames.join(', ')}</div>`
+        : '';
+
     return {
       title: `<b style="${titleStyle}">${params.datum.asset}</b>`,
-      content: `<div><b>Amount</b>: ${amount}</div>
+      content: `${dexNamesLine}
+                <div><b>Amount</b>: ${amount}</div>
                 <div><b>Share of Circulating</b>: ${shareOfCirculating}</div>
                 <div><b>Share of Total</b>: ${shareOfTotal}</div>`,
     };
@@ -120,7 +128,7 @@ const Chart: FC<Props> = ({ tokenInfo, stakedBalance, burntEVMBalance }) => {
   const { width } = useWindowSize();
   const isMobile = Number(width) <= 768;
   const { foundationDelegations } = useFoundationDelegations();
-  const { perpDexsStake } = usePerpDexsStake();
+  const { perpDexsStake, perpDexNames } = usePerpDexsStake();
 
   if (!tokenInfo)
     return <Skeleton className='h-96 w-80 md:h-[35rem] md:w-[70rem]' />;
@@ -153,6 +161,7 @@ const Chart: FC<Props> = ({ tokenInfo, stakedBalance, burntEVMBalance }) => {
     displayAmount: number;
     radius: number;
     circulatingSupply?: number;
+    dexNames?: string[];
   };
 
   const series: Segment[] = [
@@ -176,6 +185,7 @@ const Chart: FC<Props> = ({ tokenInfo, stakedBalance, burntEVMBalance }) => {
       radius: 1,
       displayAmount: perpDexsStake,
       circulatingSupply,
+      dexNames: perpDexNames,
     },
     {
       asset: SERIES_NAMES.BURN_TRADING_FEES,

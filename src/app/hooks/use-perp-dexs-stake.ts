@@ -14,7 +14,12 @@ interface PerpDex {
 
 const STAKE_PER_DEPLOYER = 500_000;
 
-async function perpDexsStakeFetcher(): Promise<number> {
+interface PerpDexsStakeResult {
+  stake: number;
+  dexNames: string[];
+}
+
+async function perpDexsStakeFetcher(): Promise<PerpDexsStakeResult> {
   const res = await fetch('https://api.hyperliquid.xyz/info', {
     method: 'POST',
     headers: {
@@ -31,27 +36,31 @@ async function perpDexsStakeFetcher(): Promise<number> {
 
   const perpDexs: (PerpDex | null)[] = await res.json();
 
-  // Count objects where deployer is specified (not null/undefined)
-  const deployerCount = perpDexs.filter(
-    (dex) => dex !== null && dex.deployer,
-  ).length;
+  // Filter DEXs where deployer is specified (not null/undefined)
+  const activeDexs = perpDexs.filter(
+    (dex): dex is PerpDex => dex !== null && !!dex.deployer,
+  );
 
-  return deployerCount * STAKE_PER_DEPLOYER;
+  return {
+    stake: activeDexs.length * STAKE_PER_DEPLOYER,
+    dexNames: activeDexs.map((dex) => dex.name),
+  };
 }
 
 export const usePerpDexsStake = () => {
-  const { data: perpDexsStake = 0, error } = useSWR<number>(
+  const { data, error } = useSWR<PerpDexsStakeResult>(
     ['perpDexsStake'],
     () => perpDexsStakeFetcher(),
     {
       refreshInterval: 30_000, // Refresh every 30 seconds
-      fallbackData: 0,
+      fallbackData: { stake: 0, dexNames: [] },
     },
   );
 
   return {
-    perpDexsStake: perpDexsStake as number,
+    perpDexsStake: data?.stake ?? 0,
+    perpDexNames: data?.dexNames ?? [],
     error,
-    isLoading: !error && perpDexsStake === 0,
+    isLoading: !error && data?.stake === 0,
   };
 };
