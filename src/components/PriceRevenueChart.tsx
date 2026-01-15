@@ -107,6 +107,12 @@ const PriceRevenueChart: FC = () => {
         marker: {
           enabled: false,
         },
+        lineWidth: 2,
+        boostThreshold: 0,
+        turboThreshold: 0,
+      },
+      line: {
+        lineWidth: 2,
       },
     },
 
@@ -185,10 +191,15 @@ const PriceRevenueChart: FC = () => {
     series: [
       {
         type: 'line',
+        id: 'hype-price',
         name: 'HYPE Price',
         data: priceData,
         yAxis: 0,
         color: '#98FCE4',
+        lineWidth: 2,
+        visible: true,
+        showInLegend: true,
+        legendSymbol: 'lineMarker',
         tooltip: {
           valueDecimals: 2,
           valuePrefix: '$',
