@@ -7,6 +7,7 @@ import TradeCallout from '@/components/TradeCallout';
 
 import Heatmap from './Heatmap';
 import USDCChart from './USDCChart';
+import USDHChart from './USDHChart';
 
 const Stats: FC = () => {
   return (
@@ -14,6 +15,12 @@ const Stats: FC = () => {
       <section className='bg-hl-dark p-3 md:p-4'>
         <div className='flex justify-center items-center flex-col mb-8'>
           <div className='relative w-full max-w-5xl'>
+            <div className='mt-8 mb-12'>
+              <h2 className='text-white text-lg mb-2 text-center'>
+                USDH on Hyperliquid
+              </h2>
+              <USDHChart />
+            </div>
             <div className='mt-8 mb-12'>
               <h2 className='text-white text-lg mb-2 text-center'>
                 USDC on Hyperliquid
