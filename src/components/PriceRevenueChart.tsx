@@ -1,31 +1,18 @@
 'use client';
 
-import dynamic from 'next/dynamic';
-import { FC, useEffect, useRef, useState } from 'react';
+import HighchartsReact from 'highcharts-react-official';
+import Highcharts from 'highcharts/highstock';
+import { FC, useRef } from 'react';
 
 import Skeleton from '@/components/Skeleton';
 
 import { usePriceRevenueData } from '@/app/hooks/use-price-revenue-data';
 
-// Dynamic import to avoid SSR issues with Highcharts
-const HighchartsReact = dynamic(() => import('highcharts-react-official'), {
-  ssr: false,
-});
-
 const PriceRevenueChart: FC = () => {
-  const chartRef = useRef(null);
+  const chartRef = useRef<HighchartsReact.RefObject>(null);
   const { data, isLoading } = usePriceRevenueData();
-  const [Highcharts, setHighcharts] = useState<
-    typeof import('highcharts/highstock') | null
-  >(null);
 
-  useEffect(() => {
-    import('highcharts/highstock').then((mod) =>
-      setHighcharts(() => mod.default),
-    );
-  }, []);
-
-  if (isLoading || !data || !Highcharts) {
+  if (isLoading || !data) {
     return <Skeleton className='h-96 w-full' />;
   }
 
@@ -107,12 +94,6 @@ const PriceRevenueChart: FC = () => {
         marker: {
           enabled: false,
         },
-        lineWidth: 2,
-        boostThreshold: 0,
-        turboThreshold: 0,
-      },
-      line: {
-        lineWidth: 2,
       },
     },
 
@@ -191,15 +172,10 @@ const PriceRevenueChart: FC = () => {
     series: [
       {
         type: 'line',
-        id: 'hype-price',
         name: 'HYPE Price',
         data: priceData,
         yAxis: 0,
         color: '#98FCE4',
-        lineWidth: 2,
-        visible: true,
-        showInLegend: true,
-        legendSymbol: 'lineMarker',
         tooltip: {
           valueDecimals: 2,
           valuePrefix: '$',
