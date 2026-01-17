@@ -3,6 +3,7 @@
 import {
   AgBarSeriesOptions,
   AgCartesianChartOptions,
+  AgLineSeriesOptions,
 } from 'ag-charts-community';
 import { AgCharts } from 'ag-charts-react';
 import { FC, useEffect, useState } from 'react';
@@ -47,26 +48,50 @@ const formatDate = (dateString: string) => {
   });
 };
 
-// Merge stale snapshots with fresh dailyAmountOwed data from Hyperliquid API
+interface MergedDataPoint {
+  date: string;
+  amount: number;
+  totalSupply: number;
+  rate: number;
+}
+
+// Merge stale snapshots with fresh data from Hyperliquid API
 const mergeWithFreshData = (
   snapshots: USDHSnapshot[],
-  dailyAmountOwed: [string, string][],
-): { date: string; amount: number }[] => {
-  const dataMap = new Map<string, number>();
+  tokenInfo: USDHTokenInfo,
+): MergedDataPoint[] => {
+  const dataMap = new Map<
+    string,
+    { amount: number; totalSupply: number; rate: number }
+  >();
 
   for (const snapshot of snapshots) {
-    dataMap.set(snapshot.date, snapshot.amount_owed);
+    dataMap.set(snapshot.date, {
+      amount: snapshot.amount_owed,
+      totalSupply: snapshot.total_supply,
+      rate: snapshot.rate * 100, // Convert to percentage
+    });
   }
 
-  // Overlay fresh data from dailyAmountOwed (this overwrites stale values)
-  for (const [date, amount] of dailyAmountOwed) {
-    dataMap.set(date, parseFloat(amount));
+  // Current values from tokenInfo for dates missing from snapshots
+  const currentTotalSupply = parseFloat(tokenInfo.evmMintedSupply);
+  const currentRate = parseFloat(tokenInfo.predictedRate) * 100;
+
+  // Overlay fresh data from dailyAmountOwed (this overwrites stale amount values)
+  for (const [date, amount] of tokenInfo.dailyAmountOwed) {
+    const existing = dataMap.get(date);
+    dataMap.set(date, {
+      amount: parseFloat(amount),
+      // Use existing snapshot values if available, otherwise use current tokenInfo values
+      totalSupply: existing?.totalSupply ?? currentTotalSupply,
+      rate: existing?.rate ?? currentRate,
+    });
   }
 
   // Convert back to array and sort by date
   return Array.from(dataMap.entries())
     .sort(([a], [b]) => a.localeCompare(b))
-    .map(([date, amount]) => ({ date, amount }));
+    .map(([date, data]) => ({ date, ...data }));
 };
 
 const USDHChart: FC = () => {
@@ -108,12 +133,19 @@ const USDHChart: FC = () => {
 
   // Merge snapshots with fresh data from tokenInfo
   const mergedData = tokenInfo
-    ? mergeWithFreshData(snapshots, tokenInfo.dailyAmountOwed)
-    : snapshots.map((s) => ({ date: s.date, amount: s.amount_owed }));
+    ? mergeWithFreshData(snapshots, tokenInfo)
+    : snapshots.map((s) => ({
+        date: s.date,
+        amount: s.amount_owed,
+        totalSupply: s.total_supply,
+        rate: s.rate * 100,
+      }));
 
   const chartData = mergedData.map((item) => ({
     date: formatDate(item.date),
     amount: item.amount,
+    totalSupply: item.totalSupply,
+    rate: item.rate,
   }));
 
   const totalSupply = tokenInfo ? parseFloat(tokenInfo.evmMintedSupply) : 0;
@@ -143,6 +175,39 @@ const USDHChart: FC = () => {
           }),
         },
       } as AgBarSeriesOptions,
+      {
+        type: 'bar',
+        xKey: 'date',
+        yKey: 'totalSupply',
+        yName: 'Total Supply',
+        fill: '#51D2C1',
+        visible: false,
+        tooltip: {
+          renderer: ({ datum }) => ({
+            title: `<span style="color: #03251F;"><b>${datum.date}</b></span>`,
+            content: `<span style="color: #03251F;">Total Supply: ${datum.totalSupply.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>`,
+          }),
+        },
+      } as AgBarSeriesOptions,
+      {
+        type: 'line',
+        xKey: 'date',
+        yKey: 'rate',
+        yName: 'Risk-free Rate',
+        stroke: '#F69318',
+        strokeWidth: 3,
+        marker: {
+          enabled: true,
+          fill: '#F69318',
+          stroke: '#F69318',
+        },
+        tooltip: {
+          renderer: ({ datum }) => ({
+            title: `<span><b>${datum.date}</b></span>`,
+            content: `<span style="color: #03251F;">Rate: ${datum.rate.toFixed(3)}%</span>`,
+          }),
+        },
+      } as AgLineSeriesOptions,
     ],
     axes: [
       {
@@ -151,21 +216,33 @@ const USDHChart: FC = () => {
         title: { text: 'Date', color: '#9ca3af' },
         label: {
           rotation: -45,
-          minSpacing: 5,
+          minSpacing: 8,
         },
       },
       {
         type: 'number',
         position: 'left',
-        title: { text: 'Amount Owed (USD)', color: '#9ca3af' },
+        keys: ['amount', 'totalSupply'],
+        title: { text: 'Amount (USD)', color: '#9ca3af' },
         label: {
           formatter: (params) => {
             return `$${params.value.toLocaleString()}`;
           },
         },
       },
+      {
+        type: 'number',
+        position: 'right',
+        keys: ['rate'],
+        title: { text: 'Rate (%)'},
+        label: {
+          formatter: (params) => {
+            return `${params.value.toFixed(2)}%`;
+          },
+        },
+      },
     ],
-    height: 400,
+    height: 500,
     background: { fill: '#0f1a1f' },
     padding: { top: 30, right: 25, bottom: 20, left: 25 },
     theme: 'ag-default-dark' as const,
@@ -173,7 +250,7 @@ const USDHChart: FC = () => {
 
   if (isLoading) {
     return (
-      <ChartSkeleton className='h-[560px]' message='Loading USDH data...' />
+      <ChartSkeleton className='h-[620px]' message='Loading USDH data...' />
     );
   }
 

@@ -131,6 +131,7 @@ const USDCChart: FC = () => {
         title: { text: 'Date', color: '#9ca3af' },
         label: {
           rotation: -45,
+          minSpacing: 8,
         },
       },
       {
