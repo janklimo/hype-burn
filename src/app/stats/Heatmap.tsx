@@ -115,7 +115,7 @@ const Heatmap = () => {
         Years to Buy Ready-for-Sale Supply
       </h2>
       <p className='text-center text-sm text-gray-400 mb-6'>
-        The Assistance Fund uses 97% of revenue to buy back HYPE tokens. This
+        The Assistance Fund uses 99% of revenue to buy back HYPE tokens. This
         chart shows how many years it would take to buy the ready-for-sale
         supply at different prices and daily revenues.
       </p>
