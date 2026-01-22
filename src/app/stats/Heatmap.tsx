@@ -6,6 +6,7 @@ import { classNames } from '@/lib/utils';
 
 import ChartSkeleton from '@/components/ChartSkeleton';
 
+import useBurntEVMBalance from '@/app/hooks/use-burnt-evm-balance';
 import useFees from '@/app/hooks/use-fees';
 import { useFoundationDelegations } from '@/app/hooks/use-foundation-delegations';
 import { useStakedBalance } from '@/app/hooks/use-staked-balance';
@@ -79,17 +80,20 @@ const Heatmap = () => {
   const { tokenInfo } = useTokenInfo();
   const { stakedBalance } = useStakedBalance();
   const { foundationDelegations } = useFoundationDelegations();
+  const { balance: burntEVMBalance } = useBurntEVMBalance();
   const [selectedPeriod, setSelectedPeriod] = useState<Period>('oneDay');
 
   const readyForSaleSupply = useMemo(() => {
     if (!tokenInfo) return 0;
 
-    return calculateReadyForSaleSupply(
-      parseFloat(tokenInfo.circulatingSupply),
-      stakedBalance,
-      foundationDelegations,
+    return (
+      calculateReadyForSaleSupply(
+        parseFloat(tokenInfo.circulatingSupply),
+        stakedBalance,
+        foundationDelegations,
+      ) - burntEVMBalance
     );
-  }, [tokenInfo, stakedBalance, foundationDelegations]);
+  }, [tokenInfo, stakedBalance, foundationDelegations, burntEVMBalance]);
 
   const data = useMemo(() => {
     if (!hypeData?.markPx || !fees?.[selectedPeriod] || !tokenInfo) return null;
@@ -194,6 +198,7 @@ const Heatmap = () => {
         <SupplyBreakdown
           circulatingSupply={parseFloat(tokenInfo.circulatingSupply)}
           stakedAmount={stakedBalance - foundationDelegations}
+          burntEVMAmount={burntEVMBalance}
         />
       </p>
 
