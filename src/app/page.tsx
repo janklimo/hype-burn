@@ -69,7 +69,7 @@ export default function HomePage() {
             <SaltSheet data={data} />
           </div>
           <div className='my-4 w-full'>
-            <Peers tokenInfo={tokenInfo} data={data} />
+            <Peers data={data} />
           </div>
           <TradeCallout />
           <div className='mt-6'>

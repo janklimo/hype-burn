@@ -5,7 +5,6 @@ import PeerCard from '@/components/PeerCard';
 import Skeleton from '@/components/Skeleton';
 
 import useHypeData from '@/app/hooks/use-hype-data';
-import useTokenInfo from '@/app/hooks/use-token-info';
 import { apiHost } from '@/constant/config';
 import { pointToHypeRatio } from '@/constant/constants';
 
@@ -15,13 +14,15 @@ type Sort = 'market_cap' | 'fdv';
 
 const processCoinData = (
   coins: PeersData,
-  markPrice: number,
-  circulatingSupply: number,
-  totalSupply: number,
   sort: Sort,
 ) => {
-  const hypeFdv = markPrice * totalSupply;
-  const hypeMarketCap = markPrice * circulatingSupply;
+  const hypeCoin = coins.find((coin) => coin.symbol === 'HYPE');
+  if (!hypeCoin) return [];
+
+  const circulatingSupply = hypeCoin.circulating_supply;
+  const totalSupply = hypeCoin.total_supply;
+  const hypeValue = sort === 'fdv' ? hypeCoin.fdv : hypeCoin.market_cap;
+  const peerCoins = coins.filter((coin) => coin.symbol !== 'HYPE');
   const allCoins = [
     {
       symbol: '$800/pt',
@@ -31,7 +32,7 @@ const processCoinData = (
       url: 'https://x.com/crypto_adair/status/1806748433593577833',
       image_url: '/images/crypto_adair.jpg',
     },
-    ...coins,
+    ...peerCoins,
   ];
 
   return allCoins
@@ -39,12 +40,8 @@ const processCoinData = (
     .map((coin) => ({
       key: coin.symbol,
       symbol: coin.symbol,
-      price:
-        sort === 'fdv'
-          ? coin.fdv / totalSupply
-          : coin.market_cap / circulatingSupply,
-      multiple:
-        sort === 'fdv' ? coin.fdv / hypeFdv : coin.market_cap / hypeMarketCap,
+      price: (sort === 'fdv' ? coin.fdv : coin.market_cap) / (sort === 'fdv' ? totalSupply : circulatingSupply),
+      multiple: (sort === 'fdv' ? coin.fdv : coin.market_cap) / hypeValue,
       url: coin.url,
       image_url: coin.image_url,
     }));
@@ -52,10 +49,9 @@ const processCoinData = (
 
 interface Props {
   data: ReturnType<typeof useHypeData>;
-  tokenInfo: ReturnType<typeof useTokenInfo>['tokenInfo'];
 }
 
-const Peers: FC<Props> = ({ data, tokenInfo }) => {
+const Peers: FC<Props> = ({ data }) => {
   const [coins, setCoins] = useState<PeersData>([]);
   const [sort, setSort] = useState<Sort>('market_cap');
 
@@ -68,12 +64,9 @@ const Peers: FC<Props> = ({ data, tokenInfo }) => {
       .catch(() => console.error('Failed to fetch peer coins.'));
   }, []);
 
-  if (!data || !coins.length || !tokenInfo)
-    return <Skeleton className='flex w-full h-40' />;
+  if (!data || !coins.length) return <Skeleton className='flex w-full h-40' />;
 
   const markPrice = parseFloat(data.markPx);
-  const circulatingSupply = parseFloat(tokenInfo.circulatingSupply);
-  const totalSupply = parseFloat(tokenInfo.totalSupply);
 
   return (
     <div>
@@ -96,13 +89,7 @@ const Peers: FC<Props> = ({ data, tokenInfo }) => {
         </div>
       </h2>
       <section className='flex justify-center items-center flex-wrap'>
-        {processCoinData(
-          coins,
-          markPrice,
-          circulatingSupply,
-          totalSupply,
-          sort,
-        ).map((coinData) => (
+        {processCoinData(coins, sort).map((coinData) => (
           <PeerCard
             key={coinData.key}
             symbol={coinData.symbol}

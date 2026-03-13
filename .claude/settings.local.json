@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(curl:*)",
+      "WebSearch",
+      "WebFetch(domain:hyperliquid.gitbook.io)",
+      "WebFetch(domain:www.circle.com)",
+      "WebFetch(domain:hyperevmscan.io)",
+      "WebFetch(domain:medium.com)",
+      "WebFetch(domain:docs.chainstack.com)",
+      "Bash(xxd:*)"
+    ]
+  }
+}
