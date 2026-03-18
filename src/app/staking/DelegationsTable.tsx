@@ -48,6 +48,12 @@ const columnDefs: ColDef<DelegationRow>[] = [
     valueFormatter: amountFormatter,
   },
   {
+    headerName: 'Foundation + Labs',
+    valueGetter: (params) =>
+      (params.data?.foundation || 0) + (params.data?.labs || 0),
+    valueFormatter: amountFormatter,
+  },
+  {
     field: 'community',
     headerName: 'Community',
     valueFormatter: amountFormatter,
