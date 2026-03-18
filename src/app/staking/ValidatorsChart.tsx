@@ -26,6 +26,8 @@ const trimAddress = (address: string) =>
     ? `${address.slice(0, 5)}...${address.slice(-4)}`
     : address;
 
+const MAX_LABEL_LENGTH = 14;
+
 const getDisplayName = (
   address: string,
   validatorNames?: { [address: string]: string },
@@ -35,6 +37,11 @@ const getDisplayName = (
   }
   return trimAddress(address);
 };
+
+const trimLabel = (label: string) =>
+  label.length > MAX_LABEL_LENGTH
+    ? `${label.slice(0, MAX_LABEL_LENGTH)}...`
+    : label;
 
 const formatNumber = (value: number) =>
   new Intl.NumberFormat('en-US', {
@@ -112,6 +119,7 @@ const ValidatorsChart: FC<ValidatorsChartProps> = ({
         title: { text: 'Validator', color: '#9ca3af' },
         label: {
           rotation: -45,
+          formatter: ({ value }) => trimLabel(value),
         },
       },
       {
@@ -125,6 +133,7 @@ const ValidatorsChart: FC<ValidatorsChartProps> = ({
           formatter: (params) =>
             isStakers ? formatNumber(params.value) : formatStake(params.value),
         },
+        min: 0,
       },
     ],
     height: 500,

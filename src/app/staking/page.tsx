@@ -6,8 +6,11 @@ import { useRef, useState } from 'react';
 
 import '@/styles/calendar.css';
 
+import UnderlineLink from '@/components/links/UnderlineLink';
+
 import useStakingSnapshot from '@/app/hooks/use-staking-snapshot';
 import useValidators from '@/app/hooks/use-validators';
+import DelegationsTable from '@/app/staking/DelegationsTable';
 import ValidatorsChart from '@/app/staking/ValidatorsChart';
 import ValidatorsTabSelector from '@/app/staking/ValidatorsTabSelector';
 import ValidatorsTreeMap from '@/app/staking/ValidatorsTreeMap';
@@ -47,6 +50,24 @@ const Staking = () => {
   return (
     <main>
       <section className='bg-hl-dark p-3 md:p-4'>
+        <h2 className='text-white text-lg mb-3 text-center'>
+          Community and foundation delegations
+        </h2>
+        <p className='text-center text-sm text-gray-400 mb-8 max-w-3xl mx-auto'>
+          Breakdown of each validator&apos;s total stake (HYPE) by source:{' '}
+          <UnderlineLink href='https://hypurrscan.io/address/0xd57ecca444a9acb7208d286be439de12dd09de5d#staking'>
+            Foundation
+          </UnderlineLink>
+          ,{' '}
+          <UnderlineLink href='https://hypurrscan.io/address/0x43e9abea1910387c4292bca4b94de81462f8a251#staking'>
+            Labs
+          </UnderlineLink>
+          , and Community (the remainder).
+        </p>
+        <div className='max-w-5xl mx-auto'>
+          <DelegationsTable />
+        </div>
+
         <h2 className='text-white text-2xl mb-3 text-center'>Validators</h2>
 
         <div className='flex justify-center mb-3'>
