@@ -1,5 +1,7 @@
 import useSWR from 'swr';
 
+import { apiHost } from '@/constant/config';
+
 interface ChartDataEntry {
   date: string;
   transaction_count: number;
@@ -37,14 +39,11 @@ interface ApiResponse {
   time_range: string;
   data_points: number;
   chart_data: ChartDataEntry[];
-  last_updated: string;
 }
 
 async function fetchTransactionFees() {
   try {
-    const response = await fetch(
-      'https://api-hyperliquid.asxn.xyz/api/hyper-evm/network-metrics?time_range=all',
-    );
+    const response = await fetch(`${apiHost}/network_metrics`);
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);

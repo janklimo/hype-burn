@@ -10,8 +10,9 @@ import { FC, useEffect, useState } from 'react';
 
 import ChartSkeleton from '@/components/ChartSkeleton';
 import UnderlineLink from '@/components/links/UnderlineLink';
+import { apiHost } from '@/constant/config';
 
-const ENDPOINT = 'https://yprjg.hatchboxapp.com/api/v1/usdc_snapshots';
+const ENDPOINT = `${apiHost}/usdc_snapshots`;
 
 interface USDCSnapshot {
   arbitrum: number;

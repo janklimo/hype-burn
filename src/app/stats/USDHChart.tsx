@@ -10,9 +10,10 @@ import { FC, useEffect, useState } from 'react';
 
 import ChartSkeleton from '@/components/ChartSkeleton';
 import UnderlineLink from '@/components/links/UnderlineLink';
+import { apiHost } from '@/constant/config';
 
 const HYPERLIQUID_API = 'https://api.hyperliquid.xyz/info';
-const SNAPSHOTS_API = 'https://yprjg.hatchboxapp.com/api/v1/usdh_snapshots';
+const SNAPSHOTS_API = `${apiHost}/usdh_snapshots`;
 
 interface USDHTokenInfo {
   isAligned: boolean;

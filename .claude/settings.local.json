@@ -9,7 +9,8 @@
       "WebFetch(domain:hyperevmscan.io)",
       "WebFetch(domain:medium.com)",
       "WebFetch(domain:docs.chainstack.com)",
-      "Bash(xxd:*)"
+      "Bash(xxd:*)",
+      "WebFetch(domain:yprjg.hatchboxapp.com)"
     ]
   }
 }
