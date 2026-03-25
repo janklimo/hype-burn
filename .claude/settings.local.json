@@ -10,7 +10,8 @@
       "WebFetch(domain:medium.com)",
       "WebFetch(domain:docs.chainstack.com)",
       "Bash(xxd:*)",
-      "WebFetch(domain:yprjg.hatchboxapp.com)"
+      "WebFetch(domain:yprjg.hatchboxapp.com)",
+      "Bash(bundle exec:*)"
     ]
   }
 }

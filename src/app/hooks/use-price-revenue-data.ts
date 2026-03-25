@@ -2,37 +2,16 @@
 
 import useSWR from 'swr';
 
+import { apiHost } from '@/constant/config';
+
 interface PriceData {
   date: string;
-  open: number;
-  high: number;
-  low: number;
   close: number;
-  volume: number;
-  trades: number;
 }
 
 interface RevenueData {
   date: string;
-  'HyperCore Buybacks': number;
-  'HyperEVM Burn': number;
-  'Auction Burn': number;
   total: number;
-}
-
-interface RevenueResponse {
-  summary: {
-    total_revenue: number;
-    total_hypercore_buybacks: number;
-    total_hypervm_burn: number;
-    total_auction_burn: number;
-    average_daily_revenue: number;
-    annualized_revenue: number;
-    days_tracked: number;
-    start_date: string;
-    end_date: string;
-  };
-  data: RevenueData[];
 }
 
 export interface CombinedChartData {
@@ -51,7 +30,6 @@ function calculateMA(data: RevenueData[], window: number): Map<string, number> {
 
   for (let i = 0; i < data.length; i++) {
     if (i < window - 1) {
-      // Not enough data for MA yet
       continue;
     }
 
@@ -67,38 +45,33 @@ function calculateMA(data: RevenueData[], window: number): Map<string, number> {
 
 export function usePriceRevenueData() {
   const { data: priceData, error: priceError } = useSWR<PriceData[]>(
-    'https://api-hyperliquid.asxn.xyz/api/buyback/hype-price',
+    `${apiHost}/network_metrics/price`,
     fetcher,
     { refreshInterval: 60000 },
   );
 
-  const { data: revenueResponse, error: revenueError } =
-    useSWR<RevenueResponse>(
-      'https://api-hyperliquid.asxn.xyz/api/buyback/revenues',
-      fetcher,
-      { refreshInterval: 60000 },
-    );
+  const { data: revenueData, error: revenueError } = useSWR<RevenueData[]>(
+    `${apiHost}/network_metrics/revenues`,
+    fetcher,
+    { refreshInterval: 60000 },
+  );
 
   const combinedData: CombinedChartData[] | undefined = (() => {
-    if (!priceData || !revenueResponse) return undefined;
+    if (!priceData || !revenueData) return undefined;
 
-    const revenueData = revenueResponse.data;
     const revenue7dMA = calculateMA(revenueData, 7);
     const revenue30dMA = calculateMA(revenueData, 30);
     const revenue90dMA = calculateMA(revenueData, 90);
 
-    // Create a map for price data by date
     const priceMap = new Map<string, number>();
     priceData.forEach((p) => {
       priceMap.set(p.date, p.close);
     });
 
-    // Get all unique dates
     const allDates = new Set<string>();
     priceData.forEach((p) => allDates.add(p.date));
     revenueData.forEach((r) => allDates.add(r.date));
 
-    // Sort dates and combine data
     const sortedDates = Array.from(allDates).sort();
 
     return sortedDates.map((date) => ({
@@ -112,7 +85,7 @@ export function usePriceRevenueData() {
 
   return {
     data: combinedData,
-    isLoading: !priceData && !revenueResponse && !priceError && !revenueError,
+    isLoading: !priceData && !revenueData && !priceError && !revenueError,
     error: priceError || revenueError,
   };
 }

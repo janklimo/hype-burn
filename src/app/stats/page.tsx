@@ -5,7 +5,6 @@ import { FC } from 'react';
 import PriceRevenueChart from '@/components/PriceRevenueChart';
 import TradeCallout from '@/components/TradeCallout';
 
-import Heatmap from './Heatmap';
 import USDCChart from './USDCChart';
 import USDHChart from './USDHChart';
 
@@ -33,7 +32,6 @@ const Stats: FC = () => {
               </h2>
               <PriceRevenueChart />
             </div>
-            <Heatmap />
             <TradeCallout />
           </div>
         </div>
